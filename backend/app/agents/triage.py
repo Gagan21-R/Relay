@@ -41,7 +41,8 @@ def prioritise(db: Session, inc: Incident) -> Incident:
         inc.priority_breakdown = {"components": {}, "total": 0.0, "note": "false or resolved: no priority"}
         return inc
     now = state.now(db)
-    lt = S.LIFE_THREAT_BY_CATEGORY.get(inc.category, 0.1)
+    from app.disasters import profile
+    lt = profile(state.disaster(db))["life_threat"].get(inc.category, S.LIFE_THREAT_BY_CATEGORY.get(inc.category, 0.1))
     if inc.life_safety:
         lt = max(lt, 0.9)
     people = inc.people_affected or 0
@@ -54,7 +55,7 @@ def prioritise(db: Session, inc: Incident) -> Incident:
         cf = 0.6
     ad, adwhy = access_difficulty(db, inc)
     comp = {
-        "life_threat": (lt, f"{inc.category}{' with a life-safety signal' if inc.life_safety else ''}"),
+        "life_threat": (lt, f"{inc.category} in a {state.disaster(db)}{' with a life-safety signal' if inc.life_safety else ''}"),
         "people": (pv, f"{people} people (log scale, 500 = full)" if people else "people count unknown"),
         "vulnerable": (vul, ", ".join(inc.vulnerable_groups or []) or "none reported"),
         "waiting_time": (wv, f"waiting {wait:.1f} h since first report" if inc.status == "open" else f"status {inc.status}"),

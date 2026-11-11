@@ -119,6 +119,9 @@ RUMOUR = {
 }
 
 
+TEMPLATE_LANGS = set(TEMPLATES["ack"])   # languages with a full reply/correction template set
+
+
 def render(kind: str, lang: str, **kw) -> str:
     t = TEMPLATES[kind].get(lang) or TEMPLATES[kind]["en"]
     return t.format(**kw)

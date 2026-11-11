@@ -10,7 +10,7 @@ from app.db import Base
 from app.models import Depot, InventoryItem, Road, Shelter, Signal, Zone
 from app.services import hazard
 from app.sim import kodagu_reports as KR
-from app.sim import kodagu_world as KW
+from app.sim import worlds
 from app.sim.scenarios import SCENARIOS, reports_for
 from app.ws.manager import emit
 
@@ -20,8 +20,9 @@ def timeline(scenario: str = "kodagu_flood") -> list[tuple]:
     sc = SCENARIOS.get(scenario, SCENARIOS["kodagu_flood"])
     ev = [(t, "signal", (typ, zc, val, src)) for t, typ, zc, val, src in sc["signals"]]
     ev += [(r[0], "report", r) for r in reports_for(scenario)]
-    ev += [(t, "checkin", (name, occ)) for t, name, occ in KW.CHECKINS]
-    return sorted(ev, key=lambda e: (e[0], {"signal": 0, "checkin": 1}.get(e[1], 2)))
+    ev += [(t, "checkin", (name, occ)) for t, name, occ in worlds.get(sc.get("world", "kodagu"))["checkins"]]
+    ev += [(t, "whatif", (typ, params, why)) for t, typ, params, why in sc.get("events", [])]
+    return sorted(ev, key=lambda e: (e[0], {"signal": 0, "checkin": 1, "whatif": 3}.get(e[1], 2)))
 
 
 def _pass_time(db: Session, t: float) -> None:
@@ -53,10 +54,14 @@ def _release(db: Session, event: tuple) -> None:
                 sh.status = "open"
             state.audit(db, f"{sh.name} manager", "shelter_checkin", f"{sh.name}: {occ}/{sh.capacity}", actor_type="human",
                         object_type="shelter", object_id=sh.id, push=False)
+    elif kind == "whatif":
+        typ, params, why = payload
+        state.audit(db, "Scenario Lab", "stage_event", why, actor_type="system", push=False)
+        what_if(db, typ, params)
     else:
         _, channel, who, text = payload[:4]
         silenced = set(state.get(db, "silenced_zones", []))
-        if silenced and payload[4]["zone"] in silenced and channel != "radio_entry":
+        if silenced and (payload[4] or {}).get("origin_zone") in silenced and channel != "radio_entry":
             return  # a silenced village sends nothing (what-if event)
         ingest.from_timeline(db, channel=channel, who=who, text=text, received_at=t, media=KR.MEDIA.get(text))
 
@@ -80,13 +85,13 @@ def advance_to(db: Session, t: float) -> int:
     return n
 
 
-def reset_world(db: Session) -> None:
-    """Empty every table and reload the static world (used to start a scenario from scratch)."""
+def reset_world(db: Session, spec: dict | None = None) -> None:
+    """Empty every table and reload a static world (default Kodagu) — used to start a scenario from scratch."""
     from app.sim.seed import load_world
     for table in reversed(Base.metadata.sorted_tables):
         db.execute(delete(table))
     db.flush()
-    load_world(db)
+    load_world(db, spec)
     from app.channels.sms import get_sms_provider
     outbox = getattr(get_sms_provider(), "outbox", None)
     if outbox is not None:
@@ -97,10 +102,14 @@ def start_scenario(db: Session, scenario: str = "kodagu_flood", replay_until: fl
                    fresh: bool = False) -> dict:
     if scenario not in SCENARIOS:
         raise ValueError(f"unknown scenario {scenario}")
-    if fresh:
-        reset_world(db)
     sc = SCENARIOS[scenario]
-    state.put(db, "scenario", {"id": scenario, "name": sc["name"], "hazard": sc["hazard"], "running": speed > 0, "speed": speed})
+    spec = worlds.get(sc.get("world", "kodagu"))
+    if fresh or (state.get(db, "world", {}) or {}).get("id") != spec["id"]:
+        reset_world(db, spec)
+    state.put(db, "scenario", {"id": scenario, "name": sc["name"], "hazard": sc["hazard"], "disaster": sc.get("disaster", sc["hazard"]),
+                               "running": speed > 0, "speed": speed, "world": spec["id"], "center": spec["center"], "zoom": spec["zoom"],
+                               "state": spec["state"], "difficulty": sc.get("difficulty"), "synthetic": True})
+    state.put(db, "disaster", sc.get("disaster", sc["hazard"]))
     state.put(db, "timeline_cursor", 0)
     state.put(db, "flood_extent", [])
     state.put(db, "extra_flood", [])
@@ -131,21 +140,23 @@ def what_if(db: Session, typ: str, p: dict) -> list[str]:
         r = db.scalar(select(Road).where(Road.code == p["road"]))
         if not r:
             raise ValueError("unknown road")
-        r.status, r.status_source, r.updated_at = ("blocked", "what-if: closed by operator", now) if typ == "close_road" else ("open", "what-if: reopened", now)
+        from app.services import routing
+        routing.report_road(db, r, "blocked" if typ == "close_road" else "open", "what-if: " + p.get("why", "closed by operator" if typ == "close_road" else "reopened by operator"),
+                            p.get("source_type", "operator"), verified=p.get("verified"), note=p.get("note"))
         out.append(f"{r.name} {r.status}")
     elif typ == "flood_shelter":
-        s = db.get(Shelter, int(p["shelter_id"]))
+        s = db.get(Shelter, int(p["shelter_id"])) if p.get("shelter_id") else db.scalar(select(Shelter).where(Shelter.name == p["shelter_name"]))
         polys = list(state.get(db, "extra_flood", []))
         for code in s.access_road_ids:
             r = db.scalar(select(Road).where(Road.code == code))
             pt = geo.lerp_point(r.points[0], r.points[-1], 0.3)
-            polys.append(geo.circle(pt[0], pt[1], 2500))
+            polys.append(geo.circle(pt[0], pt[1], min(2500, geo.haversine_m(*r.points[0], *r.points[-1]) * 0.12)))
         polys.append(geo.circle(s.lat, s.lng, 600))
         state.put(db, "extra_flood", polys)
         roads = hazard.apply_flood_to_roads(db, "what-if: flood over shelter access")
         out.append(f"flood covers {s.name} and its access roads ({', '.join(roads) or 'no road change'})")
     elif typ == "drop_inventory":
-        d = db.get(Depot, int(p["depot_id"]))
+        d = db.get(Depot, int(p["depot_id"])) if p.get("depot_id") else db.scalar(select(Depot).where(Depot.name == p["depot_name"]))
         frac = float(p.get("fraction", 0.5))
         for i in db.scalars(select(InventoryItem).where(InventoryItem.location_type == "depot", InventoryItem.location_id == d.id)):
             if not p.get("resource_type") or i.resource_type == p["resource_type"]:

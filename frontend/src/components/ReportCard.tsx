@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { AlertTriangle, HelpCircle, LifeBuoy, MapPin, Users, WifiOff } from "lucide-react";
 import { Report } from "../services/types";
 import { ChannelBadge, LangBadge, Meter, simTime } from "./ui";
+import { DISASTER_ICON } from "./Disaster";
 
 export default function ReportCard({ r, compact = false }: { r: Report; compact?: boolean }) {
   const blocked = r.status === "blocked";
@@ -18,6 +19,8 @@ export default function ReportCard({ r, compact = false }: { r: Report; compact?
         {r.rumour_signals?.length > 0 && <span className="badge bg-tangerine-300" title={r.rumour_signals.map((s) => s.detail || s.phrases?.join(", ")).join("; ")}><AlertTriangle size={12} aria-hidden />rumour signals</span>}
         {r.status === "clarifying" && <span className="badge bg-sun-300"><HelpCircle size={12} aria-hidden />asked for {r.needs_clarification.join(", ")}</span>}
         {blocked && <span className="badge bg-white"><WifiOff size={12} aria-hidden />did not get out: zone internet down</span>}
+        {r.extraction?.disaster_type && <span className="badge bg-cobalt-200" title={`indicators: ${(r.extraction.disaster_evidence ?? []).join(", ")}`}>{DISASTER_ICON[r.extraction.disaster_type] ?? ""} {r.extraction.disaster_type}</span>}
+        {r.extraction?.needs_human_review && <span className="badge bg-sun-400" title={(r.extraction.review_reasons ?? []).join("; ")}>needs human check</span>}
         <span className="ml-auto font-mono text-ink/50">{simTime(r.received_at)}</span>
       </div>
       <p className="mt-2 text-[15px] font-medium leading-snug text-ink" lang={r.original_language}>{r.raw_text}</p>

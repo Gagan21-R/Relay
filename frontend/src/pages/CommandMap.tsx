@@ -14,11 +14,12 @@ import { Breakdown, ConfidenceBadge, LANG_NAMES, Panel, PRIORITY_STYLE, simTime 
 import { useApi } from "../hooks/useApi";
 import { LiveEvent, useLiveEvents } from "../hooks/useLive";
 import { Incident, SimState } from "../services/types";
+import { DATA_BADGE, DisasterProfilePanel, useActiveDisaster, useGdacs } from "../components/Disaster";
 
 export const KODAGU_CENTER: [number, number] = [12.42, 75.78];
 const PCOL: Record<string, string> = { P1: "#E11D48", P2: "#F97316", P3: "#EAB308", P4: "#3B82F6" };
 const SCOL: Record<string, string> = { open: "#14C48A", full: "#F5B800", inaccessible: "#E11D48", unconfirmed: "#FF8A3D", closed: "#150A2E" };
-const LAYERS = ["incidents", "shelters", "depots", "routes", "flood", "blackout", "roads", "pulses"] as const;
+const LAYERS = ["incidents", "shelters", "depots", "routes", "flood", "blackout", "roads", "pulses", "hospitals", "gdacs"] as const;
 type LayerKey = typeof LAYERS[number];
 type Sel = { kind: "incident" | "shelter" | "zone" | "depot"; id: number } | null;
 
@@ -56,6 +57,14 @@ function HatchDefs() {
   return null;
 }
 
+function ScenarioView({ center, zoom }: { center?: [number, number]; zoom?: number }) {
+  // auto-zoom when a scenario (or the Scenario Lab) changes the world
+  const map = useMap();
+  const key = center ? center.join(",") : "";
+  useEffect(() => { if (center) map.flyTo(center, zoom ?? 10, { duration: 0.8 }); }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
+  return null;
+}
+
 function FlyTo({ target }: { target: [number, number] | null }) {
   const map = useMap();
   useEffect(() => { if (target) map.flyTo(target, Math.max(map.getZoom(), 12), { duration: 0.6 }); }, [target, map]);
@@ -78,6 +87,10 @@ export default function CommandMap() {
   const sim = useApi<SimState>("/api/state", ["sim", "signal", "network"], 300);
   const zones = useApi<any[]>("/api/zones/blackout", ["zone", "signal", "recon"], 800);
   const roads = useApi<any[]>("/api/roads", ["signal", "sim"], 600);
+  const hospitals = useApi<any[]>("/api/hospitals", ["sim"], 800);
+  const gdacs = useGdacs();
+  const dis = useActiveDisaster();
+  const ov = dis?.overlay ?? { label: "flood extent", colour: "#2E5BFF", fill: "#5B7BFF" };
   const [sel, setSel] = useState<Sel>(null);
   const [fly, setFly] = useState<[number, number] | null>(null);
   const [pulses, setPulses] = useState<Pulse[]>([]);
@@ -121,13 +134,14 @@ export default function CommandMap() {
       </div>
       <div className="grid gap-4 xl:grid-cols-[1fr_400px]">
         <div className="relative h-[72vh] min-h-[460px] overflow-hidden rounded-3xl border-2 border-ink shadow-hard-lg">
-          <MapContainer center={KODAGU_CENTER} zoom={10} style={{ height: "100%", width: "100%" }}>
+          <MapContainer center={(sim.data?.scenario?.center as [number, number]) ?? KODAGU_CENTER} zoom={sim.data?.scenario?.zoom ?? 10} style={{ height: "100%", width: "100%" }}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" maxZoom={18} attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors · synthetic scenario overlay' />
             <HatchDefs />
             <FlyTo target={fly} />
+            <ScenarioView center={sim.data?.scenario?.center} zoom={sim.data?.scenario?.zoom} />
             {on.flood && (sim.data?.flood_extent ?? []).map((p, i) => (
-              <Polygon key={`f${i}`} positions={p as [number, number][]} pathOptions={{ color: "#2E5BFF", weight: 1.5, fillColor: "#5B7BFF", fillOpacity: 0.35, className: "flood-poly" }}>
-                <Tooltip sticky>Satellite flood extent v{sim.data?.flood_version} (mock Sentinel-1 style)</Tooltip>
+              <Polygon key={`f${i}`} positions={p as [number, number][]} pathOptions={{ color: ov.colour, weight: 1.5, fillColor: ov.fill, fillOpacity: 0.35, className: "flood-poly" }}>
+                <Tooltip sticky>{dis?.name ?? "Hazard"} · {ov.label} v{sim.data?.flood_version} (simulated satellite-style product)</Tooltip>
               </Polygon>
             ))}
             {on.blackout && silent.map((z) => (
@@ -171,6 +185,16 @@ export default function CommandMap() {
                 </CircleMarker>
               );
             })}
+            {on.hospitals && (hospitals.data ?? []).map((h) => (
+              <CircleMarker key={`h${h.id}`} center={[h.lat, h.lng]} radius={7} pathOptions={{ color: "#150A2E", weight: 2, fillColor: "#fff", fillOpacity: 1 }}>
+                <Tooltip>✚ {h.name} · {h.beds ?? "?"} beds · {h.status} (synthetic)</Tooltip>
+              </CircleMarker>
+            ))}
+            {on.gdacs && (gdacs.data?.items ?? []).filter((g) => g.lat != null).map((g) => (
+              <CircleMarker key={g.id} center={[g.lat, g.lng]} radius={11} pathOptions={{ color: "#150A2E", weight: 2, dashArray: g.data === "live" ? undefined : "2 4", fillColor: g.level === "Red" ? "#E11D48" : g.level === "Orange" ? "#F97316" : "#14C48A", fillOpacity: 0.55 }}>
+                <Tooltip>GDACS {g.type} · {g.name} · {g.level} · <b>{g.data.toUpperCase()}</b>{g.data === "fallback" ? " (illustrative sample, not a real alert)" : ""}</Tooltip>
+              </CircleMarker>
+            ))}
             {on.pulses && pulses.filter((p) => Date.now() - p.born < 9000).map((p) => (
               <Circle key={`p${p.id}-${p.born}`} center={[p.lat, p.lng]} radius={900} pathOptions={{ color: "#FF2E86", weight: 3, fillOpacity: 0.15, className: "pulse-ring" }}>
                 <Tooltip permanent direction="top">{p.channel} · {LANG_NAMES[p.lang ?? ""] ?? p.lang}</Tooltip>
@@ -180,7 +204,7 @@ export default function CommandMap() {
           <div className="pointer-events-none absolute bottom-3 left-3 z-[500] rounded-2xl border-2 border-ink bg-white/95 p-2.5 text-[11px] font-bold shadow-hard-sm">
             <p className="mb-1 font-extrabold uppercase tracking-wider">legend</p>
             <p><span style={{ color: PCOL.P1 }}>●</span> P1 <span style={{ color: PCOL.P2 }}>●</span> P2 <span style={{ color: PCOL.P3 }}>●</span> P3 <span style={{ color: PCOL.P4 }}>●</span> P4 · thick = verified · dashed = unverified · grey = false</p>
-            <p>⌂ shelter (green open · amber full · red inaccessible) · ◆ depot · 🚚 delivery · <span className="text-cobalt-500">▬</span> flood · <span className="text-p1">▨</span> silent zone</p>
+            <p>⌂ shelter (green open · amber full · red inaccessible) · ◆ depot · 🚚 delivery · <span style={{ color: ov.colour }}>▬</span> {ov.label} · ✚ hospital · ◯ GDACS ({gdacs.data?.status ?? "…"}) · <span className="text-p1">▨</span> silent zone</p>
           </div>
         </div>
         <div className="space-y-4">
@@ -215,6 +239,10 @@ export default function CommandMap() {
                         <p className="mt-0.5 text-sm font-semibold" lang={r.original_language}>{r.raw_text}</p>
                       </li>))}</ul>
                   )}
+                </Panel>
+                <Panel title={`Disaster profile · GDACS ${gdacs.data?.status ?? ""}`} className="mt-4" section="map.disaster" tone="bg-cobalt-300">
+                  <DisasterProfilePanel compact />
+                  {gdacs.data && <p className="mt-2 text-xs font-bold"><span className={`badge ${DATA_BADGE[gdacs.data.status]}`}>{gdacs.data.status}</span> {gdacs.data.items.length} GDACS item(s){gdacs.data.reason ? ` · ${gdacs.data.reason}` : ""}</p>}
                 </Panel>
                 <Panel title="Top priorities" className="mt-4" section="incidents.priority" tone="bg-lime-400">
                   <ul className="space-y-1.5">

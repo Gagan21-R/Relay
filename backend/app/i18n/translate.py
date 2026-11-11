@@ -36,6 +36,22 @@ GLOSSARY: dict[str, str] = {
     # Telugu, Marathi, Bengali (small)
     "నీరు": "water", "ఆహారం": "food", "సహాయం": "help", "కావాలి": "needed", "पाणी": "water", "मदत": "help", "हवे": "needed",
     "জল": "water", "খাবার": "food", "সাহায্য": "help", "দরকার": "needed",
+    # enhancement round: Kannada flood phrasing, Kanglish, and key words for the newer languages (partial coverage:
+    # confidence stays low, so these reports are flagged for a speaker to check)
+    "ಒಳಗೆ": "inside", "ಬಂದಿದೆ": "has come", "ide": "is there", "madi": "please do", "help madi": "please help", "full": "full",
+    "sikkiddare": "are stuck", "bega": "quickly", "rescue beku": "rescue needed",
+    "ওচৰত": "near", "মানুহ": "people", "আবদ্ধ হৈ আছে": "are trapped", "উদ্ধাৰ": "rescue", "লাগে": "needed", "খোৱা পানী": "drinking water",
+    "খাদ্য": "food", "আহত": "injured", "ঔষধ": "medicine", "জন": "people", "শিবিৰত": "in the camp", "নাই": "not available",
+    "ପାଖରେ": "near", "ଜଣ": "people", "ଫସି ରହିଛନ୍ତି": "are trapped", "ଉଦ୍ଧାର": "rescue", "ଦରକାର": "needed", "ପିଇବା ପାଣି": "drinking water",
+    "ଖାଦ୍ୟ": "food", "ଆହତ": "injured", "ଔଷଧ": "medicine", "ଶିବିରରେ": "in the camp", "ନାହିଁ": "not available",
+    "પાસે": "near", "લોકો": "people", "ફસાયેલા છે": "are trapped", "બચાવ": "rescue", "જોઈએ": "needed", "પીવાનું પાણી": "drinking water",
+    "ખોરાક": "food", "ઘાયલ": "injured", "દવા": "medicine", "કેમ્પમાં": "in the camp", "નથી": "not available",
+    "ਨੇੜੇ": "near", "ਲੋਕ": "people", "ਫਸੇ ਹੋਏ ਹਨ": "are trapped", "ਬਚਾਅ": "rescue", "ਚਾਹੀਦਾ ਹੈ": "needed", "ਪਾਣੀ": "water",
+    "ਖਾਣਾ": "food", "ਜ਼ਖਮੀ": "injured", "ਦਵਾਈ": "medicine", "ਤੁਰੰਤ": "immediately",
+    "नजिक": "near", "जना": "people", "फसेका छन्": "are trapped", "उद्धार": "rescue", "चाहियो": "needed", "खानेपानी": "drinking water",
+    "तुरुन्तै": "immediately", "घाइते": "injured", "औषधि": "medicine",
+    "bulah": "near", "mi": "people", "an tang": "are stuck", "chhanhim": "rescue", "tui": "water", "chaw": "food", "mamawh": "need",
+    "ngut": "people", "ki la kem": "are stuck", "ïarap": "help", "um": "water", "donkam": "need",
 }
 _ORDERED = sorted(GLOSSARY, key=len, reverse=True)
 

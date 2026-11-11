@@ -2,11 +2,13 @@
 import asyncio
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.api import assistant, incidents, intake, metrics, plans, resources, signals, sim, system, world
+from app.agents.coordination import Forbidden, InvalidTransition
+from app.api import assistant, disasters, incidents, intake, lab, metrics, ops, plans, resources, signals, sim, system, world
 from app.channels import voice
 from app.core.config import get_settings
 from app.sim.seed import seed
@@ -38,6 +40,21 @@ app.include_router(plans.router)
 app.include_router(signals.router)
 app.include_router(assistant.router)
 app.include_router(metrics.router)
+app.include_router(disasters.router)
+app.include_router(ops.router)
+app.include_router(lab.router)
+
+
+@app.exception_handler(Forbidden)
+async def _forbidden(_: Request, e: Forbidden):
+    return JSONResponse({"detail": str(e)}, status_code=403)
+
+
+@app.exception_handler(InvalidTransition)
+async def _invalid(_: Request, e: InvalidTransition):
+    return JSONResponse({"detail": str(e)}, status_code=409)
+
+
 voice.MEDIA_DIR.mkdir(parents=True, exist_ok=True)
 app.mount("/media", StaticFiles(directory=voice.MEDIA_DIR), name="media")
 

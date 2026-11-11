@@ -15,7 +15,7 @@ from app.core import state
 from app.models import Depot, InventoryItem, ReconTask, Report, Shelter, Zone
 from app.services import alerts, hazard, routing
 from app.services import scoring as S
-from app.sim.kodagu_world import STANDARDS_PER_PERSON_DAY, UNITS
+from app.disasters import UNITS
 from app.ws.manager import emit
 
 AFFECTED_SHARE = 0.6           # share of a silent zone's population assumed to need help on the first visit
@@ -66,9 +66,9 @@ def risk(db: Session, z: Zone) -> dict:
 
 
 # ---------------- recon ----------------
-def _estimate(z: Zone, h: float) -> dict:
+def _estimate(db: Session, z: Zone, h: float) -> dict:
     affected = round(z.population * AFFECTED_SHARE)
-    needs = {rt: math.ceil(affected * per) for rt, per in STANDARDS_PER_PERSON_DAY.items() if per > 0}
+    needs = {rt: math.ceil(affected * per) for rt, per in state.standards(db).items() if per > 0}
     needs["blankets"] = math.ceil(affected * 0.3 * (1 if h >= 0.7 else 0.5))
     return {"affected_estimate": affected, "basis": f"{z.population:,} people × {AFFECTED_SHARE:.0%} × one day at per-person standards", "needs_one_day": needs}
 
@@ -76,7 +76,7 @@ def _estimate(z: Zone, h: float) -> dict:
 def _plan_recon(db: Session, z: Zone, r: dict) -> ReconTask:
     roads_open = any(x for x in (routing.route(db, d_z.code, z.code) for d_z in db.scalars(select(Zone).where(Zone.id.in_(select(Depot.zone_id))))))
     method = "field_team_satphone" if roads_open else ("helicopter" if z.population >= 1000 else "drone")
-    est = _estimate(z, r["hazard"])
+    est = _estimate(db, z, r["hazard"])
     best = None
     for d in db.scalars(select(Depot)):
         dz = db.get(Zone, d.zone_id)

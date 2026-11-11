@@ -41,3 +41,13 @@ def audit(db: Session, actor: str, action: str, summary: str, *, actor_type: str
         emit("audit", {"id": row.id, "actor": actor, "actor_type": actor_type, "action": action, "summary": summary,
                        "object_type": object_type, "object_id": object_id, "sim_time": row.sim_time})
     return row
+
+
+def disaster(db: Session) -> str:
+    """The active disaster category (set by the selector or by the loaded scenario)."""
+    return (get(db, "scenario", {}) or {}).get("disaster") or get(db, "disaster", "flood") or "flood"
+
+
+def standards(db: Session) -> dict:
+    from app.disasters import profile
+    return profile(disaster(db))["per_person_day"]

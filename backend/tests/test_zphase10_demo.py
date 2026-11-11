@@ -32,7 +32,7 @@ def test_run_demo_completes_all_12_steps_and_can_rerun(client):
 
 def test_scenarios_differ_and_what_if_events(client):
     sc = client.get("/api/sim/scenarios").json()
-    assert {x["id"] for x in sc["scenarios"]} == {"kodagu_flood", "harangi_release", "madikeri_landslides"}
+    assert {"kodagu_flood", "harangi_release", "madikeri_landslides"} <= {x["id"] for x in sc["scenarios"]} and len(sc["scenarios"]) == 50
     a = client.post("/api/sim/scenario/start", json={"scenario": "harangi_release", "replay_until": 7}).json()
     flood_a = client.get("/api/state").json()["flood_extent"]
     b = client.post("/api/sim/scenario/start", json={"scenario": "madikeri_landslides", "replay_until": 7}).json()

@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.models import Gazetteer
 
-KIND_RANK = {"landmark": 3, "shelter": 3, "depot": 2, "village": 1, "town": 1}
+KIND_RANK = {"landmark": 3, "shelter": 3, "hospital": 2, "depot": 2, "village": 1, "town": 1}
 
 
 @dataclass

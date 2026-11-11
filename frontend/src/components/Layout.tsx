@@ -13,6 +13,8 @@ import { useApi } from "../hooks/useApi";
 import { Blob, Marquee } from "./motion";
 import AssistantDrawer, { Explain } from "./Assistant";
 import DemoOverlay from "./DemoOverlay";
+import { DisasterSelector } from "./Disaster";
+import { RoleSwitcher } from "./Role";
 
 export const NAV = [
   { group: "see", tint: "bg-lime-400", items: [
@@ -44,7 +46,7 @@ export const NAV = [
 ] as const;
 
 type Summary = { clock: number; reports: number; languages: number; incidents: number; fast_verify: number; alerts_open: number;
-  plans_pending: number; dispatches_active: number; zones_down: string[]; blackout_zones: string[]; people_affected: number };
+  plans_pending: number; dispatches_active: number; zones_down: string[]; blackout_zones: string[]; people_affected: number; scenario_name?: string };
 
 function Ticker() {
   const { data: s } = useApi<Summary>("/api/summary", ["report", "incident", "alert", "plan", "dispatch", "network", "sim", "zone"], 800);
@@ -54,7 +56,7 @@ function Ticker() {
     `${s.fast_verify} in Fast Verify`, `${s.plans_pending} plan(s) awaiting approval`, `${s.dispatches_active} deliveries moving`,
     `${s.alerts_open} open alerts`, s.zones_down.length ? `internet DOWN: ${s.zones_down.join(", ")}` : "all zones online",
     s.blackout_zones.length ? `silent zones: ${s.blackout_zones.join(", ")}` : "no silent zones flagged",
-    "synthetic scenario · Kodagu, Karnataka", "AI interprets · rules enforce · people decide",
+    `synthetic scenario · ${s.scenario_name ?? "Kodagu, Karnataka"}`, "AI interprets · rules enforce · people decide",
   ];
   return (
     <div className="border-b-2 border-ink bg-lime-400 py-1.5 text-[12px] font-extrabold uppercase tracking-wider">
@@ -145,6 +147,8 @@ export default function Layout() {
           <div className="flex flex-wrap items-center gap-2 px-4 py-2">
             <button className="btn-ghost !p-1.5 lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu"><Menu size={16} /></button>
             <StatusPills />
+            <DisasterSelector />
+            <RoleSwitcher />
             <div className="ml-auto flex items-center gap-1 rounded-xl border-2 border-ink bg-white p-0.5 shadow-hard-sm" role="group" aria-label={t("common.language")}>
               {UI_LANGS.map((l) => (
                 <button key={l.code} onClick={() => setUiLang(l.code)} aria-pressed={i18n.language === l.code}

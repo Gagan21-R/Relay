@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.core import state
 from app.i18n.languages import LANGUAGES, script_of_char
+from app.i18n.templates import TEMPLATE_LANGS
 from app.i18n.templates import rumour_text
 from app.models import Gazetteer, Incident, Report, Source
 from app.services import alerts
@@ -45,7 +46,7 @@ def publish(db: Session, inc: Incident, who: str, override_en: str | None = None
     if inc.confidence_level != "false" and inc.official_status != "refuted":
         raise ValueError("only incidents marked false can be corrected publicly")
     kind = rumour_kind(db, inc)
-    translations = {lang: rumour_text(kind, lang, place_in(db, inc, lang, kind)) for lang in LANGUAGES}
+    translations = {lang: rumour_text(kind, lang, place_in(db, inc, lang, kind)) for lang in LANGUAGES if lang in TEMPLATE_LANGS}
     if override_en:
         translations["en"] = override_en
     a, _ = alerts.raise_alert(db, type="rumour", severity="high", key=f"rumour:{inc.id}", actor=who,

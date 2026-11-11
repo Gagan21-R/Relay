@@ -1,7 +1,9 @@
-"""Scenario definitions for the digital twin. All synthetic, all in Kodagu. They share the world but differ in the
+"""Scenario definitions for the digital twin. The three hand-built ones are in Kodagu; the Scenario Lab adds ~47
+generated ones across India (app.sim.lab). All synthetic. They share the world but differ in the
 hazard footprint, the signal timeline and which reports arrive, so the map and the 3D twin look and behave differently."""
 from app.sim import kodagu_reports as KR
 from app.sim import kodagu_world as KW
+from app.sim import lab
 
 HARANGI_FLOOD_1 = [
     [[12.47, 75.93], [12.47, 75.975], [12.445, 75.975], [12.445, 75.93]],          # Kushalnagar riverside
@@ -22,7 +24,10 @@ SCENARIOS = {
     "kodagu_flood": {
         "name": "Kodagu monsoon flood", "hazard": "flood", "colour": "#2E5BFF",
         "description": "Cauvery overflows at Bhagamandala, Napoklu, Siddapura and Kushalnagar over 12 hours; Hattihole goes silent. The full demo story.",
-        "signals": KW.SIGNALS, "zones": None,
+        "signals": KW.SIGNALS, "zones": None, "world": "kodagu", "disaster": "flood", "difficulty": "advanced",
+        "region": ["hilly", "rural", "south"], "state": "Karnataka",
+        "objectives": ["Rescue the 12 people on rooftops at Napoklu", "Keep every shelter supplied for 48 h", "Notice the silent village (Hattihole)", "Stop the dam-burst rumour"],
+        "expected": ["Rooftop rescue planned within 2 h of first report", "No shelter runs dry", "Recon team proposed for Hattihole", "Correction published in 8 languages"],
     },
     "harangi_release": {
         "name": "Harangi dam release", "hazard": "flood", "colour": "#14C48A",
@@ -36,7 +41,10 @@ SCENARIOS = {
             (4.0, "river", "kushalnagar", {"station": "Cauvery at Kudige", "level_m": 9.0, "danger_m": 7.9}, "CWC (mock)"),
             (6.0, "flood_extent", None, {"version": 2, "polygons": HARANGI_FLOOD_2}, "Satellite flood extent (mock)"),
         ],
-        "zones": {"kushalnagar", "siddapura", "somwarpet", "hattihole", "virajpet"},
+        "zones": {"kushalnagar", "siddapura", "somwarpet", "hattihole", "virajpet"}, "world": "kodagu", "disaster": "flood", "difficulty": "intermediate",
+        "region": ["hilly", "rural", "south"], "state": "Karnataka",
+        "objectives": ["Supply Kushalnagar and Siddapura camps", "Counter the dam-burst rumour with the official bulletin"],
+        "expected": ["Plan proposed for Kushalnagar/Siddapura", "Dam-burst reports marked disputed/false"],
     },
     "madikeri_landslides": {
         "name": "Madikeri hill landslides", "hazard": "landslide", "colour": "#FF6A00",
@@ -51,13 +59,22 @@ SCENARIOS = {
             (5.0, "flood_extent", None, {"version": 2, "polygons": SLIDE_ZONES}, "Landslide extent (mock)"),
             (7.0, "tower_outage", "jodupala", {"towers_down": 2, "towers_total": 2}, "Telecom operator feed (mock)"),
         ],
-        "zones": {"madikeri", "jodupala", "makkandur", "hattihole", "somwarpet", "napoklu"},
+        "zones": {"madikeri", "jodupala", "makkandur", "hattihole", "somwarpet", "napoklu"}, "world": "kodagu", "disaster": "landslide", "difficulty": "intermediate",
+        "region": ["hilly", "rural", "south"], "state": "Karnataka",
+        "objectives": ["Reroute supplies around cut ghat roads", "Reach stranded drivers at Jodupala"],
+        "expected": ["Routes avoid blocked ghat roads", "Food line planned to Jodupala"],
     },
 }
 
 
+SCENARIOS.update(lab.SCENARIOS)
+
+
 def reports_for(sid: str) -> list:
-    zones = SCENARIOS[sid]["zones"]
+    sc = SCENARIOS[sid]
+    if sc.get("reports") is not None:
+        return sc["reports"]
+    zones = sc["zones"]
     if zones is None:
         return KR.REPORTS
-    return [r for r in KR.REPORTS if r[4]["zone"] in zones or r[4]["zone"] is None]
+    return [r for r in KR.REPORTS if r[4]["origin_zone"] in zones or r[4]["origin_zone"] is None]

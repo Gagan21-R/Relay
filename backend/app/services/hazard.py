@@ -3,7 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core import geo, state
-from app.models import Road, Signal, Zone
+from app.models import Road, RoadReport, Signal, Zone
 
 
 def flood_polygons(db: Session) -> list:
@@ -18,10 +18,14 @@ def apply_flood_to_roads(db: Session, source: str) -> list[str]:
     for r in db.scalars(select(Road)):
         under = any(geo.in_any(p[0], p[1], polys) for p in geo.road_samples(r.points))
         if under and r.status == "open":
-            r.status, r.status_source, r.updated_at = "flooded", source, state.now(db)
+            # remote sensing is not ground truth: the closure is applied (caution) but stays unverified
+            r.status, r.status_source, r.updated_at, r.status_verified = "flooded", source, state.now(db), False
+            db.add(RoadReport(road_id=r.id, status="flooded", source=source, source_type="satellite", verified=False,
+                              reported_at=state.now(db), note="hazard footprint crosses this road"))
             changed.append(r.code)
         elif not under and r.status == "flooded":
-            r.status, r.status_source, r.updated_at = "open", source, state.now(db)
+            # water receded on the image: reopen for planning, but a person must verify before it counts as safe
+            r.status, r.status_source, r.updated_at, r.status_verified = "open", source + " (receded, unverified)", state.now(db), False
             changed.append(r.code)
     db.flush()
     return changed
@@ -52,8 +56,9 @@ def apply_signal(db: Session, sig: Signal) -> list[str]:
     if sig.type == "flood_extent":
         state.put(db, "flood_extent", sig.value.get("polygons", []))
         state.put(db, "flood_version", sig.value.get("version"))
-        roads = apply_flood_to_roads(db, f"satellite flood extent v{sig.value.get('version')}")
-        out.append(f"Flood extent v{sig.value.get('version')} received; roads now flooded: {', '.join(roads) or 'none new'}")
+        label = sig.value.get("label", "satellite flood extent")
+        roads = apply_flood_to_roads(db, f"{label} v{sig.value.get('version')}")
+        out.append(f"{label[0].upper() + label[1:]} v{sig.value.get('version')} received; roads now cut: {', '.join(roads) or 'none new'}")
     elif sig.type == "tower_outage" and z:
         z.tower_status = "down" if sig.value.get("towers_down", 0) >= max(1, sig.value.get("towers_total", 1)) else "partial"
         out.append(f"{z.name}: {sig.value.get('towers_down')}/{sig.value.get('towers_total')} mobile towers down")
@@ -69,5 +74,8 @@ def apply_signal(db: Session, sig: Signal) -> list[str]:
         out.append(f"{sig.value.get('dam')} dam bulletin: {sig.value.get('bulletin')}")
     elif sig.type == "quake":
         out.append(f"Earthquake M{sig.value.get('magnitude')} at {sig.value.get('place')}")
+    else:  # wind, storm_surge, fire, aqi, gas, heat, drought_index, tsunami_warning, ...: recorded as evidence
+        detail = ", ".join(f"{k} {v}" for k, v in sig.value.items() if not isinstance(v, (list, dict)))
+        out.append(f"{sig.type.replace('_', ' ')}{' at ' + z.name if z else ''}: {detail}")
     db.flush()
     return out

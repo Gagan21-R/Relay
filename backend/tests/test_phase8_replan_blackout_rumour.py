@@ -42,7 +42,7 @@ def test_flooding_a_shelters_access_roads_triggers_a_new_plan(client):
     before = max(p["version"] for p in client.get("/api/plans").json())
     current = client.get("/api/state").json()["flood_extent"]
     out = client.post("/api/signals/flood_extent", json={"value": {"version": 99, "polygons": current + polys}, "source": "test satellite"}).json()
-    assert any("roads now flooded" in c for c in out["changes"])
+    assert any("roads now cut" in c for c in out["changes"])
     shelters = {x["id"]: x for x in client.get("/api/shelters").json()}
     assert shelters[sid]["status"] == "inaccessible" and "access roads closed" in shelters[sid]["status_reason"]
     plans = client.get("/api/plans").json()

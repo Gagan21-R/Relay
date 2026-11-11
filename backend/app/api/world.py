@@ -195,6 +195,9 @@ def summary(db: Session = Depends(get_db)):
         "dispatches_active": db.scalar(select(func.count()).select_from(Dispatch).where(Dispatch.status.in_(["dispatched", "in_transit", "delivered"]))),
         "zones_down": [z.name for z in db.scalars(select(Zone).where(Zone.internet_down))],
         "blackout_zones": [z.name for z in db.scalars(select(Zone).where(Zone.blackout_flag))],
+        "scenario_name": (state.get(db, "scenario", {}) or {}).get("name"),
+        "disaster": state.disaster(db),
+        "needs_human_review": sum(1 for r in reports if (r.extraction or {}).get("needs_human_review")),
     }
 
 

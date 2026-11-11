@@ -5,7 +5,7 @@ the gazetteer, and decides whether a clarification SMS is needed."""
 import re
 from typing import Literal
 
-from pydantic import BaseModel, Field, ValidationError, field_validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -24,6 +24,7 @@ CATEGORY_ORDER = ["rescue", "medical", "water", "food", "shelter", "infrastructu
 
 class ExtractedReport(BaseModel):
     """The strict schema Gemini must fill. Anything that does not validate falls back to the rule extractor."""
+    model_config = ConfigDict(extra="forbid")   # an output carrying anything else (priority, assignment, approval...) is rejected
     language: str = Field(description="ISO 639-1 code of the main language")
     script: Literal["native", "romanized", "mixed"]
     location_text: str | None = None
@@ -193,7 +194,21 @@ def process(db: Session, r: Report) -> Report:
     r.lat, r.lng, r.zone_id = g.lat, g.lng, g.zone_id
     r.location_text, r.geocode_confidence, r.geocode_method = g.location_text, g.confidence, g.method
     r.extraction_method = method
-    r.extraction = {"evidence": ev, "detection": det.evidence, "geocode": g.matches}
+    from app.disasters import detect as detect_disaster
+    from app.i18n.languages import LANGUAGES as _L
+    dis, dis_ev = detect_disaster(r.raw_text + " " + (r.translated_text_en or ""))
+    support = _L.get(det.language, {}).get("support", "full")
+    review = []
+    if support != "full":
+        review.append(f"{_L.get(det.language, {}).get('name', det.language)} support is {support}: a speaker should check")
+    if det.confidence < 0.6:
+        review.append(f"language detection only {det.confidence:.0%} sure")
+    if r.original_language != "en" and tconf < 0.6:
+        review.append(f"translation confidence {tconf:.0%}")
+    if g.lat is not None and g.confidence < 0.75:
+        review.append(f"location match only {g.confidence:.0%}")
+    r.extraction = {"evidence": ev, "detection": det.evidence, "geocode": g.matches, "disaster_type": dis, "disaster_evidence": dis_ev[:3],
+                    "needs_human_review": bool(review), "review_reasons": review, "language_support": support}
     missing = []
     if g.lat is None:
         missing.append("location")

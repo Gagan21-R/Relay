@@ -1,0 +1,55 @@
+"""Reusable area-wise public updates (outgoing). Facts are slotted in verbatim: place, shelter and road names stay in
+Latin script and numbers stay as digits, so a fact-preservation check can prove nothing was lost or changed.
+Regional versions are machine-drafted and NOT validated by native speakers; languages without a template get the
+English text (clearly marked) — nothing is sent without a Duty Officer's approval."""
+
+PUBLIC: dict[str, dict] = {
+    "shelter_open": {
+        "fields": ["area", "shelter", "phone"],
+        "en": "RELAY update for {area}: a safe shelter is open at {shelter}. If your home is unsafe, go there now. Helpline {phone}.",
+        "hi": "{area} के लिए RELAY सूचना: {shelter} में सुरक्षित आश्रय खुला है। अगर आपका घर असुरक्षित है तो अभी वहाँ जाएँ। हेल्पलाइन {phone}।",
+        "kn": "{area} ಗಾಗಿ RELAY ಮಾಹಿತಿ: {shelter} ನಲ್ಲಿ ಸುರಕ್ಷಿತ ಆಶ್ರಯ ತೆರೆದಿದೆ. ನಿಮ್ಮ ಮನೆ ಸುರಕ್ಷಿತವಾಗಿಲ್ಲದಿದ್ದರೆ ಈಗಲೇ ಅಲ್ಲಿಗೆ ಹೋಗಿ. ಸಹಾಯವಾಣಿ {phone}.",
+        "ta": "{area} க்கான RELAY தகவல்: {shelter} இல் பாதுகாப்பான தங்குமிடம் திறக்கப்பட்டுள்ளது. உங்கள் வீடு பாதுகாப்பற்றதாக இருந்தால் இப்போதே அங்கு செல்லுங்கள். உதவி எண் {phone}.",
+        "te": "{area} కోసం RELAY సమాచారం: {shelter} లో సురక్షిత ఆశ్రయం తెరిచి ఉంది. మీ ఇల్లు సురక్షితం కాకపోతే ఇప్పుడే అక్కడికి వెళ్ళండి. హెల్ప్‌లైన్ {phone}.",
+        "ml": "{area} നുള്ള RELAY അറിയിപ്പ്: {shelter} ൽ സുരക്ഷിത അഭയകേന്ദ്രം തുറന്നിട്ടുണ്ട്. നിങ്ങളുടെ വീട് സുരക്ഷിതമല്ലെങ്കിൽ ഇപ്പോൾ തന്നെ അവിടെ പോകുക. ഹെൽപ്‌ലൈൻ {phone}.",
+        "mr": "{area} साठी RELAY सूचना: {shelter} येथे सुरक्षित निवारा सुरू आहे. तुमचे घर असुरक्षित असल्यास आत्ताच तिथे जा. हेल्पलाइन {phone}.",
+        "bn": "{area} এর জন্য RELAY বার্তা: {shelter} এ নিরাপদ আশ্রয় খোলা আছে। আপনার বাড়ি অনিরাপদ হলে এখনই সেখানে যান। হেল্পলাইন {phone}।",
+        "as": "{area} ৰ বাবে RELAY বাৰ্তা: {shelter} ত সুৰক্ষিত আশ্ৰয় খোলা আছে। আপোনাৰ ঘৰ অসুৰক্ষিত হ'লে এতিয়াই তালৈ যাওক। হেল্পলাইন {phone}।",
+        "or": "{area} ପାଇଁ RELAY ସୂଚନା: {shelter} ରେ ସୁରକ୍ଷିତ ଆଶ୍ରୟସ୍ଥଳ ଖୋଲା ଅଛି। ଆପଣଙ୍କ ଘର ଅସୁରକ୍ଷିତ ହେଲେ ଏବେ ସେଠାକୁ ଯାଆନ୍ତୁ। ହେଲ୍ପଲାଇନ {phone}।",
+        "gu": "{area} માટે RELAY સૂચના: {shelter} માં સુરક્ષિત આશ્રય ખુલ્લો છે. તમારું ઘર અસુરક્ષિત હોય તો હમણાં જ ત્યાં જાઓ. હેલ્પલાઇન {phone}.",
+        "pa": "{area} ਲਈ RELAY ਸੂਚਨਾ: {shelter} ਵਿੱਚ ਸੁਰੱਖਿਅਤ ਆਸਰਾ ਖੁੱਲ੍ਹਾ ਹੈ। ਜੇ ਤੁਹਾਡਾ ਘਰ ਅਸੁਰੱਖਿਅਤ ਹੈ ਤਾਂ ਹੁਣੇ ਉੱਥੇ ਜਾਓ। ਹੈਲਪਲਾਈਨ {phone}।",
+        "ne": "{area} का लागि RELAY सूचना: {shelter} मा सुरक्षित आश्रयस्थल खुला छ। तपाईंको घर असुरक्षित भए अहिल्यै त्यहाँ जानुहोस्। हेल्पलाइन {phone}।",
+    },
+    "relief_distribution": {
+        "fields": ["area", "items", "place", "time", "phone"],
+        "en": "RELAY update for {area}: relief supplies ({items}) will be distributed at {place} from {time}. Helpline {phone}.",
+        "hi": "{area} के लिए RELAY सूचना: राहत सामग्री ({items}) {place} पर {time} से बाँटी जाएगी। हेल्पलाइन {phone}।",
+        "kn": "{area} ಗಾಗಿ RELAY ಮಾಹಿತಿ: ಪರಿಹಾರ ಸಾಮಗ್ರಿ ({items}) {place} ನಲ್ಲಿ {time} ರಿಂದ ವಿತರಿಸಲಾಗುವುದು. ಸಹಾಯವಾಣಿ {phone}.",
+        "ta": "{area} க்கான RELAY தகவல்: நிவாரணப் பொருட்கள் ({items}) {place} இல் {time} முதல் வழங்கப்படும். உதவி எண் {phone}.",
+        "te": "{area} కోసం RELAY సమాచారం: సహాయ సామగ్రి ({items}) {place} వద్ద {time} నుండి పంపిణీ చేయబడుతుంది. హెల్ప్‌లైన్ {phone}.",
+        "ml": "{area} നുള്ള RELAY അറിയിപ്പ്: ദുരിതാശ്വാസ സാധനങ്ങൾ ({items}) {place} ൽ {time} മുതൽ വിതരണം ചെയ്യും. ഹെൽപ്‌ലൈൻ {phone}.",
+        "mr": "{area} साठी RELAY सूचना: मदत साहित्य ({items}) {place} येथे {time} पासून वाटले जाईल. हेल्पलाइन {phone}.",
+        "bn": "{area} এর জন্য RELAY বার্তা: ত্রাণ সামগ্রী ({items}) {place} এ {time} থেকে বিতরণ করা হবে। হেল্পলাইন {phone}।",
+        "as": "{area} ৰ বাবে RELAY বাৰ্তা: সাহায্য সামগ্ৰী ({items}) {place} ত {time} ৰ পৰা বিতৰণ কৰা হ'ব। হেল্পলাইন {phone}।",
+        "or": "{area} ପାଇଁ RELAY ସୂଚନା: ରିଲିଫ ସାମଗ୍ରୀ ({items}) {place} ରେ {time} ରୁ ବଣ୍ଟାଯିବ। ହେଲ୍ପଲାଇନ {phone}।",
+        "gu": "{area} માટે RELAY સૂચના: રાહત સામગ્રી ({items}) {place} ખાતે {time} થી વહેંચવામાં આવશે. હેલ્પલાઇન {phone}.",
+        "pa": "{area} ਲਈ RELAY ਸੂਚਨਾ: ਰਾਹਤ ਸਮੱਗਰੀ ({items}) {place} ਵਿਖੇ {time} ਤੋਂ ਵੰਡੀ ਜਾਵੇਗੀ। ਹੈਲਪਲਾਈਨ {phone}।",
+        "ne": "{area} का लागि RELAY सूचना: राहत सामग्री ({items}) {place} मा {time} देखि वितरण गरिनेछ। हेल्पलाइन {phone}।",
+    },
+    "road_closed": {
+        "fields": ["area", "road", "alt_road", "phone"],
+        "en": "RELAY update for {area}: {road} is closed. Do not try to cross it. Use {alt_road}. Helpline {phone}.",
+        "hi": "{area} के लिए RELAY सूचना: {road} बंद है। इसे पार करने की कोशिश न करें। {alt_road} का उपयोग करें। हेल्पलाइन {phone}।",
+        "kn": "{area} ಗಾಗಿ RELAY ಮಾಹಿತಿ: {road} ಮುಚ್ಚಲಾಗಿದೆ. ದಾಟಲು ಪ್ರಯತ್ನಿಸಬೇಡಿ. {alt_road} ಬಳಸಿ. ಸಹಾಯವಾಣಿ {phone}.",
+        "ta": "{area} க்கான RELAY தகவல்: {road} மூடப்பட்டுள்ளது. கடக்க முயற்சிக்காதீர்கள். {alt_road} ஐப் பயன்படுத்துங்கள். உதவி எண் {phone}.",
+        "te": "{area} కోసం RELAY సమాచారం: {road} మూసివేయబడింది. దాటడానికి ప్రయత్నించవద్దు. {alt_road} ఉపయోగించండి. హెల్ప్‌లైన్ {phone}.",
+        "ml": "{area} നുള്ള RELAY അറിയിപ്പ്: {road} അടച്ചിരിക്കുന്നു. കടക്കാൻ ശ്രമിക്കരുത്. {alt_road} ഉപയോഗിക്കുക. ഹെൽപ്‌ലൈൻ {phone}.",
+        "mr": "{area} साठी RELAY सूचना: {road} बंद आहे. ओलांडण्याचा प्रयत्न करू नका. {alt_road} वापरा. हेल्पलाइन {phone}.",
+        "bn": "{area} এর জন্য RELAY বার্তা: {road} বন্ধ। পার হওয়ার চেষ্টা করবেন না। {alt_road} ব্যবহার করুন। হেল্পলাইন {phone}।",
+        "as": "{area} ৰ বাবে RELAY বাৰ্তা: {road} বন্ধ। পাৰ হ'বলৈ চেষ্টা নকৰিব। {alt_road} ব্যৱহাৰ কৰক। হেল্পলাইন {phone}।",
+        "or": "{area} ପାଇଁ RELAY ସୂଚନା: {road} ବନ୍ଦ ଅଛି। ପାର ହେବାକୁ ଚେଷ୍ଟା କରନ୍ତୁ ନାହିଁ। {alt_road} ବ୍ୟବହାର କରନ୍ତୁ। ହେଲ୍ପଲାଇନ {phone}।",
+        "gu": "{area} માટે RELAY સૂચના: {road} બંધ છે. તેને પાર કરવાનો પ્રયાસ ન કરો. {alt_road} નો ઉપયોગ કરો. હેલ્પલાઇન {phone}.",
+        "pa": "{area} ਲਈ RELAY ਸੂਚਨਾ: {road} ਬੰਦ ਹੈ। ਇਸਨੂੰ ਪਾਰ ਕਰਨ ਦੀ ਕੋਸ਼ਿਸ਼ ਨਾ ਕਰੋ। {alt_road} ਵਰਤੋ। ਹੈਲਪਲਾਈਨ {phone}।",
+        "ne": "{area} का लागि RELAY सूचना: {road} बन्द छ। पार गर्ने प्रयास नगर्नुहोस्। {alt_road} प्रयोग गर्नुहोस्। हेल्पलाइन {phone}।",
+    },
+}

@@ -31,6 +31,7 @@ from app.models import Dispatch, Incident, InventoryItem, Plan, Report, Shelter,
 from app.sim import engine as sim  # noqa: E402
 from app.sim import kodagu_reports as KR  # noqa: E402
 from app.sim.seed import load_world  # noqa: E402
+from app.core.roles import Actor  # noqa: E402
 from app.ws.manager import mute  # noqa: E402
 from eval import heldout  # noqa: E402
 
@@ -136,14 +137,24 @@ def ops_metrics(db) -> dict:
     detected = sum(1 for x in injected if x in found)
     # delivery verification: approve, run the clock, recipients reply YES where a phone exists, managers check in
     plan = coordination.build_plan(db, "eval delivery")
-    coordination.approve(db, plan, "Eval officer", None)
+    officer = Actor("duty_officer", "Eval officer")
+    coordination.approve(db, plan, officer, None)
+    for d in db.scalars(select(Dispatch).where(Dispatch.plan_id == plan.id, Dispatch.status == "assigned")).all():
+        try:
+            coordination.verify_route(db, d, officer)
+            coordination.dispatch(db, d, officer)
+        except coordination.InvalidTransition:
+            pass
     for _ in range(12):
         sim.advance_to(db, state.now(db) + 0.5)
-    from app.channels.sms_flow import handle_inbound  # noqa: F401
     delivered = db.scalars(select(Dispatch).where(Dispatch.status.in_(["delivered", "confirmed"]))).all()
     for d in delivered:
         if d.status == "delivered" and d.confirmation_phone_hash:
             coordination.handle_confirmation_reply(db, d.confirmation_phone_hash, "ಹೌದು" if d.confirmation_language == "kn" else "yes")
+    # only a Duty Officer confirms; here the officer confirms tasks that have recipient evidence (SMS YES or check-in)
+    for d in db.scalars(select(Dispatch).where(Dispatch.status == "delivered")).all():
+        if d.recipient_confirmed_at is not None:
+            coordination.confirm(db, d, officer, d.confirmation_method or "sms_reply")
     allds = db.scalars(select(Dispatch).where(Dispatch.plan_id == plan.id)).all()
     reached = [d for d in allds if d.status in ("delivered", "confirmed")]
     confirmed = [d for d in allds if d.status == "confirmed"]

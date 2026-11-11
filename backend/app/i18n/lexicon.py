@@ -157,3 +157,60 @@ STRUCTURED_NEEDS = {"rescue": "rescue", "medical": "medical", "med": "medical", 
 YES = {"yes", "y", "ha", "haan", "haa", "han", "ok received", "received", "houdu", "howdu", "ಹೌದು", "ಸಿಕ್ಕಿದೆ", "ತಲುಪಿದೆ", "हाँ", "हां",
        "मिल गया", "ഉവ്വ്", "അതെ", "ലഭിച്ചു", "ஆம்", "கிடைத்தது", "అవును", "అందింది", "हो", "मिळाले", "হ্যাঁ", "পেয়েছি"}
 NO = {"no", "n", "illa", "ಇಲ್ಲ", "ತಲುಪಿಲ್ಲ", "नहीं", "nahi", "नहीं मिला", "ഇല്ല", "இல்லை", "లేదు", "नाही", "না"}
+
+
+# ---------------- enhancement round: more languages and noisier input ----------------
+# Assamese, Odia, Gujarati, Punjabi, Nepali (native script), Mizo and Khasi (Latin), plus more Kanglish/Hinglish and
+# the "water came into the house" family of flood reports. These lists are drafted for the prototype and have NOT been
+# validated by native speakers; Mizo and Khasi entries are especially uncertain (support level "basic").
+NEEDS["rescue"] += [
+    "need rescue", "lost their homes", "water inside the house", "water entered the house", "house full water", "full water",
+    "ರಕ್ಷಣೆ", "ಮನೆ ಒಳಗೆ ನೀರು", "ಒಳಗೆ ನೀರು ಬಂದಿದೆ", "mane olage neeru", "olage neeru", "neeru bandide", "water ide", "bega rescue",
+    "ghar me paani", "घर में पानी", "phase hue", "phas", "மீட்பு", "రక్షణ", "രക്ഷാപ്രവർത്തനം", "উদ্ধার",
+    "আবদ্ধ", "উদ্ধাৰ", "ଫସି", "ଉଦ୍ଧାର", "ફસાયેલા", "બચાવ", "ਫਸੇ", "ਬਚਾਅ", "फसेका", "उद्धार", "an tang", "chhanhim", "ki la kem", "ïarap",
+]
+NEEDS["water"] += [
+    "no drinking water", "পানীয় জল", "খোৱা পানী", "ପିଇବା ପାଣି", "પીવાનું પાણી", "ਪੀਣ ਵਾਲਾ ਪਾਣੀ", "खानेपानी", "tui in", "um dih",
+    "peene ka paani", "kudiyo neeru", "borewells dry", "wells dry", "water tanker",
+]
+NEEDS["food"] += ["no food", "খাদ্য", "ଖାଦ୍ୟ", "ଖାଇବା", "ખોરાક", "ખાવાનું", "ਖਾਣਾ", "chaw", "bam ja", "phah ja", "food kalsi"]
+NEEDS["medical"] += [
+    "doctor", "medicines", "heatstroke", "heat stroke", "burns", "breathing", "fainting", "eyes burning",
+    "காயமடை", "പരിക്കേ", "ഡോക്ടർ", "চিকিৎসক", "ଆହତ", "ଡାକ୍ତର", "ઘાયલ", "ડૉક્ટર", "ਜ਼ਖਮੀ", "ਡਾਕਟਰ", "घाइते", "डाक्टर",
+    "hliam", "damdawi", "pynmynsaw", "doktor", "dawai", "gaaya aagidare",
+]
+NEEDS["shelter"] += [
+    "tarpaulin", "homes destroyed", "താമസസ്ഥലം", "আশ্ৰয়", "ଆଶ୍ରୟ", "આશ્રય", "ਰਹਿਣ ਦੀ ਥਾਂ", "आश्रय", "awmna", "jaka sah",
+    "घर टूट", "ghar toot", "mane haalaagide",
+]
+LIFE_SAFETY += ["phase hue", "আবদ্ধ", "ଫସି", "ફસાયેલા", "ਫਸੇ", "फसेका", "an tang", "ki la kem", "heatstroke", "fainting",
+                "sikkiddare", "full water", "ಒಳಗೆ ನೀರು", "olage neeru"]
+URGENCY["critical"] += ["এখনই", "সোনকালে", "ତୁରନ୍ତ", "તાત્કાલિક", "ਤੁਰੰਤ", "तुरुन्तै", "వెంటనే", "ഉടൻ", "लगेच", "bega",
+                        "vat rawh", "kloi"]
+URGENCY["high"] += ["madi", "help madi", "please help", "kripya", "bhejo"]
+MISSING_CONTACT += ["can't contact", "cannot contact", "ফোন বন্ধ", "যোগাযোগ নাই", "ଯୋଗାଯୋଗ ହେଉନାହିଁ", "સંપર્ક થતો નથી", "ਸੰਪਰਕ ਨਹੀਂ"]
+FORWARD += ["forward as received", "forwarded msg", "whatsapp forward"]
+SENSATIONAL += ["will drown", "entire town", "whole town", "predicted", "govt is hiding", "poisoned", "55 degrees", "30 m high",
+                "50 km", "will collapse tonight"]
+PEOPLE_UNITS += ["জনৰ", "ଜଣ", "લોકો", "ਲੋਕ", "जना", "ngut", "ఇళ్ళు"]
+FAMILY_UNITS += ["পৰিয়াল", "ପରିବାର", "પરિવાર", "ਪਰਿਵਾਰ", "chhungkua"]
+NUMBER_WORDS.update({"ಹನ್ನೆರಡು": 12, "बारह": 12, "दुई": 2, "तीन जना": 3})
+
+ROMAN_CUES["kn"] |= {"madi", "sikkiddare", "bega", "beliggeinda", "kalsi", "aagidare", "mattu", "haalaagide", "ashraya", "kudiyo",
+                     "janakke", "neeru", "illa", "nodi", "barta"}
+ROMAN_CUES["hi"] |= {"hue", "bhejo", "logon", "logo", "peene", "subah", "mila", "ghayal", "dawai", "parivaar", "toot", "rehne",
+                     "jagah", "please", "kripya"}
+ROMAN_CUES["lus"] = {"mi", "an", "rawh", "tui", "chaw", "kan", "mamawh", "leh", "ah", "bulah", "awm", "lo", "vat", "tang", "chhanhim",
+                     "hliam", "damdawi", "chhungkua", "awmna", "turin", "rawn", "thawn", "ei"}
+ROMAN_CUES["kha"] = {"ha", "ki", "ngut", "la", "ym", "ka", "bad", "donkam", "ja", "bam", "ïarap", "kloi", "um", "dih", "jaka", "sah",
+                     "phah", "pat", "kem", "bynta", "duh", "ïing", "shah", "ai"}
+
+YES |= {"হয়", "হয়", "ହଁ", "હા", "ਹਾਂ", "हजुर", "aw", "hooid"}
+NO |= {"নহয়", "ନା", "ના", "ਨਹੀਂ", "होइन", "aih", "em"}
+
+# Devanagari / Bengali-script disambiguation markers (used by detect.py)
+NEPALI_MARKERS = {"छ", "छन्", "छैन", "छैनन्", "चाहियो", "मा", "जना", "जनाले", "जनाका", "गर्नुहोस्", "पठाउनुहोस्", "भत्कियो", "नजिक",
+                  "हुनुहुन्छ", "घाइते", "खानेपानी", "पाएका", "बिहानदेखि", "तुरुन्तै", "उद्धार", "फसेका", "परिवारको", "औषधि"}
+MARATHI_MARKERS = {"आहे", "आहेत", "आणि", "पाहिजे", "नाही", "पाणी", "आम्ही", "जवळ", "येथे", "लोकांना", "मिळाले", "पाठवा", "शिबिरात",
+                   "अडकले", "घरे", "पडली", "लगेच", "लोकांसाठी", "पिण्याचे", "जेवण", "निवारा", "औषध", "जखमी", "कुटुंबांची", "लोकांची"}
+ASSAMESE_CHARS = {"ৰ", "ৱ"}   # ৰ ৱ: used in Assamese, not in Bengali

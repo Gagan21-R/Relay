@@ -68,6 +68,10 @@ class Road(Base):
     status: Mapped[str] = mapped_column(String(16), default="open")            # open | flooded | blocked
     status_source: Mapped[str] = mapped_column(String(120), default="seed")
     updated_at: Mapped[float] = mapped_column(Float, default=0.0)
+    kind: Mapped[str] = mapped_column(String(16), default="road")              # road | bridge | ghat | causeway
+    surface: Mapped[str] = mapped_column(String(16), default="paved")           # paved | unpaved
+    allowed_vehicles: Mapped[list] = mapped_column(JSON, default=lambda: ["truck", "4x4", "ambulance", "two_wheeler"])
+    status_verified: Mapped[bool] = mapped_column(Boolean, default=True)        # seed / official status counts as verified
 
 
 class Depot(Base):
@@ -191,6 +195,7 @@ class Plan(Base):
     trigger: Mapped[str | None] = mapped_column(String(240))
     rationale: Mapped[str] = mapped_column(Text, default="")
     assignments: Mapped[list] = mapped_column(JSON, default=list)
+    changes: Mapped[dict] = mapped_column(JSON, default=dict)                  # previous vs updated allocation and routes
     created_at_sim: Mapped[float] = mapped_column(Float, default=0.0)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
@@ -209,7 +214,7 @@ class Dispatch(Base):
     resource_lines: Mapped[list] = mapped_column(JSON, default=list)           # [{resource_type, quantity, unit}]
     assigned_team: Mapped[str] = mapped_column(String(120))
     route: Mapped[list] = mapped_column(JSON, default=list)                    # [[lat, lng], ...]
-    status: Mapped[str] = mapped_column(String(16), default="pending")         # pending dispatched in_transit delivered confirmed failed
+    status: Mapped[str] = mapped_column(String(16), default="created")         # created approved assigned dispatched delivered confirmed failed
     dispatched_at: Mapped[float | None] = mapped_column(Float)
     eta: Mapped[float | None] = mapped_column(Float)                           # simulated hours
     delivered_at: Mapped[float | None] = mapped_column(Float)
@@ -218,6 +223,12 @@ class Dispatch(Base):
     confirmation_language: Mapped[str | None] = mapped_column(String(8))
     confirmed_at: Mapped[float | None] = mapped_column(Float)
     overdue: Mapped[bool] = mapped_column(Boolean, default=False)
+    volunteer_id: Mapped[int | None] = mapped_column(ForeignKey("volunteers.id"))
+    vehicle: Mapped[str | None] = mapped_column(String(16))
+    route_info: Mapped[dict] = mapped_column(JSON, default=dict)               # safety label, sources, alternatives, verification
+    route_verified_by: Mapped[str | None] = mapped_column(String(120))
+    recipient_confirmed_at: Mapped[float | None] = mapped_column(Float)        # recipient said YES: evidence, not the confirmation
+    history: Mapped[list] = mapped_column(JSON, default=list)                  # [{status, by, role, at}]
 
 
 class Approval(Base):

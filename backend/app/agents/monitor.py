@@ -8,7 +8,7 @@ from app.agents import coordination
 from app.core import state
 from app.models import Alert, Incident, Plan
 
-HIGH_PRIORITY = 60.0
+HIGH_PRIORITY = 50.0  # P2 and above (P2 starts at 50)
 
 
 def _in_pending_plan(db: Session) -> set[int]:
@@ -20,7 +20,10 @@ def _in_pending_plan(db: Session) -> set[int]:
 
 def collect(db: Session, st: dict) -> list[dict]:
     triggers = []
-    # delivery progress, overdue, failures (time-based)
+    # shelters cut off, flooded access roads, blackout zones come first: they explain most replans
+    from app.agents import blackout
+    triggers += blackout.shelter_and_road_triggers(db)
+    # delivery progress, overdue, failures, reroutes (time-based)
     triggers += coordination.track(db)
     # new shortages
     for a in db.scalars(select(Alert).where(Alert.type == "shortage", Alert.resolved.is_(False))):
@@ -31,9 +34,6 @@ def collect(db: Session, st: dict) -> list[dict]:
                                                  Incident.confidence_level.in_(["verified", "likely"]))):
         if inc.id not in planned:
             triggers.append({"key": f"incident:{inc.id}", "why": f"new high-priority incident #{inc.id} {inc.title}"})
-    # Phase 8 adds: shelters inaccessible/full/unconfirmed, flooded access roads, blackout zones
-    from app.agents import blackout
-    triggers += blackout.shelter_and_road_triggers(db) if hasattr(blackout, "shelter_and_road_triggers") else []
     return triggers
 
 

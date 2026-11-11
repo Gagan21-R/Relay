@@ -31,12 +31,15 @@ def test_reports_span_scripts_and_romanized_variants():
 
 
 def test_scenario_has_duplicates_rumours_vague_life_safety_and_silent_village():
-    keys = [r[4]["key"] for r in KR.REPORTS]
+    from eval.ground_truth import KODAGU   # labels live with the evaluation, not in the scenario module
+    truth = [KODAGU[(r[0], r[3])] for r in KR.REPORTS]
+    keys = [t["key"] for t in truth]
     assert keys.count("B") >= 4 and keys.count("A") >= 4                        # cross-language duplicates
-    assert sum(1 for r in KR.REPORTS if r[4]["real"] is False) >= 8              # rumours
-    assert sum(1 for r in KR.REPORTS if r[4]["key"] is None and r[4]["zone"] is None and r[4]["need"] == "rescue") >= 3  # vague
-    hatti = [r for r in KR.REPORTS if r[4]["zone"] == "hattihole"]
-    assert hatti and all(r[4]["need"] == "missing_contact" for r in hatti)      # the village itself never reports
+    assert sum(1 for t in truth if t["real"] is False) >= 8                      # rumours
+    assert sum(1 for t in truth if t["key"] is None and t["zone"] is None and t["need"] == "rescue") >= 3  # vague
+    hatti = [t for t in truth if t["zone"] == "hattihole"]
+    assert hatti and all(t["need"] == "missing_contact" for t in hatti)        # the village itself never reports
+    assert all(set(r[4]) == {"origin_zone"} for r in KR.REPORTS)                # the scenario carries no labels
 
 
 def test_real_coordinates_inside_kodagu():

@@ -1,16 +1,17 @@
 """Lightweight language + script detection (the fallback when Gemini is unavailable).
-- Native script: Unicode block counts (Devanagari is split into Hindi/Marathi by marker words).
-- Romanized: token cues per language (Kanglish, Hinglish, Manglish, ...), English by stop-word ratio.
+- Native script: Unicode block counts. Shared blocks are split by markers: Devanagari -> Hindi / Marathi / Nepali by
+  marker words; Bengali block -> Assamese when ৰ/ৱ appear, else Bengali. Bodo (Devanagari), Manipuri in Bengali script,
+  Garo and Kokborok are NOT reliably detected yet (support "pending" in languages.json).
+- Romanized: token cues per language (Kanglish, Hinglish, Manglish, Mizo, Khasi, ...), English by stop-word ratio.
 - Script: native | romanized | mixed (native script plus Latin words in one message)."""
 import re
 import unicodedata
 from dataclasses import dataclass
 
 from app.i18n.languages import script_of_char
-from app.i18n.lexicon import ENGLISH_CUES, ROMAN_CUES
+from app.i18n.lexicon import ASSAMESE_CHARS, ENGLISH_CUES, MARATHI_MARKERS, NEPALI_MARKERS, ROMAN_CUES
 
-_MARATHI = {"आहे", "आहेत", "आणि", "पाहिजे", "नाही", "पाणी", "मदत", "आम्ही"}
-_HINDI = {"है", "हैं", "में", "और", "नहीं", "चाहिए", "पानी", "मदद", "को", "के"}
+_HINDI = {"है", "हैं", "में", "और", "नहीं", "चाहिए", "पानी", "मदद", "को", "के", "लोग", "लोगों", "पास", "तुरंत", "भेजो", "दवाई"}
 
 
 @dataclass
@@ -42,11 +43,16 @@ def detect(text: str) -> Detection:
     native_total = sum(counts.values())
     if native_total:
         lang = max(counts, key=counts.get)
-        if lang == "hi":  # Devanagari: Hindi or Marathi
+        block = lang
+        if lang == "hi":  # Devanagari: Hindi, Marathi or Nepali
             toks = set(re.findall(r"[ऀ-ॿ]+", t))
-            if len(toks & _MARATHI) > len(toks & _HINDI):
-                lang = "mr"
-        share = counts.get(lang if lang != "mr" else "hi", 0) / max(1, native_total)
+            score = {"hi": len(toks & _HINDI), "mr": len(toks & MARATHI_MARKERS), "ne": len(toks & NEPALI_MARKERS)}
+            top = max(score, key=score.get)
+            if score[top] > score["hi"]:
+                lang = top
+        elif lang == "bn" and any(c in ASSAMESE_CHARS for c in t):
+            lang = "as"
+        share = counts.get(block, 0) / max(1, native_total)
         mixed = sum(1 for w in words if len(w) >= 3) >= 2
         script = "mixed" if mixed else "native"
         conf = round(min(0.99, 0.75 + 0.24 * share - (0.1 if mixed else 0)), 2)

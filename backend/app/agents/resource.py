@@ -12,7 +12,7 @@ from app.core import state
 from app.models import Depot, Incident, InventoryItem, Shelter, Zone
 from app.services import alerts, routing
 from app.services import scoring as S
-from app.sim.kodagu_world import STANDARDS_PER_PERSON_DAY, UNITS
+from app.disasters import UNITS
 
 NEED_TO_RESOURCES = {  # what one incident of each need asks for, per person affected (min 1 person)
     "food": {"food_kits": 1.0},
@@ -35,12 +35,12 @@ def shelter_burn(db: Session, s: Shelter) -> list[dict]:
     """Hours left per item at the shelter's current occupancy."""
     out = []
     for i in db.scalars(select(InventoryItem).where(InventoryItem.location_type == "shelter", InventoryItem.location_id == s.id)):
-        per_day = STANDARDS_PER_PERSON_DAY.get(i.resource_type, 0) * s.occupancy
+        per_day = state.standards(db).get(i.resource_type, 0) * s.occupancy
         rate = per_day / 24
         hours = (i.quantity / rate) if rate > 0 else None
         out.append({"resource_type": i.resource_type, "quantity": round(i.quantity, 1), "in_transit": i.in_transit, "unit": i.unit,
                     "rate_per_h": round(rate, 2), "hours_left": None if hours is None else round(hours, 1),
-                    "per_person_day": STANDARDS_PER_PERSON_DAY.get(i.resource_type, 0)})
+                    "per_person_day": state.standards(db).get(i.resource_type, 0)})
     return out
 
 
@@ -50,7 +50,7 @@ def consume(db: Session, dt_h: float) -> None:
         return
     for s in db.scalars(select(Shelter).where(Shelter.status.in_(["open", "full", "unconfirmed", "inaccessible"]))):
         for i in db.scalars(select(InventoryItem).where(InventoryItem.location_type == "shelter", InventoryItem.location_id == s.id)):
-            use = STANDARDS_PER_PERSON_DAY.get(i.resource_type, 0) * s.occupancy / 24 * dt_h
+            use = state.standards(db).get(i.resource_type, 0) * s.occupancy / 24 * dt_h
             used = min(i.quantity, use)
             i.quantity = round(i.quantity - used, 2)
             i.consumed = round(i.consumed + used, 2)
@@ -137,7 +137,7 @@ def analyse(db: Session) -> dict:
                                   if options else "no reachable depot holds enough fresh stock: escalate")})
     return {"clock": now, "demand_by_type": demand_by_type, "supply_by_type": supply_by_type, "incident_demand": inc_demand,
             "shelters": shelters, "projected": projected, "current": current, "transfers": transfers, "stale": stale,
-            "standards_per_person_day": STANDARDS_PER_PERSON_DAY}
+            "standards_per_person_day": state.standards(db), "disaster": state.disaster(db)}
 
 
 def run(db: Session, st: dict) -> dict:

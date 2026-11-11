@@ -7,7 +7,8 @@ from sqlalchemy.orm import Session
 from app.agents import coordination, rumour
 from app.channels.sms_flow import handle_inbound
 from app.core import state
-from app.models import Dispatch, Incident, Plan, ReconTask, Report, Shelter, Source, Zone
+from app.core.roles import Actor
+from app.models import Dispatch, Incident, Plan, ReconTask, Report, Shelter, Source, Volunteer, Zone
 from app.sim import engine
 from app.sim.seed_sources import source_key_map
 
@@ -19,8 +20,8 @@ STEPS = [
     (5, "Resource shortage detected", "Water at Napoklu camp is forecast to run out.", "/resources"),
     (6, "Allocation plan recommended", "The Coordination agent proposes deliveries with reasons and evidence.", "/plans"),
     (7, "Human approves", "Nothing moves until a person approves the plan.", "/plans"),
-    (8, "Dispatch tracked on the map", "Trucks leave depots and move along open roads.", "/"),
-    (9, "Delivery confirmed by SMS: ಹೌದು", "The Napoklu camp manager replies YES in Kannada; stock moves from in-transit to delivered.", "/dispatch"),
+    (8, "Routes verified, tasks dispatched", "The Duty Officer checks each route (unverified roads flagged) and dispatches; trucks move on the map.", "/dispatch"),
+    (9, "Recipient says ಹೌದು, officer confirms", "The Napoklu camp manager replies YES in Kannada (evidence); the Duty Officer then confirms the delivery.", "/dispatch"),
     (10, "Internet down — only SMS and voice get through", "Kushalnagar loses internet: web and social stop, SMS still arrives; a silent zone raises a blackout alert.", "/phone"),
     (11, "Shelter inaccessible → replan", "Flood water covers the roads to Siddapura camp; RELAY proposes a new plan for approval.", "/plans"),
     (12, "The village with no phones", "Hattihole sent nothing. RELAY ranks it top of the silent zones, proposes a recon team with supplies; after approval a satellite-phone report turns it into normal incidents.", "/blackout"),
@@ -95,6 +96,17 @@ def run_step(db: Session, n: int, who: str = "Duty officer") -> dict:
             n_d = db.scalar(select(Dispatch.id).where(Dispatch.plan_id == approved.id).limit(1))
             L.append(f"Plan v{approved.version} approved by a person; dispatches created" + ("" if n_d else " (none)"))
     elif n == 8:
+        officer = Actor("duty_officer", who)
+        plan = db.scalar(select(Plan).where(Plan.status == "approved").order_by(Plan.id.desc()))
+        for d in db.scalars(select(Dispatch).where(Dispatch.plan_id == (plan.id if plan else -1), Dispatch.status == "assigned")):
+            try:
+                if not (d.route_info or {}).get("verified"):
+                    coordination.verify_route(db, d, officer, "demo: Duty Officer checked the route")
+                coordination.dispatch(db, d, officer)
+                L.append(f"D-{d.id} → {d.to_name}: {' + '.join(d.route_info.get('road_names') or ['in town'])} ({d.route_info.get('safety')}), "
+                         f"volunteer {db.get(Volunteer, d.volunteer_id).code if d.volunteer_id else '—'}")
+            except coordination.InvalidTransition as e:
+                L.append(str(e))
         engine.advance_to(db, state.now(db) + 0.6)
         ds = db.scalars(select(Dispatch)).all()
         by = {}
@@ -105,13 +117,17 @@ def run_step(db: Session, n: int, who: str = "Duty officer") -> dict:
         s = db.scalar(select(Shelter).where(Shelter.name.like("Napoklu%")))
         d = db.scalar(select(Dispatch).where(Dispatch.to_type == "shelter", Dispatch.to_id == s.id).order_by(Dispatch.id.desc()))
         if d:
-            if d.status in ("dispatched", "in_transit"):
-                coordination.mark_delivered(db, d, "NDRF truck (GPS)")
+            if d.status == "dispatched":
+                v = db.get(Volunteer, d.volunteer_id)
+                coordination.mark_delivered(db, d, coordination.SimVolunteer(v.code) if v else Actor("duty_officer", who))
             phone = "+919845012350"  # Napoklu camp manager (synthetic)
             r = handle_inbound(db, phone, "ಹೌದು")
             db.refresh(d)
             L += [f"RELAY → manager ({d.confirmation_language}): did you receive {', '.join(str(l['quantity']) + ' ' + l['resource_type'] for l in d.resource_lines)}?",
-                  "Manager → RELAY: ಹೌದು (yes)", f"D-{d.id} is now {d.status} ({d.confirmation_method}); stock moved to the shelter"]
+                  "Manager → RELAY: ಹೌದು (yes) — recorded as evidence, not as confirmation"]
+            if d.status == "delivered":
+                coordination.confirm(db, d, Actor("duty_officer", who), "sms_reply", "recipient replied YES; officer reviewed")
+            L.append(f"D-{d.id} is now {d.status} (confirmed by {who} after the recipient's YES); stock moved to the shelter")
             if r.get("replies"):
                 L.append(f"Reply sent: {r['replies'][0].body}")
         else:
