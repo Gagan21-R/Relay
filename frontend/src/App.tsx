@@ -13,20 +13,22 @@ import Resources from "./pages/Resources";
 import Shelters from "./pages/Shelters";
 import Plans from "./pages/Plans";
 import Dispatch from "./pages/Dispatch";
+import Blackout from "./pages/Blackout";
+import Alerts from "./pages/Alerts";
+import PublicCorrections from "./pages/PublicCorrections";
 
 // [path, nav key, page key, phase that fills it]
 const PLANNED: [string, string, string, number][] = [
-  ["alerts", "alerts", "alerts", 8],
   ["scenario", "scenario", "scenario", 10],
   ["twin3d", "twin3d", "twin3d", 10],
   ["metrics", "metrics", "metrics", 11],
   ["audit", "audit", "audit", 9],
-  ["blackout", "blackout", "blackout", 8],
 ];
 
 export default function App() {
   return (
     <Routes>
+      <Route path="public" element={<PublicCorrections />} />
       <Route element={<Layout />}>
         <Route index element={<CommandMap />} />
         <Route path="feed" element={<LiveFeed />} />
@@ -40,6 +42,8 @@ export default function App() {
         <Route path="shelters" element={<Shelters />} />
         <Route path="plans" element={<Plans />} />
         <Route path="dispatch" element={<Dispatch />} />
+        <Route path="blackout" element={<Blackout />} />
+        <Route path="alerts" element={<Alerts />} />
         {PLANNED.map(([path, nav, page, phase]) => (
           <Route key={path} path={path} element={<Planned navKey={nav} pageKey={page} phase={phase} />} />
         ))}

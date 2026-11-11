@@ -99,7 +99,7 @@ def test_voice_ivr_twiml_and_simulator(client):
 
 
 def test_radio_field_and_feed_channels(client):
-    r = client.post("/api/intake/radio", json={"kind": "satphone", "callsign": "NDRF-2", "zone_code": "hattihole",
+    r = client.post("/api/intake/radio", json={"kind": "satphone", "callsign": "NDRF-2", "zone_code": "napoklu",
                                                 "message": "Team at village: 300 people at temple hall, need food and water"}).json()["report"]
     assert r["channel"] == "radio_entry" and r["zone_id"] and r["geocode_method"] == "device GPS"
     body = {"client_id": "dev1-0001", "text": "Napoklu camp needs 50 blankets", "team": "Volunteer team A", "lat": 12.307, "lng": 75.698,

@@ -39,4 +39,4 @@ SHORTAGE_HORIZON_H = 24.0       # projected shortage when stock runs out within 
 STALE_STOCK_H = 12.0            # stock not counted for this long is flagged stale
 OVERDUE_GRACE_H = 1.0
 CONFIRMATION_TIMEOUT_H = 2.0
-SHELTER_CHECKIN_STALE_H = 6.0
+SHELTER_CHECKIN_STALE_H = 8.0

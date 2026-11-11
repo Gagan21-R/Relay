@@ -69,4 +69,4 @@ def test_langgraph_routes_a_report_through_the_agents(client):
         out = run(db, "report_received", report_ids=[rid])
         db.rollback()
     agents = [t["agent"] for t in out["trace"]]
-    assert agents[:5] == ["intake", "trust", "triage", "resource", "monitor"] and set(agents) <= set(AGENTS)
+    assert agents[:6] == ["intake", "trust", "triage", "resource", "blackout", "monitor"] and set(agents) <= set(AGENTS)

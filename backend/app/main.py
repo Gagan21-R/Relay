@@ -6,7 +6,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.api import incidents, intake, plans, resources, sim, system, world
+from app.api import incidents, intake, plans, resources, signals, sim, system, world
 from app.channels import voice
 from app.core.config import get_settings
 from app.sim.seed import seed
@@ -33,6 +33,7 @@ app.include_router(sim.router)
 app.include_router(incidents.router)
 app.include_router(resources.router)
 app.include_router(plans.router)
+app.include_router(signals.router)
 voice.MEDIA_DIR.mkdir(parents=True, exist_ok=True)
 app.mount("/media", StaticFiles(directory=voice.MEDIA_DIR), name="media")
 

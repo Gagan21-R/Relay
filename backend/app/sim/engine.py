@@ -16,7 +16,8 @@ def timeline(scenario: str = "kodagu_flood") -> list[tuple]:
     """(t, kind, payload) sorted by time. kind: signal | report."""
     ev = [(t, "signal", (typ, zc, val, src)) for t, typ, zc, val, src in KW.SIGNALS]
     ev += [(r[0], "report", r) for r in KR.REPORTS]
-    return sorted(ev, key=lambda e: (e[0], 0 if e[1] == "signal" else 1))
+    ev += [(t, "checkin", (name, occ)) for t, name, occ in KW.CHECKINS]
+    return sorted(ev, key=lambda e: (e[0], {"signal": 0, "checkin": 1}.get(e[1], 2)))
 
 
 def _pass_time(db: Session, t: float) -> None:
@@ -39,6 +40,16 @@ def _release(db: Session, event: tuple) -> None:
         db.flush()
         changes = hazard.apply_signal(db, sig)
         emit("signal", {"id": sig.id, "type": typ, "zone": zc, "value": val, "changes": changes, "t": t})
+    elif kind == "checkin":
+        from app.models import Shelter
+        name, occ = payload
+        sh = db.scalar(select(Shelter).where(Shelter.name.like(f"{name}%")))
+        if sh:
+            sh.last_confirmed_at, sh.occupancy = t, occ
+            if sh.status == "unconfirmed":
+                sh.status = "open"
+            state.audit(db, f"{sh.name} manager", "shelter_checkin", f"{sh.name}: {occ}/{sh.capacity}", actor_type="human",
+                        object_type="shelter", object_id=sh.id, push=False)
     else:
         _, channel, who, text = payload[:4]
         media = KR.MEDIA.get(text)

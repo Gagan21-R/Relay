@@ -119,3 +119,19 @@ Read this file and the master prompt first after any context reset, then continu
   editable quantities/remove, route map, decision panel, version history), Dispatch kanban + live route map.
 - Checks: nothing dispatched before approval; approval creates dispatches and decrements stock; Kannada "ಹೌದು"
   confirms a shelter delivery; audit has every step. 57 tests pass; browser approve → 11 dispatches.
+
+## Phase 8 — Replanning, Blackout Detection, Rumour Control (done)
+- `agents/blackout.py` (graph node between resource and monitor): per-zone risk = hazard 0.30 + population 0.15 +
+  silence 0.20 (≥6 h vs normal rate) + infrastructure 0.15 + missing-contact 0.10 + vulnerability 0.10, threshold
+  0.6; alert + recon task (method by road access: sat-phone field team / helicopter / drone; one-day needs for 60% of
+  population at standards; pre-positioned supplies within carry limits) → approval → report from inside completes
+  it, resolves the alert, zone back to normal. Shelter triggers: inaccessible (all access roads closed), full,
+  unconfirmed (missed check-ins > 8 h; timeline check-ins added, Somwarpet misses its late ones).
+- `agents/rumour.py`: correction for false incidents, kind auto-detected (dam burst / old photo / camp closed /
+  generic), 8 languages with the place name in each script, SMS to reporters in the area in their language,
+  public `/public` corrections page.
+- API `/api/signals/{type}` (rainfall, river, dam, quake, flood_extent, tower_outage, power_outage, census),
+  `/api/zones/blackout`, `/api/recon` (+approve/reject/report/image — drone check experimental, Gemini vision with a
+  key), `/api/alerts/rumour`, `/api/public/corrections`. UI: Blackout & Recon, Alerts (+ rumour control), Public page.
+- Checks: flooding Siddapura camp's access roads → inaccessible + new plan pending approval; Hattihole top-ranked with
+  recon + supply estimate; recon report resolves it into incidents; correction in ≥3 languages. 62 tests pass.

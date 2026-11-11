@@ -137,3 +137,10 @@ SIGNALS = [
     (7.0, "tower_outage", "jodupala", {"towers_down": 1, "towers_total": 2}, "Telecom operator feed (mock)"),
     (9.0, "flood_extent", None, {"version": 3, "polygons": FLOOD_V3}, "Satellite flood extent (mock, Sentinel-1 style)"),
 ]
+
+# Shelter manager check-ins on the timeline (t, shelter name prefix, occupancy). Somwarpet misses its later check-ins.
+CHECKINS = [
+    (3.0, "Somwarpet", 120),
+    (4.0, "Madikeri", 215), (4.5, "Napoklu", 240), (5.0, "Kushalnagar", 300), (5.5, "Siddapura", 190), (6.0, "Virajpet", 150),
+    (9.0, "Madikeri", 222), (9.5, "Napoklu", 240), (10.0, "Kushalnagar", 340), (10.5, "Siddapura", 195), (11.0, "Virajpet", 160),
+]
