@@ -29,7 +29,7 @@ export default function RadioConsole() {
   };
   return (
     <div className="space-y-4">
-      <PageHeader title={t("nav.radio")} sub={t("pages.radio")} />
+      <PageHeader title={t("nav.radio")} sub={t("pages.radio")} section="radio.page" />
       <div className="grid gap-4 xl:grid-cols-[440px_1fr]">
         <Panel title="Log a radio / sat-phone message">
           <div className="grid gap-2 text-sm">

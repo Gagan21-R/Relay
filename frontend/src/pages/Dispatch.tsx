@@ -28,7 +28,7 @@ export default function Dispatch() {
   const active = all.filter((d) => ["dispatched", "in_transit", "delivered"].includes(d.status));
   return (
     <div className="space-y-4">
-      <PageHeader title={t("nav.dispatch")} sub={t("pages.dispatch")} kicker={`T+${(sim.data?.clock ?? 0).toFixed(1)} h`} tone="bg-mint-400">
+      <PageHeader title={t("nav.dispatch")} sub={t("pages.dispatch")} kicker={`T+${(sim.data?.clock ?? 0).toFixed(1)} h`} tone="bg-mint-400" section="dispatch.page">
         <button className="btn-ghost" onClick={() => act("/api/dispatches/tick", "POST", {})}><AlarmClock size={15} aria-hidden />Run tracking now</button>
       </PageHeader>
       {!all.length ? <Empty>No dispatches yet. Approve a plan to start.</Empty> : (

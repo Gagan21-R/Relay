@@ -2,6 +2,7 @@
 import { ReactNode } from "react";
 import { Building2, Globe, MessageSquare, Mic, Newspaper, Radio, Rss, Smartphone } from "lucide-react";
 import { CountUp } from "./motion";
+import { Explain } from "./Assistant";
 
 export const LANG_NAMES: Record<string, string> = {
   en: "English", kn: "ಕನ್ನಡ", hi: "हिंदी", ml: "മലയാളം", ta: "தமிழ்", te: "తెలుగు", mr: "मराठी", bn: "বাংলা",
@@ -61,13 +62,13 @@ export function Meter({ value, label, tone = "brand" }: { value: number; label?:
   );
 }
 
-export function Panel({ title, actions, children, className = "", explain, tone }: { title?: ReactNode; actions?: ReactNode; children: ReactNode; className?: string; explain?: ReactNode; tone?: string }) {
+export function Panel({ title, actions, children, className = "", explain, tone, section }: { title?: ReactNode; actions?: ReactNode; children: ReactNode; className?: string; explain?: ReactNode; tone?: string; section?: string }) {
   return (
     <section className={`card relative overflow-hidden p-4 ${className}`}>
       {tone && <div className={`absolute inset-x-0 top-0 h-1.5 border-b-2 border-ink ${tone}`} aria-hidden />}
-      {(title || actions || explain) && (
+      {(title || actions || explain || section) && (
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">{title && <h2 className="text-[20px] font-extrabold leading-tight">{title}</h2>}{explain}</div>
+          <div className="flex items-center gap-2">{title && <h2 className="text-[20px] font-extrabold leading-tight">{title}</h2>}{section && <Explain id={section} />}{explain}</div>
           {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
         </div>
       )}

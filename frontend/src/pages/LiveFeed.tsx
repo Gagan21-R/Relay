@@ -19,7 +19,7 @@ export default function LiveFeed() {
   const offline = all.filter((r) => !CHANNELS[r.channel]?.internet).length;
   return (
     <div className="space-y-4">
-      <PageHeader title={t("nav.feed")} sub={t("pages.feed")} />
+      <PageHeader title={t("nav.feed")} sub={t("pages.feed")} section="feed.page" />
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Stat label="reports" value={all.length} />
         <Stat label="languages" value={langs.length} />

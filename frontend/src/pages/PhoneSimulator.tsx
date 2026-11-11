@@ -127,7 +127,7 @@ export default function PhoneSimulator() {
   useLiveEvents(onReport, ["report"]);
   return (
     <div className="space-y-4">
-      <PageHeader title={t("nav.phone")} sub={t("pages.phone")} />
+      <PageHeader title={t("nav.phone")} sub={t("pages.phone")} section="phone.page" />
       <div className="grid gap-4 xl:grid-cols-[380px_1fr]">
         <div className="space-y-3">
           <div className="flex flex-wrap gap-1.5">
@@ -139,12 +139,12 @@ export default function PhoneSimulator() {
           <MockPhone phone={phone} samples={samples.data?.messages ?? []} />
         </div>
         <div className="space-y-4">
-          <Panel title="Arriving on the dashboard now">
+          <Panel title="Arriving on the dashboard now" section="feed.card">
             {!arrivals.length ? <Empty>Send an SMS or make a call: it appears here within seconds, with its translation and extracted fields.</Empty>
               : <div className="space-y-2">{arrivals.map((r) => <ReportCard key={r.id} r={r} />)}</div>}
           </Panel>
           <div className="grid gap-4 lg:grid-cols-2">
-            <Panel title="Voice call (IVR)"><VoiceCall phone={phone} /></Panel>
+            <Panel title="Voice call (IVR)" section="phone.voice"><VoiceCall phone={phone} /></Panel>
             <NetworkPanel />
           </div>
         </div>

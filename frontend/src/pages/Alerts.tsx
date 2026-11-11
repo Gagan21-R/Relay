@@ -52,7 +52,7 @@ export default function Alerts() {
   const falseIncs = (incs.data ?? []).filter((i) => i.confidence_level === "false" || i.official_status === "refuted");
   return (
     <div className="space-y-4">
-      <PageHeader title={t("nav.alerts")} sub={t("pages.alerts")} kicker={`${(data ?? []).filter((a) => !a.resolved).length} open`} tone="bg-pink-400">
+      <PageHeader title={t("nav.alerts")} sub={t("pages.alerts")} kicker={`${(data ?? []).filter((a) => !a.resolved).length} open`} tone="bg-pink-400" section="alerts.page">
         <div className="flex rounded-xl border-2 border-ink bg-white p-0.5">
           {(["open", "all"] as const).map((k) => <button key={k} onClick={() => setShow(k)} className={`rounded-lg px-3 py-1 text-xs font-extrabold ${show === k ? "bg-ink text-white" : ""}`}>{k}</button>)}
         </div>
@@ -88,7 +88,7 @@ export default function Alerts() {
           ))}
         </div>
         <div className="space-y-4">
-          <Panel title={<span className="flex items-center gap-2"><Megaphone size={18} aria-hidden />Rumour control</span>} tone="bg-brand-300">
+          <Panel title={<span className="flex items-center gap-2"><Megaphone size={18} aria-hidden />Rumour control</span>} tone="bg-brand-300" section="alerts.rumour">
             <p className="mb-2 text-xs font-medium text-ink/60">Incidents marked false. Publish a correction: pre-translated into all 8 languages with the place name in each script, sent by SMS to people who reported from the area, and shown on the public page.</p>
             {!falseIncs.length ? <Empty>No false incidents.</Empty> : falseIncs.map((i) => (
               <div key={i.id} className="mb-2 flex items-center gap-2 rounded-xl border-2 border-ink bg-paper p-2">

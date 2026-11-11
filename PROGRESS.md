@@ -135,3 +135,17 @@ Read this file and the master prompt first after any context reset, then continu
   key), `/api/alerts/rumour`, `/api/public/corrections`. UI: Blackout & Recon, Alerts (+ rumour control), Public page.
 - Checks: flooding Siddapura camp's access roads → inaccessible + new plan pending approval; Hattihole top-ranked with
   recon + supply estimate; recon report resolves it into incidents; correction in ≥3 languages. 62 tests pass.
+
+## Phase 9 — Complete dashboard + i18n + Explain-me assistant (done)
+- Explain-me (user extra): `services/assistant.py` registry of 38 sections (every page + key panels: what it is / how
+  to read it / what you can do) + live facts from the current state; `/api/assistant` (Gemini writes the answer in the
+  UI language when a key is set; rule-based in mock mode; follow-up questions routed to the best section).
+  Frontend: `Explain` button on every page header and panel (`section` prop on PageHeader/Panel), slide-in drawer with
+  follow-ups, floating "Ask RELAY" button.
+- Command Map rebuilt as a real-time map: incidents (priority colour, confidence outline, false = grey), shelters by
+  status, depots, dispatch routes with trucks positioned by sim-clock progress, breathing flood extent, hatched red
+  blackout zones (SVG pattern), road status, report pulses from WebSocket, layer toggles (persisted), click → side
+  panel (incident evidence / zone risk / shelter / depot), live counters.
+- Audit Log page (actor type, action, text filters, inputs/outputs). i18n: nav, page headers, status and assistant UI in
+  EN/KN/HI (deep panel copy stays English — noted as a limitation).
+- Checks: every page renders with seed data; Kannada switch works; no console errors after startup; 64 tests pass.

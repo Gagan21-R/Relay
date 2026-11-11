@@ -20,7 +20,7 @@ export default function FastVerify() {
   };
   return (
     <div className="space-y-4">
-      <PageHeader title={t("nav.fastVerify")} sub={t("pages.fastVerify")} kicker="never discarded" tone="bg-tangerine-400" />
+      <PageHeader title={t("nav.fastVerify")} sub={t("pages.fastVerify")} kicker="never discarded" tone="bg-tangerine-400" section="fastverify.page" />
       {!data?.length ? <Empty>Nothing waiting. Every life-safety report is either verified or confirmed false.</Empty> : (
         <div className="grid gap-4 lg:grid-cols-2">
           {data.map((i, n) => {

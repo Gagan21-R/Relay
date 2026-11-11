@@ -8,6 +8,7 @@ import { PageHeader } from "../components/Layout";
 import { Breakdown, Empty, Meter, Panel, simTime } from "../components/ui";
 import { useApi } from "../hooks/useApi";
 import { api } from "../services/api";
+import { Explain } from "../components/Assistant";
 
 export default function Blackout() {
   const { t } = useTranslation();
@@ -28,7 +29,7 @@ export default function Blackout() {
   const others = (data ?? []).filter((z) => !z.blackout_flag);
   return (
     <div className="space-y-4">
-      <PageHeader title={t("nav.blackout")} sub={t("pages.blackout")} kicker="silence is a signal" tone="bg-ink text-white" />
+      <PageHeader title={t("nav.blackout")} sub={t("pages.blackout")} kicker="silence is a signal" tone="bg-ink text-white" section="blackout.page" />
       {!data ? null : !silent.length ? <Empty>No zone is silent right now. Every populated zone inside the hazard footprint has reported recently.</Empty> : silent.map((z, n) => (
         <motion.section key={z.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card overflow-hidden p-0 shadow-hard-pink">
           <div className="hatch-red flex flex-wrap items-center gap-3 border-b-2 border-ink bg-ink px-4 py-3 text-white">
@@ -41,14 +42,14 @@ export default function Blackout() {
           </div>
           <div className="grid gap-4 p-4 xl:grid-cols-[1.1fr_1fr]">
             <div>
-              <p className="label mb-2">Why RELAY thinks people here need help</p>
+              <p className="label mb-2 flex items-center gap-2">Why RELAY thinks people here need help <Explain id="blackout.risk" context={{ zone: z.code }} /></p>
               <Breakdown components={z.risk.components} />
               <p className="mt-2 text-xs font-bold text-ink/60">Rank value (population × hazard × hours silent): {z.risk.rank_value.toLocaleString()}</p>
             </div>
             {z.recon ? (
               <div className="rounded-2xl border-2 border-ink bg-paper p-3">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="label">Reconnaissance</span>
+                  <span className="label">Reconnaissance</span><Explain id="blackout.recon" />
                   <span className={`badge ${z.recon.status === "pending_approval" ? "bg-sun-400" : z.recon.status === "completed" ? "bg-mint-400" : "bg-cobalt-300"}`}>{z.recon.status.replace("_", " ")}</span>
                 </div>
                 <p className="mt-1 text-lg font-extrabold">{z.recon.team}</p>

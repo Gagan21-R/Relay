@@ -63,5 +63,22 @@
     "radio": "Enter reports received by HAM radio, police wireless, forest/railway radio or satellite phone.",
     "blackout": "Silent zones ranked by risk: hazard, population, silence, infrastructure loss and missing-contact reports.",
     "about": "The story: what RELAY does, who does what, and the evidence behind it."
+  },
+  "assistant": {
+    "explain": "Explain me",
+    "ask": "Ask RELAY",
+    "title": "Explain me",
+    "sub": "Live explanations of every part of the screen",
+    "close": "Close",
+    "thinking": "Reading the live state…",
+    "what": "What this is",
+    "read": "How to read it",
+    "do": "What you can do",
+    "now": "Right now",
+    "placeholder": "Ask a follow-up…",
+    "send": "Send",
+    "s1": "Why does it look like this?",
+    "s2": "What should I do next?",
+    "s3": "What is the evidence?"
   }
 }

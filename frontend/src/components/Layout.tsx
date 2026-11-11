@@ -11,6 +11,7 @@ import { useHealth } from "../hooks/useHealth";
 import { useLiveStatus } from "../hooks/useLive";
 import { useApi } from "../hooks/useApi";
 import { Blob, Marquee } from "./motion";
+import AssistantDrawer, { Explain } from "./Assistant";
 
 export const NAV = [
   { group: "see", tint: "bg-lime-400", items: [
@@ -157,6 +158,7 @@ export default function Layout() {
           </motion.div>
         </main>
       </div>
+      <AssistantDrawer />
     </div>
   );
 }
@@ -164,7 +166,7 @@ export default function Layout() {
 const ORNAMENTS = ["✺", "✦", "❋", "✿", "☀", "❖"];
 const TONES = ["bg-lime-400", "bg-pink-400", "bg-sun-400", "bg-cobalt-300", "bg-tangerine-400", "bg-brand-300"];
 
-export function PageHeader({ title, sub, children, kicker, tone, explain }: { title: string; sub?: string; children?: ReactNode; kicker?: string; tone?: string; explain?: ReactNode }) {
+export function PageHeader({ title, sub, children, kicker, tone, explain, section }: { title: string; sub?: string; children?: ReactNode; kicker?: string; tone?: string; explain?: ReactNode; section?: string }) {
   const h = [...title].reduce((a, c) => a + c.charCodeAt(0), 0);
   const tn = tone ?? TONES[h % TONES.length];
   return (
@@ -176,6 +178,7 @@ export function PageHeader({ title, sub, children, kicker, tone, explain }: { ti
         <div className="min-w-0 max-w-3xl">
           <div className="flex flex-wrap items-center gap-2">
             {kicker && <span className={`sticker -rotate-2 ${tn}`}>{kicker}</span>}
+            {section && <Explain id={section} />}
             {explain}
           </div>
           <h1 className="mega mt-3 text-[40px] sm:text-[56px]">{title}</h1>

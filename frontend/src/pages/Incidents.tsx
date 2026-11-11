@@ -40,11 +40,11 @@ export function IncidentDetail({ id, onClose }: { id: number; onClose?: () => vo
         {i.official_status && <p className="mt-2 text-xs font-bold">Marked {i.official_status} by a person{i.verification_note ? `: ${i.verification_note}` : ""}. Source reliabilities were updated.</p>}
       </Panel>
       <div className="grid gap-4 2xl:grid-cols-2">
-        <Panel title={<>Why priority {i.priority_score.toFixed(0)}<span className="text-ink/40">/100</span></>} tone="bg-lime-400">
+        <Panel title={<>Why priority {i.priority_score.toFixed(0)}<span className="text-ink/40">/100</span></>} tone="bg-lime-400" section="incidents.priority">
           {i.priority_breakdown?.components && Object.keys(i.priority_breakdown.components).length
             ? <Breakdown components={i.priority_breakdown.components} unit=" pts" /> : <p className="text-sm">{i.priority_breakdown?.note}</p>}
         </Panel>
-        <Panel title={<>Why {i.confidence_level} ({Math.round(i.confidence_score * 100)}%)</>} tone="bg-cobalt-300">
+        <Panel title={<>Why {i.confidence_level} ({Math.round(i.confidence_score * 100)}%)</>} tone="bg-cobalt-300" section="incidents.confidence">
           <Breakdown components={i.confidence_breakdown.components} penalties={i.confidence_breakdown.penalties} />
           <p className="mt-2 text-xs font-bold text-ink/60">Level rule: {i.confidence_breakdown.level_reason}</p>
           <div className="mt-2 flex flex-wrap gap-1.5">
@@ -54,7 +54,7 @@ export function IncidentDetail({ id, onClose }: { id: number; onClose?: () => vo
           </div>
         </Panel>
       </div>
-      <Panel title="Evidence trail" tone="bg-sun-400">
+      <Panel title="Evidence trail" tone="bg-sun-400" section="incidents.evidence">
         <div className="space-y-2">
           {i.reports.map((r: any) => (
             <div key={r.id}>
@@ -81,7 +81,7 @@ function SameReportAnalyser() {
   const run = async () => setRes(await api("/api/trust/compare", { method: "POST", body: JSON.stringify({ texts: [a, b], hours_apart: [0, hours] }) }));
   const p = res?.pairs?.[0];
   return (
-    <Panel title={<span className="flex items-center gap-2"><GitCompare size={18} aria-hidden />Same-report analyser</span>} tone="bg-brand-300">
+    <Panel title={<span className="flex items-center gap-2"><GitCompare size={18} aria-hidden />Same-report analyser</span>} tone="bg-brand-300" section="incidents.analyser">
       <p className="mb-2 text-xs font-medium text-ink/60">Paste two reports in any language. RELAY runs the real Intake and Trust logic (nothing is stored) and shows every test.</p>
       <div className="grid gap-2 md:grid-cols-2">
         <textarea className="input" rows={3} value={a} onChange={(e) => setA(e.target.value)} aria-label="Report A" />
@@ -126,7 +126,7 @@ export default function Incidents() {
   useEffect(() => { if (!focus && list.length) setParams({ focus: String(list[0].id) }, { replace: true }); }, [focus, list, setParams]);
   return (
     <div className="space-y-4">
-      <PageHeader title={t("nav.incidents")} sub={t("pages.incidents")} kicker="ranked by danger" tone="bg-pink-400" />
+      <PageHeader title={t("nav.incidents")} sub={t("pages.incidents")} kicker="ranked by danger" tone="bg-pink-400" section="incidents.page" />
       <div className="flex flex-wrap gap-1.5">
         {["", "verified", "likely", "unverified", "disputed", "false"].map((l) => (
           <button key={l} onClick={() => setLevel(l)} className={`badge !px-3 !py-1 text-xs ${level === l ? "bg-ink text-white" : "bg-white hover:bg-lime-300"}`}>{l || "all"} {l ? `(${(data ?? []).filter((i) => i.confidence_level === l).length})` : `(${data?.length ?? 0})`}</button>

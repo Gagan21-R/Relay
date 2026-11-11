@@ -12,7 +12,7 @@ export default function NetworkPanel({ explain }: { explain?: React.ReactNode })
     reload();
   };
   return (
-    <Panel title="Network status" explain={explain}>
+    <Panel title="Network status" explain={explain} section="phone.network">
       <p className="mb-2 text-xs text-ink/60">Cut the internet in a zone. Reports needing internet from inside it stop arriving; SMS, voice calls and radio still get through.</p>
       <div className="grid grid-cols-2 gap-1.5">
         {(data ?? []).map((z) => (

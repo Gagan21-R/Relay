@@ -35,7 +35,7 @@ export default function Resources() {
   if (!o) return <PageHeader title={t("nav.resources")} sub={t("pages.resources")} />;
   return (
     <div className="space-y-4">
-      <PageHeader title={t("nav.resources")} sub={t("pages.resources")} kicker="supply vs demand" tone="bg-sun-400" />
+      <PageHeader title={t("nav.resources")} sub={t("pages.resources")} kicker="supply vs demand" tone="bg-sun-400" section="resources.page" />
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Stat i={0} label="projected shortages (<24 h)" value={o.projected.length} />
         <Stat i={1} label="current shortages" value={o.current.length} />
@@ -43,7 +43,7 @@ export default function Resources() {
         <Stat i={3} label={`water standard (L / person / day)`} value={o.standards_per_person_day.water_litres} />
       </div>
       <div className="grid gap-4 xl:grid-cols-[1.4fr_1fr]">
-        <Panel title="Burn-rate projection by shelter" tone="bg-cobalt-300"
+        <Panel title="Burn-rate projection by shelter" tone="bg-cobalt-300" section="resources.burn"
           actions={<select className="input !w-auto !py-1" value={rt} onChange={(e) => setRt(e.target.value)} aria-label="Resource">
             {["water_litres", "food_kits", "medical_kits"].map((r) => <option key={r} value={r}>{nice(r)}</option>)}</select>}>
           <div className="h-72">
@@ -61,7 +61,7 @@ export default function Resources() {
           </div>
           <p className="text-xs font-medium text-ink/60">Stock at current occupancy × per-person daily standard, next 48 simulated hours. A line hitting zero is a shortage.</p>
         </Panel>
-        <Panel title="Projected shortages & transfers" tone="bg-pink-400">
+        <Panel title="Projected shortages & transfers" tone="bg-pink-400" section="resources.transfers">
           {!o.transfers.length ? <Empty>No shelter runs out within {o.horizon_h} h.</Empty> : o.transfers.map((t: any) => (
             <div key={t.shelter_id + t.resource_type} className="mb-2 rounded-2xl border-2 border-ink bg-paper p-3">
               <p className="flex items-center gap-2 font-extrabold"><Clock size={16} aria-hidden />{nice(t.resource_type)} at {t.shelter}: runs out in ~{Math.round(t.hours_left)} h</p>
@@ -78,7 +78,7 @@ export default function Resources() {
         </Panel>
       </div>
       <div className="grid gap-4 xl:grid-cols-[1fr_1.4fr]">
-        <Panel title="Demand vs reachable supply" tone="bg-lime-400">
+        <Panel title="Demand vs reachable supply" tone="bg-lime-400" section="resources.supply">
           <div className="h-64">
             <ResponsiveContainer>
               <BarChart data={dvs}>
@@ -92,7 +92,7 @@ export default function Resources() {
           </div>
           <p className="text-xs text-ink/60">Water (litres) left out for scale: demand {Math.round(o.demand_by_type.water_litres ?? 0)} L vs supply {Math.round(o.supply_by_type.water_litres ?? 0)} L. Stale stock is not counted as supply.</p>
         </Panel>
-        <Panel title="Depot inventory" tone="bg-tangerine-400">
+        <Panel title="Depot inventory" tone="bg-tangerine-400" section="resources.depots">
           <div className="grid gap-3 md:grid-cols-3">
             {o.depots.map((d: any) => (
               <div key={d.id} className="rounded-2xl border-2 border-ink bg-white p-2.5">

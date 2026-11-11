@@ -58,7 +58,7 @@ export default function FieldApp() {
 
   return (
     <div className="mx-auto max-w-xl space-y-4">
-      <PageHeader title={t("nav.field")} sub={t("pages.field")} />
+      <PageHeader title={t("nav.field")} sub={t("pages.field")} section="field.page" />
       <div className={`flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium ${connected ? "bg-mint-300 text-ink" : "bg-sun-300 text-ink"}`} role="status">
         {connected ? <Wifi size={16} aria-hidden /> : <WifiOff size={16} aria-hidden />}
         {connected ? "Online — reports send immediately" : "No signal — reports are saved on this device"}

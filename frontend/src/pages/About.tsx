@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Blob, CountUp, Item, Marquee, Reveal, Rotator, Stagger, Tilt } from "../components/motion";
 import { useApi } from "../hooks/useApi";
+import { Explain } from "../components/Assistant";
 import { api } from "../services/api";
 
 const WATER = ["ನೀರು", "पानी", "വെള്ളം", "தண்ணீர்", "నీరు", "पाणी", "জল", "water"];
@@ -108,6 +109,7 @@ export default function About() {
         <div className="relative max-w-6xl">
           <motion.span initial={{ rotate: -12, scale: 0 }} animate={{ rotate: -4, scale: 1 }} transition={{ type: "spring", stiffness: 300, damping: 14 }}
             className="sticker bg-lime-400 text-ink">AgentX Hackathon 2026 · PS-03 · Agentic AI</motion.span>
+          <span className="ml-2 inline-block align-middle"><Explain id="about.page" /></span>
           <motion.h1 initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 160, damping: 18, delay: 0.1 }}
             className="mega mt-6 text-[56px] sm:text-[92px] lg:text-[120px]">
             Reports in.<br /><span className="serif-i text-lime-400">Relief</span> out.

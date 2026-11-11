@@ -33,7 +33,7 @@ export default function Plans() {
   const edited = remove.length > 0 || Object.keys(qty).length > 0;
   return (
     <div className="space-y-4">
-      <PageHeader title={t("nav.plans")} sub={t("pages.plans")} kicker="human in the loop" tone="bg-brand-300">
+      <PageHeader title={t("nav.plans")} sub={t("pages.plans")} kicker="human in the loop" tone="bg-brand-300" section="plans.page">
         <button className="btn-ghost" disabled={busy} onClick={() => call("/api/plans", { reason: "requested by the duty officer" }, "New plan proposed")}><RefreshCw size={15} aria-hidden />Ask for a fresh plan</button>
       </PageHeader>
       {msg && <p className="sticker w-fit bg-lime-400">{msg}</p>}
@@ -44,7 +44,7 @@ export default function Plans() {
               <p className="text-[15px] font-medium leading-relaxed">{pending.rationale}</p>
               <p className="mt-1 text-xs font-bold text-ink/50">proposed {simTime(pending.created_at_sim)} by {pending.created_by_agent}</p>
             </Panel>
-            <Panel title={`Deliveries (${lines.length})`} tone="bg-lime-400">
+            <Panel title={`Deliveries (${lines.length})`} tone="bg-lime-400" section="plans.lines">
               <div className="space-y-2">
                 {lines.map((a: any, i: number) => {
                   const off = remove.includes(a.line);
@@ -89,7 +89,7 @@ export default function Plans() {
             <Panel title="Routes" tone="bg-cobalt-300">
               <MiniMap routes={lines.filter((a: any) => !remove.includes(a.line)).map((a: any) => ({ id: a.line, points: a.route_points, color: COLORS[lines.indexOf(a) % COLORS.length], label: `#${a.line} ${a.to_name}` }))} height={340} />
             </Panel>
-            <Panel title={<span className="flex items-center gap-2"><Stamp size={18} aria-hidden />Decision</span>} tone="bg-pink-400">
+            <Panel title={<span className="flex items-center gap-2"><Stamp size={18} aria-hidden />Decision</span>} tone="bg-pink-400" section="plans.decision">
               <div className="grid gap-2">
                 <input className="input" value={who} onChange={(e) => setWho(e.target.value)} aria-label="Approver name" />
                 <textarea className="input" rows={2} value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Comment (kept in the audit log)" />
@@ -107,7 +107,7 @@ export default function Plans() {
           </div>
         </div>
       )}
-      <Panel title={<span className="flex items-center gap-2"><History size={18} aria-hidden />Version history</span>}>
+      <Panel title={<span className="flex items-center gap-2"><History size={18} aria-hidden />Version history</span>} section="plans.history">
         {!data?.length ? <Empty>No plans yet.</Empty> : (
           <ol className="space-y-1.5">
             {data.map((p) => (

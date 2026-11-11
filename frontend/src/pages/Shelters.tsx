@@ -23,7 +23,7 @@ export default function Shelters() {
   if (!ov.data || !raw.data) return <PageHeader title={t("nav.shelters")} sub={t("pages.shelters")} />;
   return (
     <div className="space-y-4">
-      <PageHeader title={t("nav.shelters")} sub={t("pages.shelters")} kicker="capacity · access · check-ins" tone="bg-cobalt-300" />
+      <PageHeader title={t("nav.shelters")} sub={t("pages.shelters")} kicker="capacity · access · check-ins" tone="bg-cobalt-300" section="shelters.page" />
       {!raw.data.length && <Empty>No shelters.</Empty>}
       <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
         {ov.data.shelters.map((s: any, n: number) => {

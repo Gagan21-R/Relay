@@ -52,3 +52,10 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
 }
+
+/* map: hatched silent zones, breathing flood, report pulses */
+.blackout-hatch { fill: url(#relay-hatch) !important; }
+.flood-poly { animation: floodbreath 4s ease-in-out infinite; }
+@keyframes floodbreath { 0%,100% { fill-opacity: .28; } 50% { fill-opacity: .45; } }
+.pulse-ring { animation: pulsemap 1.6s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes pulsemap { 0% { stroke-opacity: 1; stroke-width: 6; } 100% { stroke-opacity: .15; stroke-width: 1; } }
