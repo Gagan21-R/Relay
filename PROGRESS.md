@@ -174,3 +174,11 @@ Read this file and the master prompt first after any context reset, then continu
   recipient phone). Development set is near-perfect because the rules were built on it — labelled as such.
 - `/api/metrics` (+ `/run` in a subprocess), Metrics page (per-language Recharts, confusion matrix, disclaimer).
   Placeholder pages removed: every route is real. 67 pytest + 5 vitest pass.
+
+## Phase 12 — Polish + final delivery (done)
+- README (overview, mermaid architecture, agent table, setup, mock vs real, demo, evaluation table, research grounding,
+  privacy + retention, limitations), DEMO.md rehearsal checklist, code-split heavy pages (main bundle 1.6 MB → 245 kB,
+  no build warnings), warnings cleaned (one third-party LangGraph import notice remains and is documented).
+- Final delivery checks (this machine, SQLite fallback; Docker not available here): clean database → auto-seed (82
+  reports, 19 incidents) → full 12-step Run Demo via API completes → reset to T+12. 67 pytest + 5 vitest pass,
+  typecheck clean, `npm run build` clean, `make eval` results in backend/eval/results.json.

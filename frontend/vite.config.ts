@@ -14,5 +14,6 @@ export default defineConfig({
       "/ws": { target: API.replace(/^http/, "ws"), ws: true },
     },
   },
+  build: { chunkSizeWarningLimit: 1200, rollupOptions: { output: { manualChunks: { map: ["leaflet", "react-leaflet"], motion: ["framer-motion"] } } } },
   test: { environment: "jsdom", globals: true },
 });
