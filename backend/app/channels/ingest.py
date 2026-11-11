@@ -51,6 +51,24 @@ def store_raw(db: Session, *, channel: str, source: Source, text: str, received_
 
 
 def from_timeline(db: Session, *, channel: str, who: str, text: str, received_at: float, media: dict | None = None) -> Report:
-    """Scenario replay: a report arrives through its channel's adapter."""
+    """Scenario replay: a report arrives through its channel's adapter (SMS and voice go through the SMS flow so
+    auto-replies and clarification questions are sent exactly as in a live deployment)."""
+    if channel in ("sms", "voice"):
+        from app.channels.sms_flow import handle_inbound
+        return handle_inbound(db, who, text, received_at=received_at, channel=channel)["report"]
     src = resolve_source(db, who, channel)
-    return store_raw(db, channel=channel, source=src, text=text, received_at=received_at or state.now(db), media=media)
+    return submit(db, channel=channel, source=src, text=text, received_at=received_at, media=media)
+
+
+def submit(db: Session, *, channel: str, source: Source, text: str, received_at: float | None = None, media: dict | None = None,
+           adapter: str | None = None, lat: float | None = None, lng: float | None = None, event_time: float | None = None,
+           audio_url: str | None = None) -> Report:
+    """Store a report and run the agent graph on it."""
+    from app.graph import pipeline
+    r = store_raw(db, channel=channel, source=source, text=text, received_at=state.now(db) if received_at is None else received_at,
+                  media=media, adapter=adapter, audio_url=audio_url)
+    r.lat, r.lng, r.reported_event_time = lat, lng, event_time
+    db.flush()
+    pipeline.run(db, "report_received", report_ids=[r.id])
+    db.refresh(r)
+    return r

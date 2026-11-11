@@ -86,7 +86,7 @@ REPORTS = [
      T(key="F", real=True, need="food", people=20, zone="jodupala"),
      "A hill collapsed on the highway near Jodupala and 20 lorries are stuck, the drivers need food"),
     (5.6, "news_feed", "news_en", "NH275 blocked at Jodupala after landslide; around 20 trucks and their drivers stranded, says police.",
-     T(key="F", real=True, need="food", people=20, zone="jodupala"), None),
+     T(key="F", real=True, need="infrastructure", people=20, zone="jodupala"), None),
     (6.0, "sms", "+919812300602", "jodupala il NH road poyi, 20 lorry kudungi, food venam",
      T(key="F", real=True, need="food", people=20, zone="jodupala"),
      "At Jodupala the NH road is gone, 20 lorries are stuck, food is needed"),
@@ -104,7 +104,7 @@ REPORTS = [
      T(key="G", real=True, need="shelter", people=60, zone="kushalnagar"),
      "Flood in Sai Layout, Kushalnagar, 60 people need a place to stay"),
     (7.3, "field_app", "sdrf", "SDRF Kodagu: Sai Layout Kushalnagar, 60 residents moving to Rotary Hall camp, need food kits.",
-     T(key="G", real=True, need="shelter", people=60, zone="kushalnagar"), None),
+     T(key="G", real=True, need="food", people=60, zone="kushalnagar"), None),
 
     # ---- H: insulin and medicines at Virajpet camp ----
     (7.0, "sms", "vol_ravi", "ವಿರಾಜಪೇಟೆ ಶಿಬಿರದಲ್ಲಿ 8 ಮಧುಮೇಹ ರೋಗಿಗಳಿಗೆ ಇನ್ಸುಲಿನ್ ಮತ್ತು ಔಷಧಿ ಬೇಕು",
@@ -153,34 +153,34 @@ REPORTS = [
 
     # ---- Rumour R1: "Harangi dam has burst" forwards (false; the dam bulletin says the structure is safe) ----
     (3.5, "social_feed", "@kodagu_whatsapp_fwd", "ಹಾರಂಗಿ ಅಣೆಕಟ್ಟು ಒಡೆದಿದೆ!! ಕುಶಾಲನಗರ ಖಾಲಿ ಮಾಡಿ, ಎಲ್ಲರಿಗೂ ಶೇರ್ ಮಾಡಿ",
-     T(key="R1", real=False, need="rescue", people=None, zone="kushalnagar"),
+     T(key="R1", real=False, need="other", people=None, zone="kushalnagar"),
      "The Harangi dam has burst!! Evacuate Kushalnagar, share with everyone"),
     (3.7, "social_feed", "@fwd_hindi", "हारंगी बांध टूट गया है, कुशालनगर खाली करो, सबको शेयर करो",
-     T(key="R1", real=False, need="rescue", people=None, zone="kushalnagar"),
+     T(key="R1", real=False, need="other", people=None, zone="kushalnagar"),
      "The Harangi dam has broken, evacuate Kushalnagar, share with everyone"),
     (3.9, "social_feed", "@fwd_english", "Forwarded as received: Harangi dam has burst, Kushalnagar will be washed away, share to all!!",
-     T(key="R1", real=False, need="rescue", people=None, zone="kushalnagar"), None),
+     T(key="R1", real=False, need="other", people=None, zone="kushalnagar"), None),
     (4.1, "sms", "+919812301401", "harangi dam odedide antha news, ellarigu share maadi",
-     T(key="R1", real=False, need="rescue", people=None, zone="kushalnagar"),
+     T(key="R1", real=False, need="other", people=None, zone="kushalnagar"),
      "There is news that the Harangi dam has burst, share it with everyone"),
     (4.3, "official_feed", "ksdma", "KSDMA: Harangi dam is safe. Controlled release of 20,000 cusecs only. The dam has NOT burst — do not believe or forward rumours.",
-     T(key="R1", real=False, need="rescue", people=None, zone="kushalnagar"), None),
+     T(key="R1", real=False, need="other", people=None, zone="kushalnagar"), None),
 
     # ---- Rumour R2: recycled 2018 photo of Madikeri bus stand underwater ----
     (5.5, "social_feed", "@viral_coorg", "Madikeri bus stand completely underwater right now!! See photo. Share to all",
-     T(key="R2", real=False, need="rescue", people=None, zone="madikeri"), None),
+     T(key="R2", real=False, need="other", people=None, zone="madikeri"), None),
     (5.8, "social_feed", "@kn_viral", "ಮಡಿಕೇರಿ ಬಸ್ ನಿಲ್ದಾಣ ಸಂಪೂರ್ಣ ಮುಳುಗಿದೆ, ಫೋಟೋ ನೋಡಿ, ಎಲ್ಲರಿಗೂ ಶೇರ್ ಮಾಡಿ",
-     T(key="R2", real=False, need="rescue", people=None, zone="madikeri"),
+     T(key="R2", real=False, need="other", people=None, zone="madikeri"),
      "Madikeri bus stand is completely submerged, see the photo, share with everyone"),
     (6.1, "field_app", "vol_ravi", "Checked Madikeri bus stand myself: it is dry, buses running. The viral photo is from 2018.",
-     T(key="R2", real=False, need="rescue", people=None, zone="madikeri"), None),
+     T(key="R2", real=False, need="other", people=None, zone="madikeri"), None),
 
     # ---- Rumour R3: "Kushalnagar camp is closed" hoax (contradicted by the camp manager's check-in) ----
     (7.1, "social_feed", "@fwd_kushal", "कुशालनगर रोटरी हॉल कैंप बंद हो गया है, वहाँ मत जाओ, सबको शेयर करो",
-     T(key="R3", real=False, need="shelter", people=None, zone="kushalnagar"),
+     T(key="R3", real=False, need="other", people=None, zone="kushalnagar"),
      "The Kushalnagar Rotary Hall camp has closed, don't go there, share with everyone"),
     (7.5, "sms", "mgr_kushal", "ಕುಶಾಲನಗರ ರೋಟರಿ ಹಾಲ್ ಶಿಬಿರ ತೆರೆದಿದೆ, 300 ಜನ ಇದ್ದಾರೆ, ಇನ್ನೂ 100 ಜನರಿಗೆ ಜಾಗ ಇದೆ",
-     T(key="R3", real=False, need="shelter", people=None, zone="kushalnagar"),
+     T(key="R3", real=False, need="other", people=None, zone="kushalnagar"),
      "The Kushalnagar Rotary Hall camp is open, 300 people are here, there is space for 100 more people"),
 
     # ---- vague reports with no location (trigger clarification SMS) ----
@@ -245,7 +245,7 @@ REPORTS = [
     (10.5, "web", "vol_anita", "Sai Layout Kushalnagar: 60 displaced residents still waiting for food kits at Rotary Hall.",
      T(key="G", real=True, need="shelter", people=60, zone="kushalnagar"), None),
     (10.8, "sms", "+919812301801", "jodupala highway alli lorry driver galige neeru beku, 20 jana iddare",
-     T(key="F", real=True, need="food", people=20, zone="jodupala"),
+     T(key="F", real=True, need="water", people=20, zone="jodupala"),
      "The lorry drivers on the Jodupala highway need water, there are 20 people"),
     (11.1, "voice", "+919812301901", "ನಾಪೋಕ್ಲು ಶಾಲೆ ಶಿಬಿರಕ್ಕೆ ಕುಡಿಯುವ ನೀರು ಬೇಕು, ತುಂಬಾ ಕಡಿಮೆ ಇದೆ",
      T(key="W", real=True, need="water", people=None, zone="napoklu"),

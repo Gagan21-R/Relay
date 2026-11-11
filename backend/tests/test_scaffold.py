@@ -61,6 +61,12 @@ def test_phone_privacy():
     assert hash_phone("9812345210") == hash_phone("+919812345210") != hash_phone("+919812345211")
 
 
-def test_langgraph_runs_every_agent_in_order():
-    out = run("report_received", report_ids=[1])
-    assert [t["agent"] for t in out["trace"]] == AGENTS
+def test_langgraph_routes_a_report_through_the_agents(client):
+    from app.db import SessionLocal
+    from app.models import Report
+    with SessionLocal() as db:
+        rid = db.query(Report.id).order_by(Report.id).first()[0]
+        out = run(db, "report_received", report_ids=[rid])
+        db.rollback()
+    agents = [t["agent"] for t in out["trace"]]
+    assert agents[:5] == ["intake", "trust", "triage", "resource", "monitor"] and set(agents) <= set(AGENTS)

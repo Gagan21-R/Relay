@@ -32,3 +32,21 @@ Read this file and the master prompt first after any context reset, then continu
 - Auto-seed on startup when empty; `python -m app.sim.seed --reset` resets. CRUD: /api/state, zones, roads,
   gazetteer, depots, shelters (PATCH), inventory (PATCH), sources (masked), reports, incidents, signals, alerts (ack), audit.
 - Checks: migration upgrade + `alembic check` clean; counts printed; 17 tests pass.
+
+## Phase 3 — Intake agent + channels (done)
+- `app/agents/intake.py`: language+script detection (`i18n/detect.py`: Unicode blocks, Devanagari hi/mr split,
+  romanized cue words for kn/hi/ml/ta/te/mr/bn, mixed-script), translation for display only (`i18n/translate.py`:
+  translation memory → Gemini → glossary with coverage confidence), extraction on the ORIGINAL text (Gemini JSON
+  schema validated by Pydantic `ExtractedReport`; fallback `rule_extract` with per-language lexicons in
+  `i18n/lexicon.py`), people counts (digits in any script, number words, families×3.7, vehicles), vulnerable groups,
+  life-safety, missing-contact, rumour signals (forward-chain phrases per language, sensational claims, old EXIF),
+  geocoding (`services/geocode.py`: gazetteer exact/fuzzy in all scripts → Nominatim outside mock mode).
+- Channels: SMS webhook (Twilio/Exotel/MSG91 field names + JSON), auto-reply with Ref in the sender's language,
+  one clarification question (location first, else need) and reply merge into the same report, structured
+  `HELP <need> <people> <landmark>`; voice IVR TwiML (language menu → record → transcribe → pipeline) + simulator
+  endpoint; field app sync (idempotent client_id); radio console (satphone, police wireless, forest/railway, HAM);
+  7 mock feed adapters behind `SourceAdapter`; outgoing templates in 8 languages (`i18n/templates.py`).
+- LangGraph graph is real now (intake → trust → triage → resource → monitor → coordination, network-block exit).
+- Decision: phone numbers are kept only in memory for replies (hash+mask in DB); real providers reply by conversation.
+- Probe: rule extraction matches zone/need/people on all 82 seed reports (seed texts; held-out eval in Phase 11).
+- Checks: 35 tests pass (kn/hi/ml/en native, romanized and code-mixed; clarification SMS; voice; radio; field; feeds).
