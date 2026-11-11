@@ -1,8 +1,8 @@
 /** @type {import('tailwindcss').Config} */
-// RELAY design system v3 — brutalist · minimal · surreal.
-// Bone paper, black ink, ONE signal colour (vermilion), square corners, hard offset shadows, a visible grid, monospace
-// structure, and a surreal layer (dusk gradients, floating moons, an eye that watches). The colour names from the earlier
-// system are kept as ROLES so every page restyles at once; each role now maps to a restrained tone:
+// RELAY design system v4 — brutalist · minimal.
+// Bone paper, black ink, ONE signal colour (vermilion), green for approve and red for reject, square corners, hard
+// offset shadows, a visible grid and monospace structure. The colour names from the earlier system are kept as ROLES so
+// every page restyles at once; each role maps to a restrained tone:
 //   brand → ink (primary actions)      pink → signal vermilion (danger, P1, alerts)
 //   lime → bone highlight / done       sun → sand (waiting, attention)      cobalt → dream lilac (info, maps)
 //   tangerine → rust (warning)         mint → sage (ok, confirmed)
@@ -17,6 +17,8 @@ export default {
         white: "#F6F4EF",
         ink: "#0B0B0C",
         signal: "#FF3D1F",
+        go: "#15803D",
+        stop: "#DC2626",
         dusk: { 1: "#C9C3FF", 2: "#F3C8D8", 3: "#FFD9B8" },
         brand: { 50: "#F4F4F4", 100: "#E9E9E9", 200: "#D6D6D6", 300: "#BDBDBD", 400: "#4A4A4A", 500: "#0B0B0C", 600: "#FF3D1F", 700: "#1A1A1A", 800: "#111111", 900: "#000000" },
         pink: { 200: "#FFD6CE", 300: "#FFB3A6", 400: "#FF6B52", 500: "#FF3D1F" },

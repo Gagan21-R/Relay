@@ -118,9 +118,9 @@ export default function Plans() {
                   {edited ? (
                     <button className="btn-primary" disabled={busy} onClick={() => call(`/api/plans/${pending.id}/edit`, { approver_name: who, comment, remove_lines: remove, quantities: qty }, "Edited: new version awaits approval")}><Pencil size={15} aria-hidden />Save edits as v{pending.version + 1}</button>
                   ) : (
-                    <button className="btn-pop px-5" disabled={busy} onClick={() => call(`/api/plans/${pending.id}/approve`, { approver_name: who, comment }, "Approved: tasks created and volunteers assigned — verify routes and dispatch on the Tasks page")}><Check size={16} aria-hidden />Approve & assign volunteers</button>
+                    <button className="btn-approve px-5" disabled={busy} onClick={() => call(`/api/plans/${pending.id}/approve`, { approver_name: who, comment }, "Approved: tasks created and volunteers assigned — verify routes and dispatch on the Tasks page")}><Check size={16} aria-hidden />Approve & assign volunteers</button>
                   )}
-                  <button className="btn-danger" disabled={busy} onClick={() => call(`/api/plans/${pending.id}/reject`, { approver_name: who, comment }, "Rejected")}><X size={15} aria-hidden />Reject</button>
+                  <button className="btn-reject" disabled={busy} onClick={() => call(`/api/plans/${pending.id}/reject`, { approver_name: who, comment }, "Rejected")}><X size={15} aria-hidden />Reject</button>
                 </div>
                 <p className="text-xs font-medium text-ink/60">Approval creates tasks and assigns the top-ranked free volunteer. Stock leaves the depot only when a task is dispatched, and dispatch needs a verified route. Only a Duty Officer can approve (the backend returns 403 otherwise). Every decision is in the audit log and in the precedent memory.</p>
               </div>

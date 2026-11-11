@@ -272,3 +272,18 @@ happens, (5) a flowchart of the complete workflow.
   real report — checked: R-1007 detected Kannada), giant footer wordmark.
 - Checked in the browser at phone-pane and 1440 px widths; fixed mid-word headline breaks, an 18 px horizontal
   overflow, and clipped contact/footer type. Build clean; 5 vitest pass; backend untouched.
+
+---
+
+# Round 5 — calmer brutalist · minimal UI (done)
+
+User asked: fewer animations, remove the eyeball, make the sidebar RELAY big and bold (it was covered), green approve
+and red reject buttons everywhere, no animations when a page/section opens, natural map colours, and no surrealism.
+- Removed every surreal element (moon, orb, eye, door, ladder, clouds, drips, dusk gradients) and the page wipe;
+  motion helpers are now plain wrappers; all `initial`/`whileHover`/`whileInView` entrance animations stripped from pages.
+- Sidebar logo: "RELAY." in bold 54 px Space Grotesk, fully visible (checked: text width = box width).
+- `.btn-approve` (green #15803D) and `.btn-reject` (red #DC2626) applied to every approve / confirm / send and reject /
+  refute / fail button (plans, tasks, fast verify, incidents, public messages, blackout recon, guided run).
+- Map tiles back to natural OpenStreetMap colours (greyscale filter removed).
+- Page headers: grid + big type + a solid black index block with the page number; landing hero: black live-index block.
+- Checked in the browser (landing, map, plans); build clean; 5 vitest pass.

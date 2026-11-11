@@ -102,7 +102,7 @@ export default function Agents() {
           {!threads.length ? <Empty>No messages yet. Start a guided run from the disaster menu, the map or the Scenario Lab.</Empty> : (
             <div className="space-y-3">
               {threads.map((t) => (
-                <motion.div key={t[0].conversation} layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border-2 border-ink bg-white p-2.5">
+                <motion.div key={t[0].conversation} layout animate={{ opacity: 1, y: 0 }} className="rounded-2xl border-2 border-ink bg-white p-2.5">
                   <p className="mb-1 text-[10px] font-extrabold uppercase tracking-wider text-ink/50">{t[0].topic.replace(/_/g, " ")} · {simTime(t[0].sim_time)}</p>
                   <ul className="space-y-1">
                     {t.map((m: any) => {

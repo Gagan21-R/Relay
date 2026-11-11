@@ -70,9 +70,9 @@ export default function Communications() {
                 <p className="mt-2 text-[15px] font-medium" lang={c.language}>{c.text}</p>
                 {c.language !== "en" && c.translation_status !== "english-fallback" && <p className="mt-1 text-xs text-ink/60">EN: {c.english_text}</p>}
                 <div className="mt-2 flex gap-1.5">
-                  {c.status === "draft" && <button className="btn-pop !px-2 !py-1 !text-xs" onClick={() => act(`/api/communications/${c.id}/approve`)}><CheckCircle2 size={13} aria-hidden />Approve</button>}
-                  {c.status === "draft" && <button className="btn-danger !px-2 !py-1 !text-xs" onClick={() => act(`/api/communications/${c.id}/reject`)}><XCircle size={13} aria-hidden />Reject</button>}
-                  {c.status === "approved" && <button className="btn-pop !px-2 !py-1 !text-xs" onClick={() => act(`/api/communications/${c.id}/send`, {}, `Sent #${c.id} (mock SMS)`)}><Send size={13} aria-hidden />Send (mock SMS)</button>}
+                  {c.status === "draft" && <button className="btn-approve !px-2 !py-1 !text-xs" onClick={() => act(`/api/communications/${c.id}/approve`)}><CheckCircle2 size={13} aria-hidden />Approve</button>}
+                  {c.status === "draft" && <button className="btn-reject !px-2 !py-1 !text-xs" onClick={() => act(`/api/communications/${c.id}/reject`)}><XCircle size={13} aria-hidden />Reject</button>}
+                  {c.status === "approved" && <button className="btn-approve !px-2 !py-1 !text-xs" onClick={() => act(`/api/communications/${c.id}/send`, {}, `Sent #${c.id} (mock SMS)`)}><Send size={13} aria-hidden />Send (mock SMS)</button>}
                 </div>
               </article>))}</div>
           )}

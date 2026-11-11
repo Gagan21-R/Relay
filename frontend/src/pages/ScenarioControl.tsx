@@ -39,7 +39,7 @@ export default function ScenarioControl() {
       </PageHeader>
       <div className="grid gap-4 md:grid-cols-3">
         {d?.scenarios.map((s: any) => (
-          <motion.button key={s.id} whileHover={{ y: -4, rotate: -0.5 }} disabled={busy}
+          <motion.button key={s.id} disabled={busy}
             onClick={() => call("/api/sim/scenario/start", { scenario: s.id, replay_until: 0, speed: Number(speed) }, `Started ${s.name}`)}
             className={`relative overflow-hidden rounded-3xl border-2 border-ink p-4 text-left shadow-hard ${d.active?.id === s.id ? "bg-lime-300" : "bg-white"}`}>
             <span className="absolute right-3 top-3 h-6 w-6 rounded-full border-2 border-ink" style={{ background: s.colour }} />

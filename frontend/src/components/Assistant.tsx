@@ -59,7 +59,7 @@ export default function AssistantDrawer() {
   return (
     <>
       {!open && (
-        <motion.button initial={{ scale: 0 }} animate={{ scale: 1 }} whileHover={{ x: -3, y: -3 }}
+        <motion.button whileHover={{ x: -3, y: -3 }}
           onClick={() => opener?.(pageSection)} aria-label={t("assistant.ask")}
           className="fixed bottom-4 right-4 z-[1100] flex items-center gap-2 border-2 border-ink bg-ink px-4 py-3 font-mono text-[12px] font-bold uppercase tracking-[0.08em] text-bone shadow-hard-pink">
           <MessageCircleQuestion size={18} aria-hidden />{t("assistant.ask")}
@@ -71,9 +71,8 @@ export default function AssistantDrawer() {
             transition={{ type: "spring", stiffness: 260, damping: 28 }}
             className="fixed bottom-0 right-0 top-0 z-[1300] flex w-[min(440px,100vw)] flex-col border-l-2 border-ink bg-paper shadow-hard-lg">
             <header className="relative overflow-hidden border-b-2 border-ink bg-ink p-4 text-bone">
-              <span className="absolute -right-6 -top-8 h-24 w-24 animate-levitate rounded-full orb" aria-hidden />
               <div className="relative flex items-center gap-2">
-                <span className="grid h-9 w-9 place-items-center rounded-xl border-2 border-ink bg-lime-400 text-ink"><Sparkles size={18} aria-hidden /></span>
+                <span className="grid h-9 w-9 place-items-center border-2 border-bone bg-signal text-bone"><Sparkles size={18} aria-hidden /></span>
                 <div className="flex-1"><p className="mega text-2xl">{t("assistant.title")}</p><p className="text-[11px] font-bold text-brand-100">{t("assistant.sub")}</p></div>
                 <button className="rounded-lg border-2 border-white/60 p-1" onClick={() => setOpen(false)} aria-label={t("assistant.close")}><X size={16} /></button>
               </div>

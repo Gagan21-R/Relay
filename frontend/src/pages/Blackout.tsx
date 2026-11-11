@@ -31,7 +31,7 @@ export default function Blackout() {
     <div className="space-y-4">
       <PageHeader title={t("nav.blackout")} sub={t("pages.blackout")} kicker="silence is a signal" tone="bg-ink text-white" section="blackout.page" />
       {!data ? null : !silent.length ? <Empty>No zone is silent right now. Every populated zone inside the hazard footprint has reported recently.</Empty> : silent.map((z, n) => (
-        <motion.section key={z.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card overflow-hidden p-0 shadow-hard-pink">
+        <motion.section key={z.id} animate={{ opacity: 1, y: 0 }} className="card overflow-hidden p-0 shadow-hard-pink">
           <div className="hatch-red flex flex-wrap items-center gap-3 border-b-2 border-ink bg-ink px-4 py-3 text-white">
             <span className="mega text-4xl text-pink-400">#{n + 1}</span>
             <EyeOff size={22} aria-hidden />
@@ -57,7 +57,7 @@ export default function Blackout() {
                 <p className="mt-2 text-xs font-bold">Likely needs: {z.recon.estimated_needs.affected_estimate.toLocaleString()} people · {z.recon.estimated_needs.basis}</p>
                 <p className="label mt-2">Pre-positioned with the team</p>
                 <div className="mt-1 flex flex-wrap gap-1.5">{z.recon.prepositioned.map((p: any) => <span key={p.resource_type} className="badge bg-lime-300">{p.quantity} {p.unit} {p.resource_type.replace("_", " ")}</span>)}</div>
-                {z.recon.status === "pending_approval" && <button className="btn-pop mt-3" disabled={busy} onClick={() => approve(z.recon.id)}><Check size={15} aria-hidden />Approve recon + supplies</button>}
+                {z.recon.status === "pending_approval" && <button className="btn-approve mt-3" disabled={busy} onClick={() => approve(z.recon.id)}><Check size={15} aria-hidden />Approve recon + supplies</button>}
                 {z.recon.status === "in_progress" && (
                   <div className="mt-3 space-y-2">
                     <p className="label flex items-center gap-1"><Radio size={12} aria-hidden />Team report (satellite phone)</p>

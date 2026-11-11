@@ -30,7 +30,7 @@ export default function Shelters() {
           const r = raw.data!.find((x) => x.id === s.id);
           const since = now - (r?.last_confirmed_at ?? 0);
           return (
-            <motion.article key={s.id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: n * 0.05 }}
+            <motion.article key={s.id} animate={{ opacity: 1, y: 0 }} transition={{ delay: n * 0.05 }}
               className={`card overflow-hidden p-0 ${s.status === "inaccessible" ? "shadow-hard-pink" : ""}`}>
               <div className={`flex items-center justify-between border-b-2 border-ink px-4 py-2 ${STATUS[s.status] ?? "bg-white"}`}>
                 <span className="text-xs font-extrabold uppercase tracking-wider">{s.status}</span>

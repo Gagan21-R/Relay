@@ -245,7 +245,7 @@ export default function CommandMap() {
         <div className="space-y-4">
           <AnimatePresence mode="wait">
             {sel ? (
-              <motion.div key={`${sel.kind}${sel.id}`} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 30 }}>
+              <motion.div key={`${sel.kind}${sel.id}`} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 30 }}>
                 <div className="mb-2 flex items-center gap-2"><Explain id="map.panel" /><button className="btn-ghost ml-auto !p-1" onClick={() => setSel(null)} aria-label="Close"><X size={15} /></button></div>
                 {sel.kind === "incident" && <IncidentDetail id={sel.id} />}
                 {sel.kind === "zone" && (() => { const z = (zones.data ?? []).find((x) => x.id === sel.id); return z && (
@@ -265,7 +265,7 @@ export default function CommandMap() {
                   </Panel>); })()}
               </motion.div>
             ) : (
-              <motion.div key="tabs" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              <motion.div key="tabs" animate={{ opacity: 1 }}>
                 <div className="mb-2 flex flex-wrap gap-1" role="tablist" aria-label="Side panel">
                   {TABS.map(([k, label]) => <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
                     className={`border-[1.5px] border-ink px-2 py-0.5 font-mono text-[10.5px] font-bold uppercase ${tab === k ? "bg-ink text-bone" : "bg-bone"}`}>{label}</button>)}

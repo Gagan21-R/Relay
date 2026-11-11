@@ -34,8 +34,8 @@ export function IncidentDetail({ id, onClose }: { id: number; onClose?: () => vo
         <p className="text-sm font-medium text-ink/70">{i.reports.length} reports · first {simTime(i.first_report_at)} · latest {simTime(i.last_report_at)} · needs: {i.need_types.join(", ")}{i.vulnerable_groups.length ? ` · vulnerable: ${i.vulnerable_groups.join(", ")}` : ""}</p>
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <input className="input !w-64" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Note (callback result, team check…)" aria-label="Verification note" />
-          <button className="btn-pop" onClick={() => verify("confirm")}><Check size={15} aria-hidden />Confirm</button>
-          <button className="btn-danger" onClick={() => verify("refute")}><X size={15} aria-hidden />Refute (false)</button>
+          <button className="btn-approve" onClick={() => verify("confirm")}><Check size={15} aria-hidden />Confirm</button>
+          <button className="btn-reject" onClick={() => verify("refute")}><X size={15} aria-hidden />Refute (false)</button>
         </div>
         {i.official_status && <p className="mt-2 text-xs font-bold">Marked {i.official_status} by a person{i.verification_note ? `: ${i.verification_note}` : ""}. Source reliabilities were updated.</p>}
       </Panel>
@@ -92,7 +92,7 @@ function SameReportAnalyser() {
         <button className="btn-primary" onClick={run}>Compare</button>
       </div>
       <AnimatePresence>{res && p && (
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-3 space-y-2">
+        <motion.div animate={{ opacity: 1, y: 0 }} className="mt-3 space-y-2">
           <p className={`sticker w-fit ${p.same ? "bg-mint-400" : "bg-pink-400"}`}>{res.verdict}</p>
           <div className="grid gap-2 md:grid-cols-2">
             {res.items.map((it: any, n: number) => (

@@ -84,7 +84,7 @@ export function Panel({ title, actions, children, className = "", explain, tone,
 export function Empty({ children }: { children: ReactNode }) {
   return (
     <div className="relative overflow-hidden border-2 border-dashed border-ink/40 bg-bone p-8 text-center">
-      <span className="mx-auto mb-3 block h-10 w-10 animate-levitate rounded-full orb" aria-hidden />
+      <span className="mx-auto mb-3 block h-3 w-10 bg-ink" aria-hidden />
       <p className="mx-auto max-w-md text-sm text-ink/60">{children}</p>
     </div>
   );

@@ -34,7 +34,7 @@ function TaskCard({ d, act }: { d: any; act: (path: string, body?: any) => void 
   const mine = me.role === "volunteer" && d.volunteer?.code === me.actor;
   const officer = me.role === "duty_officer";
   return (
-    <motion.article layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+    <motion.article layout animate={{ opacity: 1, scale: 1 }}
       className={`rounded-xl border-2 border-ink bg-white p-2.5 text-xs ${d.overdue ? "shadow-hard-pink ring-2 ring-pink-500" : "shadow-hard-sm"}`}>
       <div className="flex flex-wrap items-center gap-1.5"><Truck size={13} aria-hidden /><b className="font-mono">D-{d.id}</b>
         <span className="badge bg-white">{d.vehicle ?? "vehicle?"}</span>{d.overdue && <span className="badge bg-pink-500 text-white">overdue</span>}
@@ -51,10 +51,10 @@ function TaskCard({ d, act }: { d: any; act: (path: string, body?: any) => void 
       <div className="mt-1.5 flex flex-wrap gap-1">
         {d.status === "approved" && officer && <button className="btn-ghost !px-1.5 !py-0.5 !text-[11px]" onClick={() => act(`/api/dispatches/${d.id}/assign`, {})}><UserCheck size={12} aria-hidden />assign top-ranked</button>}
         {["approved", "assigned"].includes(d.status) && officer && !ri.verified && <button className="btn-ghost !px-1.5 !py-0.5 !text-[11px]" onClick={() => act(`/api/dispatches/${d.id}/verify-route`, {})}><RouteIcon size={12} aria-hidden />verify route</button>}
-        {d.status === "assigned" && (officer || mine) && <button className="btn-pop !px-1.5 !py-0.5 !text-[11px]" onClick={() => act(`/api/dispatches/${d.id}/dispatch`)}><Truck size={12} aria-hidden />dispatch</button>}
+        {d.status === "assigned" && (officer || mine) && <button className="btn-primary !px-1.5 !py-0.5 !text-[11px]" onClick={() => act(`/api/dispatches/${d.id}/dispatch`)}><Truck size={12} aria-hidden />dispatch</button>}
         {d.status === "dispatched" && (officer || mine) && <button className="btn-ghost !px-1.5 !py-0.5 !text-[11px]" onClick={() => act(`/api/dispatches/${d.id}/deliver`)}><PackageCheck size={12} aria-hidden />mark delivered</button>}
-        {d.status === "delivered" && officer && <button className="btn-pop !px-1.5 !py-0.5 !text-[11px]" onClick={() => act(`/api/dispatches/${d.id}/confirm`, { method: d.recipient_confirmed_at != null ? "sms_reply" : "officer_review" })}><CheckCircle2 size={12} aria-hidden />confirm</button>}
-        {["approved", "assigned", "dispatched", "delivered"].includes(d.status) && officer && <button className="btn-danger !px-1.5 !py-0.5 !text-[11px]" onClick={() => act(`/api/dispatches/${d.id}/fail`, { reason: "reported by field team" })}><XCircle size={12} aria-hidden />failed</button>}
+        {d.status === "delivered" && officer && <button className="btn-approve !px-1.5 !py-0.5 !text-[11px]" onClick={() => act(`/api/dispatches/${d.id}/confirm`, { method: d.recipient_confirmed_at != null ? "sms_reply" : "officer_review" })}><CheckCircle2 size={12} aria-hidden />confirm</button>}
+        {["approved", "assigned", "dispatched", "delivered"].includes(d.status) && officer && <button className="btn-reject !px-1.5 !py-0.5 !text-[11px]" onClick={() => act(`/api/dispatches/${d.id}/fail`, { reason: "reported by field team" })}><XCircle size={12} aria-hidden />failed</button>}
         <button className="btn-ghost !px-1.5 !py-0.5 !text-[11px]" onClick={() => setOpen(!open)} aria-expanded={open}>{open ? "less" : "why?"}</button>
       </div>
       {open && (

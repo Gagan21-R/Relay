@@ -62,7 +62,7 @@ export default function Alerts() {
         <div className="space-y-2">
           {!list.length && <Empty>No alerts.</Empty>}
           {list.map((a, n) => (
-            <motion.article key={a.id} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: Math.min(n, 10) * 0.03 }}
+            <motion.article key={a.id} animate={{ opacity: 1, x: 0 }} transition={{ delay: Math.min(n, 10) * 0.03 }}
               className={`flex flex-wrap items-start gap-2 rounded-2xl border-2 border-ink bg-white p-3 ${a.resolved ? "opacity-50" : a.severity === "critical" ? "shadow-hard-pink" : "shadow-hard-sm"}`}>
               <BellRing size={18} className="mt-0.5" aria-hidden />
               <div className="min-w-0 flex-1">

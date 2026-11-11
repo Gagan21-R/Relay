@@ -23,10 +23,10 @@ export default function FastVerify() {
       <PageHeader title={t("nav.fastVerify")} sub={t("pages.fastVerify")} kicker="never discarded" tone="bg-tangerine-400" section="fastverify.page" />
       {!data?.length ? <Empty>Nothing waiting. Every life-safety report is either verified or confirmed false.</Empty> : (
         <div className="grid gap-4 lg:grid-cols-2">
-          {data.map((i, n) => {
+          {data.map((i) => {
             const p = PRIORITY_STYLE(i.priority_score);
             return (
-              <motion.article key={i.id} initial={{ opacity: 0, y: 20, rotate: n % 2 ? 1 : -1 }} animate={{ opacity: 1, y: 0, rotate: 0 }}
+              <motion.article key={i.id} animate={{ opacity: 1, y: 0, rotate: 0 }}
                 className="card relative overflow-hidden p-4 shadow-hard-pink">
                 <div className="pat-stripes absolute right-0 top-0 h-full w-3 opacity-20" aria-hidden />
                 <div className="flex flex-wrap items-center gap-2">
@@ -50,8 +50,8 @@ export default function FastVerify() {
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                   <input className="input !w-56" placeholder="What did you find?" value={notes[i.id] ?? ""} onChange={(e) => setNotes({ ...notes, [i.id]: e.target.value })} aria-label="Result" />
-                  <button className="btn-pop" onClick={() => act(i.id, "confirm")}><Check size={15} aria-hidden />Confirmed</button>
-                  <button className="btn-danger" onClick={() => act(i.id, "refute")}><X size={15} aria-hidden />Not true</button>
+                  <button className="btn-approve" onClick={() => act(i.id, "confirm")}><Check size={15} aria-hidden />Confirmed</button>
+                  <button className="btn-reject" onClick={() => act(i.id, "refute")}><X size={15} aria-hidden />Not true</button>
                   <Link className="btn-ghost" to={`/incidents?focus=${i.id}`}>Evidence</Link>
                 </div>
               </motion.article>

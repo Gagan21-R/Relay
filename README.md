@@ -323,17 +323,15 @@ blackout & recon, phone simulator, **Scenario Lab**, scenario control, metrics, 
 radio console were removed; recon teams still report by satellite phone on the Blackout page.) Every page and panel has **Explain me**. The UI chrome
 switches between English, ಕನ್ನಡ and हिंदी.
 
-### Design: brutalist · minimal · surreal
+### Design: brutalist · minimal
 
-The whole UI follows one system (`frontend/tailwind.config.js`, `src/index.css`, `src/components/motion.tsx`):
-**brutalist** — a visible grid, square corners, thick black rules, hard offset shadows, monospace index numbers and
-labels; **minimal** — bone paper, black ink and a single signal colour (vermilion), with muted tones only where colour
-carries meaning (priority, status); **surreal** — a dusk sky, a levitating moon and orb, an eye that follows the
-pointer, a door open onto night, a ladder out of the frame and melting drips, one per page header and a full scene on
-the landing page. Motion: letter-by-letter headlines, a black wipe between pages, parallax, magnetic buttons, clip
-reveals and marquees (all respect reduced-motion). The landing page (`/about`) is built like a creative-agency
-portfolio: hero, manifesto, live index, case-study previews, capabilities, team showcase (the agents and the Duty
-Officer), process, research and a contact form that files a real report.
+The UI follows one system (`frontend/tailwind.config.js`, `src/index.css`): **brutalist** — a visible grid, square
+corners, thick black rules, hard offset shadows, monospace index numbers and labels; **minimal** — bone paper, black
+ink and one signal colour, with colour only where it carries meaning: **approve / confirm buttons are green, reject /
+refute / fail buttons are red** everywhere, plus priority and status tones. Maps use their natural OpenStreetMap
+colours. Pages and sections appear without entrance animations; the live status ticker is the only moving part.
+The landing page (`/about`) is laid out like an agency portfolio: hero with a live index, manifesto, case studies,
+capabilities, team, process, research and a contact form that files a real report.
 
 ## Human in the loop, explainability, privacy
 

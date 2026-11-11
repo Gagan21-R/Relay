@@ -117,7 +117,7 @@ export default function GuideOverlay() {
                 <ul className="mt-2 space-y-1 text-[12.5px] leading-snug">{o.lines.map((l, i) => <li key={i} className="rounded-lg bg-paper px-2 py-1">{l}</li>)}</ul>
                 {o.status === "waiting" && o.action && (
                   <>
-                    <button className="btn-pop mt-3 w-full justify-center py-2 text-sm" disabled={s.busy} onClick={act}><Check size={16} aria-hidden />{o.action.label}</button>
+                    <button className="btn-approve mt-3 w-full justify-center py-2 text-sm" disabled={s.busy} onClick={act}><Check size={16} aria-hidden />{o.action.label}</button>
                     <p className="mt-1 text-[11px] text-ink/60">…or do it yourself on this page — the guide continues as soon as it is done.</p>
                   </>
                 )}

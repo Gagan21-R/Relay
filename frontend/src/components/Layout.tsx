@@ -1,6 +1,5 @@
-// App shell, brutalist · minimal · surreal: a numbered index for navigation (no colour chips), one thin black ticker,
-// square controls, a black wipe on every route change, and page headers with big type, a hairline grid and ONE
-// surreal object per page (a moon, an orb, an eye, a door) chosen from the page title.
+// App shell, brutalist · minimal: a numbered index for navigation, one thin black ticker, square controls, and page
+// headers with big type, a hairline grid and a solid black index block. No entrance animations.
 import { ReactNode, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -10,7 +9,7 @@ import { setUiLang, UI_LANGS } from "../i18n";
 import { useHealth } from "../hooks/useHealth";
 import { useLiveStatus } from "../hooks/useLive";
 import { useApi } from "../hooks/useApi";
-import { Blob, Door, Drip, Eye, Marquee, Moon } from "./motion";
+import { Marquee } from "./motion";
 import AssistantDrawer, { Explain } from "./Assistant";
 import GuideOverlay from "./Guide";
 import { DisasterSelector } from "./Disaster";
@@ -73,10 +72,9 @@ function StatusPills() {
 
 function Logo() {
   return (
-    <Link to="/about" className="group relative block overflow-hidden border-2 border-ink bg-ink p-3 text-bone" aria-label="About RELAY">
-      <span className="absolute -right-6 -top-6 h-16 w-16 rounded-full orb transition-transform duration-700 group-hover:translate-y-3 group-hover:scale-110" aria-hidden />
-      <p className="mega relative text-[40px] lowercase">relay<span className="text-signal">.</span></p>
-      <p className="relative font-mono text-[9.5px] uppercase tracking-[0.22em] text-bone/70">reports in / relief out</p>
+    <Link to="/about" className="block border-2 border-ink bg-ink px-3 pb-2 pt-1.5 text-bone" aria-label="About RELAY">
+      <p className="whitespace-nowrap font-sans text-[54px] font-bold uppercase leading-none tracking-[-0.06em]">Relay<span className="text-signal">.</span></p>
+      <p className="mt-1 font-mono text-[9.5px] uppercase tracking-[0.22em] text-bone/70">reports in / relief out</p>
     </Link>
   );
 }
@@ -107,7 +105,7 @@ export default function Layout() {
                     <>
                       <span className={`font-mono text-[10px] ${isActive ? "text-signal" : "text-ink/40"}`}>{num}</span>
                       <span className="truncate transition-transform duration-200 group-hover:translate-x-1">{t(`nav.${it.key}`)}</span>
-                      {isActive && <motion.span layoutId="nav-dot" className="ml-auto h-2 w-2 self-center rounded-full bg-signal" />}
+                      {isActive && <span className="ml-auto h-2 w-2 self-center bg-signal" />}
                     </>
                   )}
                 </NavLink>
@@ -152,10 +150,7 @@ export default function Layout() {
           </div>
         </header>
         <main className="relative min-w-0 flex-1 overflow-x-clip p-4 sm:p-6">
-          <div key={`wipe-${loc.pathname}`} className="wipe pointer-events-none fixed inset-y-0 left-0 right-0 z-[1100] bg-ink lg:left-60" aria-hidden />
-          <motion.div key={loc.pathname} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 260, damping: 28, delay: 0.25 }}>
-            <Outlet />
-          </motion.div>
+          <Outlet key={loc.pathname} />
         </main>
       </div>
       <AssistantDrawer />
@@ -164,30 +159,32 @@ export default function Layout() {
   );
 }
 
-/** Page header: index number, huge type, hairline grid and one surreal object (picked from the title). */
+/** Page header: index number, big type, hairline grid, and a solid black index block on the right. */
 export function PageHeader({ title, sub, children, kicker, explain, section }: { title: string; sub?: string; children?: ReactNode; kicker?: string; tone?: string; explain?: ReactNode; section?: string }) {
-  const h = [...title].reduce((a, c) => a + c.charCodeAt(0), 0);
-  const obj = h % 4;
+  const loc = useLocation();
+  const idx = NAV.flatMap((g) => g.items as readonly { to: string }[]).findIndex((it) => it.to === loc.pathname);
+  const num = String(idx >= 0 ? idx + 1 : 0).padStart(2, "0");
   return (
-    <div className="relative mb-6 overflow-hidden border-2 border-ink bg-bone shadow-hard">
-      <div className="pat-grid absolute inset-0" aria-hidden />
-      <div className="absolute right-0 top-0 hidden h-full w-[34%] border-l-2 border-ink sky sm:block" aria-hidden />
-      {obj === 0 && <Moon className="right-[9%] top-6 hidden sm:block" size={110} />}
-      {obj === 1 && <Blob className="right-[11%] top-8 hidden h-24 w-24 sm:block" />}
-      {obj === 2 && <Eye className="right-[10%] top-10 hidden sm:block" size={130} />}
-      {obj === 3 && <Door className="right-[13%] top-6 hidden h-28 w-16 sm:block" />}
-      <Drip className="right-[4%] top-0 hidden h-12 w-16 sm:block" />
-      <div className="relative flex flex-wrap items-end justify-between gap-4 p-5 sm:p-7 sm:pr-[38%]">
-        <div className="min-w-0 max-w-3xl">
-          <div className="flex flex-wrap items-center gap-2">
-            {kicker && <span className="sticker bg-bone">{kicker}</span>}
-            {section && <Explain id={section} />}
-            {explain}
+    <div className="relative mb-6 grid border-2 border-ink bg-bone shadow-hard sm:grid-cols-[1fr_200px]">
+      <div className="relative">
+        <div className="pat-grid absolute inset-0" aria-hidden />
+        <div className="relative flex flex-wrap items-end justify-between gap-4 p-5 sm:p-7">
+          <div className="min-w-0 max-w-3xl">
+            <div className="flex flex-wrap items-center gap-2">
+              {kicker && <span className="sticker bg-bone">{kicker}</span>}
+              {section && <Explain id={section} />}
+              {explain}
+            </div>
+            <h1 className="mega mt-4 text-[42px] sm:text-[60px]">{title}<span className="text-signal">.</span></h1>
+            {sub && <p className="mt-3 max-w-2xl border-l-2 border-ink pl-3 text-[14.5px] text-ink/75">{sub}</p>}
           </div>
-          <h1 className="mega mt-4 text-[42px] sm:text-[60px]">{title}<span className="text-signal">.</span></h1>
-          {sub && <p className="mt-3 max-w-2xl border-l-2 border-ink pl-3 text-[14.5px] text-ink/75">{sub}</p>}
+          {children && <div className="relative flex flex-wrap gap-2">{children}</div>}
         </div>
-        {children && <div className="relative flex flex-wrap gap-2">{children}</div>}
+      </div>
+      <div className="hidden flex-col justify-between border-l-2 border-ink bg-ink p-4 text-bone sm:flex" aria-hidden>
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-bone/60">relay / index</span>
+        <span className="font-display text-[88px] font-extrabold leading-none tracking-[-0.05em]">{num}</span>
+        <span className="h-3 w-full bg-signal" />
       </div>
     </div>
   );
