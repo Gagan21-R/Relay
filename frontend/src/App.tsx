@@ -11,11 +11,11 @@ import Incidents from "./pages/Incidents";
 import FastVerify from "./pages/FastVerify";
 import Resources from "./pages/Resources";
 import Shelters from "./pages/Shelters";
+import Plans from "./pages/Plans";
+import Dispatch from "./pages/Dispatch";
 
 // [path, nav key, page key, phase that fills it]
 const PLANNED: [string, string, string, number][] = [
-  ["plans", "plans", "plans", 7],
-  ["dispatch", "dispatch", "dispatch", 7],
   ["alerts", "alerts", "alerts", 8],
   ["scenario", "scenario", "scenario", 10],
   ["twin3d", "twin3d", "twin3d", 10],
@@ -38,6 +38,8 @@ export default function App() {
         <Route path="fast-verify" element={<FastVerify />} />
         <Route path="resources" element={<Resources />} />
         <Route path="shelters" element={<Shelters />} />
+        <Route path="plans" element={<Plans />} />
+        <Route path="dispatch" element={<Dispatch />} />
         {PLANNED.map(([path, nav, page, phase]) => (
           <Route key={path} path={path} element={<Planned navKey={nav} pageKey={page} phase={phase} />} />
         ))}

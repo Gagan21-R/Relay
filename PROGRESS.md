@@ -105,3 +105,17 @@ Read this file and the master prompt first after any context reset, then continu
   same-report analyser), Fast Verify (callback numbers masked, in reporter's language), Resources (Recharts 48 h
   burn-rate lines, demand vs supply bars, transfers, depot stock with stale recount), Shelters (occupancy, access,
   burn, check-in endpoint `POST /api/shelters/{id}/checkin`).
+
+## Phase 7 — Coordination + approvals + delivery loop (done)
+- `agents/coordination.py`: greedy plan (shelter forecast shortages first, then incidents by priority; nearest
+  reachable depot with fresh stock + free vehicle/crew; in-plan reservations; unverified life-safety gets a
+  "verify on arrival" kit); rationale + per-line reason + evidence (report refs / forecast); unmet needs listed.
+  approve (dispatches, depot stock → in transit, crews/vehicles taken, incidents in_progress), edit (new version),
+  reject; tracking: dispatched → in_transit → delivered at ETA (route re-checked: a closed road fails the dispatch),
+  confirmation SMS in the recipient's language, YES/NO in 8 languages, field confirm, shelter check-in confirm;
+  overdue and unconfirmed (2 h) alerts; confirm moves stock to shelter / consumed and returns crews.
+- `agents/monitor.py` (Phase 7 triggers): shortages, new high-priority incidents, failed deliveries; each trigger once.
+- API `/api/plans` (+ approve/reject/edit), `/api/dispatches` (PATCH, confirm, tick). UI: Plans & Approvals (rationale,
+  editable quantities/remove, route map, decision panel, version history), Dispatch kanban + live route map.
+- Checks: nothing dispatched before approval; approval creates dispatches and decrements stock; Kannada "ಹೌದು"
+  confirms a shelter delivery; audit has every step. 57 tests pass; browser approve → 11 dispatches.
