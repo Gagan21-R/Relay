@@ -12,8 +12,8 @@ describe("UI translations", () => {
   it.each([["kn", kn], ["hi", hi]])("%s has every English key", (_, dict) => {
     expect(keys(dict).sort()).toEqual(base);
   });
-  it("keeps interpolation placeholders", () => {
-    expect(kn.common.comingIn).toContain("{{phase}}");
-    expect(hi.common.comingIn).toContain("{{phase}}");
+  it("ships the assistant UI in every language", () => {
+    expect(kn.assistant.explain).toBeTruthy();
+    expect(hi.assistant.explain).toBeTruthy();
   });
 });

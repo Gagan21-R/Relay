@@ -162,3 +162,15 @@ Read this file and the master prompt first after any context reset, then continu
 - Checks: Run Demo completes all 12 steps from a fresh start and re-runs (pytest, twice); in the browser all 12 ran
   with UI approvals. Fix: demo captions use CSS animation (framer exit animations stall when frames are paused).
   66 backend tests pass.
+
+## Phase 11 — Evaluation + Metrics page (done)
+- `eval/heldout.py`: 29 held-out labelled reports written after tuning (adds te, mr, bn; new phrasings; 2 rumours with
+  refutations; a Bengali single life-safety report). `eval/run_eval.py` (`make eval`): fresh temp DB, mock mode;
+  development (seed) and held-out sets scored separately; duplicates P/R/F1 overall + per language; extraction
+  accuracy (zone/need/people) + translation coverage per language; fake/true confusion (incident level); plan time
+  + feasibility; shortage detection on 6 injected shortages; evidence traceability; delivery verification.
+- Results (synthetic): held-out duplicates P 1.00 R 0.95; extraction zone 0.85 need 0.95 people 0.80; fake/true 2/2,
+  0 false alarms; plan 0.27 s feasible; traceability 100%; shortages 6/6; deliveries verified 8/13 (rest lack a
+  recipient phone). Development set is near-perfect because the rules were built on it — labelled as such.
+- `/api/metrics` (+ `/run` in a subprocess), Metrics page (per-language Recharts, confusion matrix, disclaimer).
+  Placeholder pages removed: every route is real. 67 pytest + 5 vitest pass.

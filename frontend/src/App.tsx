@@ -1,7 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import CommandMap from "./pages/CommandMap";
-import Planned from "./pages/Planned";
 import LiveFeed from "./pages/LiveFeed";
 import PhoneSimulator from "./pages/PhoneSimulator";
 import FieldApp from "./pages/FieldApp";
@@ -19,11 +18,8 @@ import PublicCorrections from "./pages/PublicCorrections";
 import Audit from "./pages/Audit";
 import ScenarioControl from "./pages/ScenarioControl";
 import Twin3D from "./pages/Twin3D";
+import Metrics from "./pages/Metrics";
 
-// [path, nav key, page key, phase that fills it]
-const PLANNED: [string, string, string, number][] = [
-  ["metrics", "metrics", "metrics", 11],
-];
 
 export default function App() {
   return (
@@ -47,9 +43,7 @@ export default function App() {
         <Route path="audit" element={<Audit />} />
         <Route path="scenario" element={<ScenarioControl />} />
         <Route path="twin3d" element={<Twin3D />} />
-        {PLANNED.map(([path, nav, page, phase]) => (
-          <Route key={path} path={path} element={<Planned navKey={nav} pageKey={page} phase={phase} />} />
-        ))}
+        <Route path="metrics" element={<Metrics />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

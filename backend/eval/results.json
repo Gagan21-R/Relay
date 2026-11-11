@@ -1,0 +1,543 @@
+{
+  "disclaimer": "Evaluated on synthetic data; real-world validation pending.",
+  "generated_in_seconds": 53.2,
+  "mode": "mock (rule-based extraction, local embeddings)",
+  "development": {
+    "reports": 82,
+    "languages": [
+      "en",
+      "hi",
+      "kn",
+      "ml",
+      "ta"
+    ],
+    "duplicates": {
+      "overall": {
+        "precision": 0.951,
+        "recall": 1.0,
+        "f1": 0.975,
+        "tp": 116,
+        "fp": 6,
+        "fn": 0
+      },
+      "per_language": {
+        "en": {
+          "precision": 0.927,
+          "recall": 1.0,
+          "f1": 0.962,
+          "tp": 76,
+          "fp": 6,
+          "fn": 0
+        },
+        "hi": {
+          "precision": 0.929,
+          "recall": 1.0,
+          "f1": 0.963,
+          "tp": 26,
+          "fp": 2,
+          "fn": 0
+        },
+        "kn": {
+          "precision": 0.974,
+          "recall": 1.0,
+          "f1": 0.987,
+          "tp": 74,
+          "fp": 2,
+          "fn": 0
+        },
+        "ml": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 18,
+          "fp": 0,
+          "fn": 0
+        },
+        "ta": {
+          "precision": 0.909,
+          "recall": 1.0,
+          "f1": 0.952,
+          "tp": 10,
+          "fp": 1,
+          "fn": 0
+        }
+      }
+    },
+    "extraction": {
+      "overall": {
+        "zone": {
+          "accuracy": 1.0,
+          "n": 68
+        },
+        "need": {
+          "accuracy": 1.0,
+          "n": 55
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 48
+        }
+      },
+      "per_language": {
+        "en": {
+          "zone": {
+            "accuracy": 1.0,
+            "n": 28
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 21
+          },
+          "people": {
+            "accuracy": 1.0,
+            "n": 19
+          },
+          "translated": {
+            "accuracy": 1.0,
+            "n": 31
+          }
+        },
+        "hi": {
+          "zone": {
+            "accuracy": 1.0,
+            "n": 8
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 6
+          },
+          "people": {
+            "accuracy": 1.0,
+            "n": 6
+          },
+          "translated": {
+            "accuracy": 1.0,
+            "n": 11
+          }
+        },
+        "kn": {
+          "zone": {
+            "accuracy": 1.0,
+            "n": 26
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 22
+          },
+          "people": {
+            "accuracy": 1.0,
+            "n": 18
+          },
+          "translated": {
+            "accuracy": 1.0,
+            "n": 31
+          }
+        },
+        "ml": {
+          "zone": {
+            "accuracy": 1.0,
+            "n": 4
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 4
+          },
+          "people": {
+            "accuracy": 1.0,
+            "n": 3
+          },
+          "translated": {
+            "accuracy": 1.0,
+            "n": 6
+          }
+        },
+        "ta": {
+          "zone": {
+            "accuracy": 1.0,
+            "n": 2
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 2
+          },
+          "people": {
+            "accuracy": 1.0,
+            "n": 2
+          },
+          "translated": {
+            "accuracy": 1.0,
+            "n": 3
+          }
+        }
+      }
+    },
+    "translation_coverage": {
+      "en": {
+        "accuracy": 1.0,
+        "n": 31
+      },
+      "hi": {
+        "accuracy": 1.0,
+        "n": 11
+      },
+      "kn": {
+        "accuracy": 1.0,
+        "n": 31
+      },
+      "ml": {
+        "accuracy": 1.0,
+        "n": 6
+      },
+      "ta": {
+        "accuracy": 1.0,
+        "n": 3
+      }
+    },
+    "fake_true_confusion": {
+      "tp": 3,
+      "fp": 0,
+      "tn": 15,
+      "fn": 0
+    },
+    "fake_detection": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "tp": 3,
+      "fp": 0,
+      "fn": 0
+    }
+  },
+  "held_out": {
+    "reports": 29,
+    "languages": [
+      "bn",
+      "en",
+      "hi",
+      "kn",
+      "ml",
+      "mr",
+      "ta",
+      "te"
+    ],
+    "duplicates": {
+      "overall": {
+        "precision": 1.0,
+        "recall": 0.947,
+        "f1": 0.973,
+        "tp": 18,
+        "fp": 0,
+        "fn": 1
+      },
+      "per_language": {
+        "bn": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "en": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 14,
+          "fp": 0,
+          "fn": 0
+        },
+        "hi": {
+          "precision": 1.0,
+          "recall": 0.667,
+          "f1": 0.8,
+          "tp": 2,
+          "fp": 0,
+          "fn": 1
+        },
+        "kn": {
+          "precision": 1.0,
+          "recall": 0.889,
+          "f1": 0.941,
+          "tp": 8,
+          "fp": 0,
+          "fn": 1
+        },
+        "ml": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 3,
+          "fp": 0,
+          "fn": 0
+        },
+        "mr": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "ta": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 2,
+          "fp": 0,
+          "fn": 0
+        },
+        "te": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 2,
+          "fp": 0,
+          "fn": 0
+        }
+      }
+    },
+    "extraction": {
+      "overall": {
+        "zone": {
+          "accuracy": 0.852,
+          "n": 27
+        },
+        "need": {
+          "accuracy": 0.955,
+          "n": 22
+        },
+        "people": {
+          "accuracy": 0.8,
+          "n": 20
+        }
+      },
+      "per_language": {
+        "bn": {
+          "zone": {
+            "accuracy": 0.5,
+            "n": 2
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 2
+          },
+          "people": {
+            "accuracy": 0.5,
+            "n": 2
+          },
+          "translated": {
+            "accuracy": 0.0,
+            "n": 2
+          }
+        },
+        "en": {
+          "zone": {
+            "accuracy": 0.909,
+            "n": 11
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 7
+          },
+          "people": {
+            "accuracy": 0.833,
+            "n": 6
+          },
+          "translated": {
+            "accuracy": 1.0,
+            "n": 12
+          }
+        },
+        "hi": {
+          "zone": {
+            "accuracy": 1.0,
+            "n": 2
+          },
+          "need": {
+            "accuracy": 0.5,
+            "n": 2
+          },
+          "people": {
+            "accuracy": 0.5,
+            "n": 2
+          },
+          "translated": {
+            "accuracy": 0.0,
+            "n": 2
+          }
+        },
+        "kn": {
+          "zone": {
+            "accuracy": 0.714,
+            "n": 7
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 6
+          },
+          "people": {
+            "accuracy": 1.0,
+            "n": 5
+          },
+          "translated": {
+            "accuracy": 0.0,
+            "n": 8
+          }
+        },
+        "ml": {
+          "zone": {
+            "accuracy": 1.0,
+            "n": 2
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 2
+          },
+          "people": {
+            "accuracy": 0.5,
+            "n": 2
+          },
+          "translated": {
+            "accuracy": 0.0,
+            "n": 2
+          }
+        },
+        "mr": {
+          "zone": {
+            "accuracy": 1.0,
+            "n": 1
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 1
+          },
+          "people": {
+            "accuracy": 1.0,
+            "n": 1
+          },
+          "translated": {
+            "accuracy": 0.0,
+            "n": 1
+          }
+        },
+        "ta": {
+          "zone": {
+            "accuracy": 1.0,
+            "n": 1
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 1
+          },
+          "people": {
+            "accuracy": 1.0,
+            "n": 1
+          },
+          "translated": {
+            "accuracy": 0.0,
+            "n": 1
+          }
+        },
+        "te": {
+          "zone": {
+            "accuracy": 1.0,
+            "n": 1
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 1
+          },
+          "people": {
+            "accuracy": 1.0,
+            "n": 1
+          },
+          "translated": {
+            "accuracy": 0.0,
+            "n": 1
+          }
+        }
+      }
+    },
+    "translation_coverage": {
+      "bn": {
+        "accuracy": 0.0,
+        "n": 2
+      },
+      "en": {
+        "accuracy": 1.0,
+        "n": 12
+      },
+      "hi": {
+        "accuracy": 0.0,
+        "n": 2
+      },
+      "kn": {
+        "accuracy": 0.0,
+        "n": 8
+      },
+      "ml": {
+        "accuracy": 0.0,
+        "n": 2
+      },
+      "mr": {
+        "accuracy": 0.0,
+        "n": 1
+      },
+      "ta": {
+        "accuracy": 0.0,
+        "n": 1
+      },
+      "te": {
+        "accuracy": 0.0,
+        "n": 1
+      }
+    },
+    "fake_true_confusion": {
+      "tp": 2,
+      "fp": 0,
+      "tn": 10,
+      "fn": 0
+    },
+    "fake_detection": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    }
+  },
+  "operations": {
+    "plan_generation_seconds": {
+      "mean": 0.268,
+      "max": 0.304,
+      "runs": 5,
+      "all_feasible": true
+    },
+    "evidence_traceability": {
+      "traced_lines": 12,
+      "lines": 12,
+      "rate": 1.0
+    },
+    "shortage_detection": {
+      "injected": 6,
+      "detected": 6,
+      "rate": 1.0
+    },
+    "delivery_verification": {
+      "dispatched": 13,
+      "reached_destination": 13,
+      "confirmed": 8,
+      "rate_of_reached": 0.615,
+      "methods": [
+        "sms_reply"
+      ],
+      "note": "recipient replies are simulated; deliveries without a recipient phone stay unconfirmed until a field team or check-in confirms them"
+    }
+  },
+  "notes": [
+    "development = the seed reports the rules were built against; held-out = written after tuning, never used to tune",
+    "duplicate metrics are pairwise over report pairs; per-language counts pairs involving that language",
+    "fake/true is incident-level: positive class = fake/rumour"
+  ]
+}

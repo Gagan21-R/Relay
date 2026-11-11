@@ -36,7 +36,6 @@
     "db": "Database"
   },
   "common": {
-    "comingIn": "Arrives in phase {{phase}}",
     "language": "Language",
     "synthetic": "Synthetic scenario data"
   },
