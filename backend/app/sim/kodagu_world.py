@@ -72,7 +72,7 @@ UNITS = {"food_kits": "kits", "water_litres": "L", "medical_kits": "kits", "boat
 # name, zone, lat, lng, capacity, occupancy, access roads (all must be closed for the shelter to be cut off), stock
 SHELTERS = [
     ("Madikeri Town Hall relief camp", "madikeri", 12.4250, 75.7395, 350, 210, [], {"water_litres": 9000, "food_kits": 260, "medical_kits": 30, "blankets": 250}),
-    ("Napoklu Govt High School camp", "napoklu", 12.3070, 75.6985, 300, 240, ["r_mad_nap", "r_nap_sid"], {"water_litres": 2700, "food_kits": 160, "medical_kits": 12, "blankets": 200}),
+    ("Napoklu Govt High School camp", "napoklu", 12.3070, 75.6985, 300, 240, ["r_mad_nap", "r_nap_sid"], {"water_litres": 4500, "food_kits": 160, "medical_kits": 12, "blankets": 200}),
     ("Kushalnagar Rotary Hall camp", "kushalnagar", 12.4600, 75.9600, 400, 300, [], {"water_litres": 12000, "food_kits": 320, "medical_kits": 25, "blankets": 320}),
     ("Siddapura Govt School camp", "siddapura", 12.3560, 75.8830, 250, 190, ["r_kus_sid", "r_sid_vir"], {"water_litres": 6500, "food_kits": 180, "medical_kits": 14, "blankets": 150}),
     ("Virajpet Kodava Samaja Hall camp", "virajpet", 12.1985, 75.8070, 300, 150, [], {"water_litres": 7000, "food_kits": 170, "medical_kits": 10, "blankets": 160}),

@@ -19,9 +19,18 @@ def timeline(scenario: str = "kodagu_flood") -> list[tuple]:
     return sorted(ev, key=lambda e: (e[0], 0 if e[1] == "signal" else 1))
 
 
+def _pass_time(db: Session, t: float) -> None:
+    """Move the clock to t; shelters consume stock for the elapsed time."""
+    from app.agents import resource
+    dt = t - state.now(db)
+    if dt > 0:
+        resource.consume(db, dt)
+        state.set_now(db, t)
+
+
 def _release(db: Session, event: tuple) -> None:
     t, kind, payload = event
-    state.set_now(db, t)
+    _pass_time(db, t)
     if kind == "signal":
         typ, zc, val, src = payload
         z = db.scalar(select(Zone).where(Zone.code == zc)) if zc else None
@@ -47,8 +56,11 @@ def advance_to(db: Session, t: float) -> int:
         cursor += 1
         n += 1
         state.put(db, "timeline_cursor", cursor)
-    state.set_now(db, max(t, state.now(db)))
+    _pass_time(db, t)
+    from app.graph import pipeline
+    pipeline.run(db, "tick")
     db.flush()
+    emit("sim", {"clock": state.now(db), "released": n})
     return n
 
 
@@ -56,5 +68,6 @@ def start_scenario(db: Session, scenario: str = "kodagu_flood", replay_until: fl
     state.put(db, "scenario", {"id": scenario, "name": "Kodagu monsoon flood", "running": False, "speed": 0})
     state.put(db, "timeline_cursor", 0)
     state.set_now(db, 0.0)
+    state.put(db, "flood_extent", [])
     n = advance_to(db, replay_until) if replay_until is not None else 0
     return {"scenario": scenario, "released": n, "clock": state.now(db)}

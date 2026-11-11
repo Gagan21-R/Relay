@@ -88,3 +88,16 @@ Read this file and the master prompt first after any context reset, then continu
   respected via MotionConfig), new shell (live marquee ticker from `/api/summary`, colour-chip nav, page transitions),
   restyled UI kit (`Breakdown` component for every score), `/about` landing (hero, live numbers, 5 case studies,
   team = 5 agents + 4 modules + people, research grounding, contact form → real web report).
+
+## Phase 6 — Triage + Resource agents (backend done)
+- Triage (`agents/triage.py`): priority /100 = life threat 30 + people 20 (log) + vulnerable 15 + waiting 10 +
+  confidence 15 (unverified life-safety keeps 0.6) + access difficulty 10 (roads closed, flood extent, towers);
+  false/resolved = 0. Breakdown with `why` per component.
+- Resource (`agents/resource.py`): demand = verified/likely incidents (and unverified life-safety) × per-need kit
+  rules + shelter 48 h top-up; supply = depot stock reachable over open roads (`services/routing.py` Dijkstra),
+  stale stock (>12 h uncounted) excluded and alerted per depot; projected shortages by burn rate at Sphere
+  standards (15 L/person/day); transfer proposals from the nearest reachable fresh depot, else escalation.
+  Shelters consume stock as simulated time passes (`engine._pass_time`). Alerts de-duplicated by key and
+  auto-resolved (`services/alerts.py`). `/api/resources/overview` with 48 h projection series.
+- Seed result: "Water litres at Napoklu Govt High School camp runs out in ~18 h" + transfer from Madikeri depot
+  (13.9 km); boats shortage; NGO store stale. 52 tests pass.
