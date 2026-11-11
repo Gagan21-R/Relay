@@ -63,11 +63,6 @@ ADAPTERS: dict[str, MockAdapter] = {a.name: a for a in [
         FeedItem("मेरे माता-पिता हट्टीहोले में हैं, कल से संपर्क नहीं हो रहा", "+919812309101", "My parents are in Hattihole, I have not been able to contact them since yesterday"),
         FeedItem("Neighbours from Hattihole not answering since last night, please send someone.", "+919812309102"),
     ]),
-    MockAdapter("radio", "radio_entry", "HAM / police wireless / satellite phone entries typed by an operator", [
-        FeedItem("[satphone · NDRF team 2] Hattihole reached on foot: 40 houses damaged, ~300 people at the temple hall, need food, water and medical team.",
-                 "ndrf2"),
-        FeedItem("[police wireless · Napoklu station] Napoklu–Siddapura road water receding, light vehicles can pass.", "ksdma"),
-    ]),
 ]}
 
 

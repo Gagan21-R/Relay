@@ -111,7 +111,7 @@ def recon_report(rid: int, body: ReconReport, db: Session = Depends(get_db)):
         src = Source(type="field_team", name=name, reliability_score=0.85, preferred_language="en")
         db.add(src)
         db.flush()
-    channel = "field_app" if body.kind == "field_app" else "radio_entry"
+    channel = "field_app" if body.kind == "field_app" else "satphone"
     r = ingest.submit(db, channel=channel, source=src, text=body.message, lat=z.lat, lng=z.lng, adapter=f"recon:{rid}")
     db.commit()
     db.refresh(t)

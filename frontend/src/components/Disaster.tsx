@@ -1,7 +1,9 @@
 // Disaster selector + profile. One configurable architecture: changing the disaster changes severity factors,
 // resource standards, map overlay style and recommendations (all served by /api/disasters).
 import { useState } from "react";
+import { Play, X } from "lucide-react";
 import { api } from "../services/api";
+import { startGuide } from "./Guide";
 import { useApi } from "../hooks/useApi";
 
 export type DisasterProfile = {
@@ -26,23 +28,57 @@ export function useActiveDisaster(): DisasterProfile | null {
 
 export function DisasterSelector() {
   const { data, reload } = useDisasters();
-  const [busy, setBusy] = useState(false);
+  const [pick, setPick] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   if (!data) return null;
-  const change = async (code: string) => {
-    setBusy(true); setErr(null);
-    try { await api("/api/disasters/active", { method: "POST", body: JSON.stringify({ code }) }); await reload(); }
-    catch (e: any) { setErr(e.message); } finally { setBusy(false); }
+  const profileOnly = async (code: string) => {
+    setErr(null);
+    try { await api("/api/disasters/active", { method: "POST", body: JSON.stringify({ code }) }); await reload(); setPick(null); }
+    catch (e: any) { setErr(e.message); }
   };
   return (
-    <label className="flex items-center gap-1.5 rounded-xl border-2 border-ink bg-white px-2 py-0.5 shadow-hard-sm">
-      <span className="text-[11px] font-extrabold uppercase tracking-wider">disaster</span>
-      <select value={data.active} disabled={busy} onChange={(e) => change(e.target.value)} aria-label="Active disaster type"
-        className="rounded-lg bg-transparent py-0.5 text-xs font-extrabold focus:outline-none">
-        {data.items.map((d) => <option key={d.code} value={d.code}>{DISASTER_ICON[d.code]} {d.name}</option>)}
-      </select>
-      {err && <span className="badge bg-pink-300">{err}</span>}
-    </label>
+    <>
+      <label className="flex items-center gap-1.5 rounded-xl border-2 border-ink bg-white px-2 py-0.5 shadow-hard-sm">
+        <span className="text-[11px] font-extrabold uppercase tracking-wider">disaster</span>
+        <select value={data.active} onChange={(e) => setPick(e.target.value)} aria-label="Choose a disaster and where to run it"
+          className="rounded-lg bg-transparent py-0.5 text-xs font-extrabold focus:outline-none">
+          {data.items.map((d) => <option key={d.code} value={d.code}>{DISASTER_ICON[d.code]} {d.name}</option>)}
+        </select>
+        {err && <span className="badge bg-pink-300">{err}</span>}
+      </label>
+      {pick && <ScenarioPicker disaster={pick} name={data.items.find((d) => d.code === pick)?.name ?? pick}
+        onClose={() => setPick(null)} onProfileOnly={() => profileOnly(pick)} />}
+    </>
+  );
+}
+
+/** Where should this disaster run? Every scenario of that type across India; choosing one runs the full model, guided. */
+export function ScenarioPicker({ disaster, name, onClose, onProfileOnly }: { disaster: string; name: string; onClose: () => void; onProfileOnly: () => void }) {
+  const { data } = useApi<any>("/api/lab/scenarios");
+  const list = (data?.scenarios ?? []).filter((s: any) => s.disaster === disaster);
+  const go = (id: string) => { onClose(); startGuide(id); };
+  return (
+    <div className="fixed inset-0 z-[1300] grid place-items-center bg-ink/50 p-4" role="dialog" aria-modal="true" aria-label={`Run a ${name} scenario`} onClick={onClose}>
+      <div className="max-h-[80vh] w-[min(640px,100%)] overflow-y-auto rounded-3xl border-2 border-ink bg-white p-5 shadow-hard-lg" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center gap-2"><span className="text-2xl">{DISASTER_ICON[disaster]}</span>
+          <h2 className="mega text-2xl">Run a {name.toLowerCase()} scenario</h2>
+          <button className="btn-ghost ml-auto !p-1" onClick={onClose} aria-label="Close"><X size={16} /></button></div>
+        <p className="mt-1 text-sm text-ink/70">Pick where it happens. RELAY loads that place (roads, shelters, hospitals, depots, volunteers), centres the map and runs every agent, step by step, stopping where a Duty Officer must decide.</p>
+        <ul className="mt-3 space-y-1.5">
+          {list.map((s: any) => (
+            <li key={s.id}>
+              <button onClick={() => go(s.id)} className="flex w-full flex-wrap items-center gap-2 rounded-2xl border-2 border-ink bg-paper px-3 py-2 text-left text-sm hover:-translate-y-0.5 hover:shadow-hard-sm">
+                <span className="font-extrabold">{s.name}</span>
+                <span className="badge bg-white">{s.state}</span>
+                <span className={`badge ${s.difficulty === "advanced" ? "bg-pink-300" : s.difficulty === "intermediate" ? "bg-sun-300" : "bg-mint-300"}`}>{s.difficulty}</span>
+                <span className="ml-auto flex items-center gap-1 text-xs font-extrabold text-brand-600"><Play size={13} aria-hidden />Run guided</span>
+              </button>
+            </li>))}
+          {!list.length && <li className="text-sm text-ink/60">Loading scenarios…</li>}
+        </ul>
+        <button className="btn-ghost mt-3 text-xs" onClick={onProfileOnly}>Only switch the planning profile for the current place</button>
+      </div>
+    </div>
   );
 }
 

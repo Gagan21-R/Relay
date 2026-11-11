@@ -1,5 +1,5 @@
 // Scenario Lab: 50 synthetic scenarios on real places across every Indian state and union territory, nine disaster
-// types, three difficulty levels. Launch one and the whole system (map, agents, plans, tasks, 3D twin) switches to it;
+// types, three difficulty levels. Launch one and the whole system (map, agents, plans, tasks) switches to it;
 // play it stage by stage, then read the final report built from the live database.
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
@@ -11,6 +11,7 @@ import { Empty, Panel, simTime } from "../components/ui";
 import { useApi } from "../hooks/useApi";
 import { useLiveEvents } from "../hooks/useLive";
 import { api } from "../services/api";
+import { startGuide } from "../components/Guide";
 
 const DIFF: Record<string, string> = { beginner: "bg-mint-300", intermediate: "bg-sun-300", advanced: "bg-pink-300" };
 
@@ -99,8 +100,8 @@ export default function ScenarioLab() {
                   <p className="mt-1.5 text-ink/75">{s.description}</p>
                   <p className="mt-1 text-[11px] font-bold text-ink/60">{s.stages.length || 1} stage(s) · {s.objectives.length} objectives</p>
                   <div className="mt-2 flex gap-1.5">
-                    <button className="btn-pop !px-2 !py-1 !text-[11px]" disabled={busy} onClick={() => call("/api/lab/launch", { id: s.id, replay_until: 0 }, `Launched ${s.name} at T+0 — press +1 h or Play`)}><Rocket size={12} aria-hidden />Launch</button>
-                    <button className="btn-ghost !px-2 !py-1 !text-[11px]" disabled={busy} onClick={() => call("/api/lab/launch", { id: s.id, replay_until: 4.5 }, `Launched ${s.name}, replayed to T+4.5 h`)}><FlaskConical size={12} aria-hidden />Launch at T+4.5</button>
+                    <button className="btn-pop !px-2 !py-1 !text-[11px]" disabled={busy} onClick={() => startGuide(s.id)}><Rocket size={12} aria-hidden />Run guided</button>
+                    <button className="btn-ghost !px-2 !py-1 !text-[11px]" disabled={busy} onClick={() => call("/api/lab/launch", { id: s.id, replay_until: 0 }, `Launched ${s.name} at T+0 — press +1 h or Play`)}><FlaskConical size={12} aria-hidden />Launch only</button>
                   </div>
                 </motion.article>
               ))}

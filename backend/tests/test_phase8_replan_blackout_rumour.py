@@ -16,7 +16,7 @@ def test_silent_village_is_top_ranked_with_recon_and_supply_estimate(client):
     assert any(a["type"] == "blackout" and "Hattihole" in a["message"] for a in client.get("/api/alerts?open_only=true").json())
 
 
-def test_radio_report_from_the_village_resolves_the_blackout(client):
+def test_satphone_report_from_the_village_resolves_the_blackout(client):
     zone = client.get("/api/zones/blackout").json()[0]
     rid = zone["recon"]["id"]
     assert client.post(f"/api/recon/{rid}/approve", json={"who": "DC Kodagu"}).json()["status"] == "in_progress"

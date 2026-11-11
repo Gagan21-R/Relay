@@ -53,6 +53,22 @@ def n_intake(st: RelayState, config: RunnableConfig) -> dict[str, Any]:
             r.status = "processed"
         db.flush()
         emit("report", row(r))
+        from app.agents import bus
+        if r.status == "blocked":
+            bus.send(db, "intake", "monitor", "inform", "report_blocked",
+                     f"{r.ref} from {z.name} could not get out ({r.channel} needs internet, which is down there)", {"report": r.ref},
+                     conversation=f"report:{r.ref}")
+        else:
+            needs = ", ".join(r.need_types or []) or "unclear need"
+            bus.send(db, "intake", "trust", "inform", "report_ready",
+                     f"New {r.channel} report {r.ref} in {r.original_language} ({r.script}): {needs}"
+                     + (f", {r.people_count} people" if r.people_count else "") + f", at {r.location_text or 'unknown place'}"
+                     + (" — LIFE-SAFETY" if r.life_safety else "")
+                     + (" — asked the sender for the location" if r.needs_clarification else "")
+                     + (" — language needs a human check" if (r.extraction or {}).get("needs_human_review") else "")
+                     + ". Is it new or a duplicate, and is it credible?",
+                     {"report": r.ref, "language": r.original_language, "needs": r.need_types, "people": r.people_count},
+                     conversation=f"report:{r.ref}")
         if r.status == "blocked":
             emit("network", {"zone": z.code, "name": z.name, "internet_down": True, "blocked_report": r.ref, "channel": r.channel})
     return {"blocked": blocked, "trace": _trace(st, "intake", f"{len(st.get('report_ids', []))} report(s) extracted", blocked=blocked)}

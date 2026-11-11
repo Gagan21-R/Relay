@@ -3,7 +3,7 @@
 **AgentX Hackathon 2026 (Hack4Hack) · PS-03 Multi-Agent Disaster Response Coordinator · Agentic AI track · Team Tech Architects**
 
 RELAY turns fragmented, duplicate, unverified and **multilingual** emergency reports — arriving over the internet *and*
-over SMS, voice calls and radio — into evidence-backed, **human-approved** relief plans for **nine kinds of disaster**.
+over SMS, voice calls and satellite phones — into evidence-backed, **human-approved** relief plans for **nine kinds of disaster**.
 It plans **safe routes** around closed roads, assigns volunteers with a deterministic tool, tracks every task until a
 Duty Officer confirms it, replans when conditions change, talks back to people in their own language, and treats
 **silence as a signal**.
@@ -35,7 +35,7 @@ npm run dev                                             # http://localhost:5180 
 
 | Command | What it does |
 |---|---|
-| `make test` | backend `pytest` (98 tests) + frontend `vitest` (5) |
+| `make test` | backend `pytest` (104 tests) + frontend `vitest` (5) |
 | `make seed` | reset the database and replay the Kodagu scenario to T+12 h |
 | `make eval` | run the full evaluation (~5 min), write `backend/eval/results.json` |
 | `python -m alembic upgrade head` | apply migrations (`cc50a87e03ed` initial, `e2a1` enhancement) |
@@ -74,7 +74,7 @@ wildfire, drought, heatwave, tsunami and industrial/chemical** incidents. Each p
 - **fleet** order (boats first in floods; trucks / 4x4 elsewhere) used for route planning;
 - **recommendations** shown on the map.
 
-The **disaster selector** in the header switches the active profile; agents re-run and priorities re-rank immediately.
+Choosing a disaster in the header opens **every scenario of that disaster across India**; picking one loads that place and starts a **guided run** of the full model (see below). The map also has India-wide scenario pins ("All of India"): click any place to run it. An option keeps the current place and only switches the planning profile.
 GDACS alerts for India appear as a map layer, each labelled live / stale / fallback.
 
 ## Languages
@@ -166,6 +166,38 @@ Coordination agent proposes a new plan version. The plan shows **previous vs upd
 that every change **needs approval**; tasks it replaces are cancelled only when the new plan is approved. Demonstrated
 in every Scenario Lab scenario (stage 2 closes the hub road and, from intermediate up, cuts a shelter off).
 
+## How the agents talk to each other
+
+The agents do not only pass a shared state down the graph — they **send each other messages and act on the replies**
+(`backend/app/agents/bus.py`, table `agent_messages`, *Agent conversations* page). Performatives: inform, request,
+propose, accept, decline, escalate, reply. Requests are answered synchronously inside the asking agent's turn, so every
+conversation is deterministic and auditable; messages carry facts and numbers, never prompts.
+
+| Conversation | What happens | Outcome it changes |
+|---|---|---|
+| Intake → Trust → Triage → Monitor | "new report R-1012: rescue, 12 people, Napoklu" → "it joins incident #3 (likely 68%)" → "re-ranked: #3 → 74/100" | hand-offs, visible per report |
+| **Coordination ⇄ Resource** | "short of 2 boats for Bhagamandala after Madikeri depot" → "Kushalnagar can send 2 (47 km, verified)" → *accept* — or *escalate* to the Duty Officer when nobody can | a **second-source plan line** is added; unmet needs raise an outside-help alert |
+| Coordination ⇄ Trust | "#9 is unverified life-safety — still credible before I send a team?" → "no contradictions: verify on arrival" | lines are dropped if Trust says no |
+| Trust ⇄ Coordination | "life-safety but unverified — who can check on the ground fastest?" → "V-001 is free, 1 km away" | a ground-check suggestion for the Duty Officer |
+| Blackout ⇄ Resource | "Hattihole is silent (2,400 people): what should recon carry?" → quantities from the nearest depot | the recon task's supplies |
+| Monitor → Coordination → Duty Officer | "road blocked / task failed — re-plan" → "plan v5 ready, 2 lines changed" → "needs your approval" | every replan |
+
+In a Kodagu replay to T+12 h the agents exchange ~370 messages, including 11 accepted second-source offers and the
+escalations for boats nobody in the district holds (tests: `tests/test_zzz_agents_guide.py`).
+
+## Guided run and the workflow page
+
+- **Guided run** (`backend/app/sim/guide.py`, overlay in the UI): starts any scenario at T+0 and walks through **14
+  steps** — the disaster begins, reports arrive, the agents talk, duplicates and rumours, priorities, shortages, plan
+  (negotiated), Duty Officer approval, volunteers + route verification + dispatch, teams moving, a disruption,
+  replan (previous vs updated), public messages in the area's languages, deliveries confirmed by the officer, final
+  report. Each step **takes you to the page where that work is happening**, explains it with live numbers, moves on by
+  itself when done, and waits where a Duty Officer must decide (approve here or on the page). Started from the disaster
+  menu, the India map pins, the Scenario Lab or *Scenario control → Run guided*.
+- **How RELAY works** (`/workflow`): the complete workflow as a flowchart — 17 steps in 5 phases (set up, understand,
+  decide, act, communicate & learn), the agent that owns each step, the messages between agents (⇄), the human
+  decisions (◆) and the replanning loop. Steps light up during a guided run.
+
 ## Agent architecture
 
 The code has seven LangGraph nodes. They map onto the five conceptual agents of the design:
@@ -214,8 +246,7 @@ paths and human decisions.
 - **Multi-stage**: Onset → Disruption (a citizen reports the hub road blocked; a shelter is cut off) → Escalation
   (a village goes silent, depot stock is lost, a second road is cut) or Recovery.
 - **Launch / reset / play / step**, stage progress, live activity and a **final report** (decisions, successes,
-  failures, unresolved issues, objective checks) computed from the live database. The map and the 3D twin re-centre on
-  the scenario.
+  failures, unresolved issues, objective checks) computed from the live database. The map re-centres on the scenario.
 - Launching runs the **real backend workflows** (channels → agents → plans → approvals → tasks).
 - **Synthetic and isolated**: the scenario script (which message belongs to which situation) is design data used only
   by the generator, the final report and the evaluation; agents receive only the rendered messages
@@ -261,7 +292,7 @@ real report still merges).
 ```mermaid
 flowchart LR
   subgraph Channels
-    SMS[SMS] ; VOICE[Voice IVR] ; WEB[Web] ; FIELD[Field app<br/>offline] ; RADIO[Radio / sat-phone] ; FEEDS[Feeds]
+    SMS[SMS] ; VOICE[Voice IVR] ; WEB[Web] ; FIELD[Field app<br/>offline] ; SAT[Sat-phone<br/>recon teams] ; FEEDS[Feeds]
   end
   SIGNALS[Signals: rain · river · wind · quake · fire · heat · gas · footprints · towers · power]
   GDACS[GDACS<br/>live/stale/fallback]
@@ -286,9 +317,10 @@ phase and decision.
 ### Dashboard
 
 Command map (disaster overlay, hospitals, GDACS, routes, silent zones; tabs for priorities, arriving reports, disaster
-profile, volunteers and agent activity), live feed, 3D twin (re-centred per scenario), incidents, Fast Verify, plans,
-tasks, resources, shelters, alerts, **public messages**, blackout & recon, phone simulator, radio, **Scenario Lab**,
-scenario control (12-step Run Demo), metrics, audit, field app. Every page and panel has **Explain me**. The UI chrome
+profile, volunteers and agent messages; India-wide scenario pins), **How RELAY works** (workflow), **Agent
+conversations**, live feed, incidents, Fast Verify, plans, tasks, resources, shelters, alerts, **public messages**,
+blackout & recon, phone simulator, **Scenario Lab**, scenario control, metrics, audit, field app. (The 3D twin and the
+radio console were removed; recon teams still report by satellite phone on the Blackout page.) Every page and panel has **Explain me**. The UI chrome
 switches between English, ಕನ್ನಡ and हिंदी.
 
 ## Human in the loop, explainability, privacy

@@ -3,8 +3,8 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  Activity, AlertTriangle, BarChart3, Box, ClipboardCheck, Database, EyeOff, FlaskConical, Home, Inbox, Map as MapIcon, Menu,
-  Megaphone, Package, PhoneCall, RadioTower, ScrollText, ShieldAlert, Smartphone, Sparkles, TestTubes, Truck, X,
+  Activity, AlertTriangle, BarChart3, ClipboardCheck, Database, EyeOff, FlaskConical, Home, Inbox, Map as MapIcon, Menu,
+  Megaphone, MessagesSquare, Package, PhoneCall, ScrollText, ShieldAlert, Smartphone, Sparkles, TestTubes, Truck, Workflow, X,
 } from "lucide-react";
 import { setUiLang, UI_LANGS } from "../i18n";
 import { useHealth } from "../hooks/useHealth";
@@ -12,15 +12,16 @@ import { useLiveStatus } from "../hooks/useLive";
 import { useApi } from "../hooks/useApi";
 import { Blob, Marquee } from "./motion";
 import AssistantDrawer, { Explain } from "./Assistant";
-import DemoOverlay from "./DemoOverlay";
+import GuideOverlay from "./Guide";
 import { DisasterSelector } from "./Disaster";
 import { RoleSwitcher } from "./Role";
 
 export const NAV = [
   { group: "see", tint: "bg-lime-400", items: [
+    { to: "/workflow", key: "workflow", icon: Workflow, chip: "bg-lime-300" },
     { to: "/", key: "map", icon: MapIcon, end: true, chip: "bg-cobalt-400" },
+    { to: "/agents", key: "agents", icon: MessagesSquare, chip: "bg-pink-300" },
     { to: "/feed", key: "feed", icon: Inbox, chip: "bg-lime-400" },
-    { to: "/twin3d", key: "twin3d", icon: Box, chip: "bg-sun-400" },
   ] },
   { group: "decide", tint: "bg-pink-400", items: [
     { to: "/incidents", key: "incidents", icon: Activity, chip: "bg-pink-400" },
@@ -35,7 +36,6 @@ export const NAV = [
     { to: "/comms", key: "comms", icon: Megaphone, chip: "bg-tangerine-300" },
     { to: "/blackout", key: "blackout", icon: EyeOff, chip: "bg-ink text-white" },
     { to: "/phone", key: "phone", icon: PhoneCall, chip: "bg-lime-300" },
-    { to: "/radio", key: "radio", icon: RadioTower, chip: "bg-tangerine-300" },
     { to: "/lab", key: "lab", icon: TestTubes, chip: "bg-brand-300" },
     { to: "/scenario", key: "scenario", icon: FlaskConical, chip: "bg-brand-200" },
   ] },
@@ -166,7 +166,7 @@ export default function Layout() {
         </main>
       </div>
       <AssistantDrawer />
-      <DemoOverlay />
+      <GuideOverlay />
     </div>
   );
 }

@@ -29,7 +29,8 @@ def collect(db: Session, st: dict) -> list[dict]:
     from app.models import Road
     closed = {r.code: r for r in db.scalars(select(Road).where(Road.status != "open"))}
     for p in db.scalars(select(Plan).where(Plan.status == "pending_approval")):
-        hit = sorted({c for a in p.assignments for c in a.get("route_roads", []) if c in closed})
+        hit = sorted({c for a in p.assignments for c in a.get("route_roads", []) if c in closed
+                      and not (a.get("vehicle") == "boat" and closed[c].status == "flooded")})
         if hit:
             triggers.append({"key": f"stale_plan:{p.id}:{','.join(hit)}",
                              "why": f"plan v{p.version} routes through {', '.join(closed[c].name + ' (' + closed[c].status + ')' for c in hit)}"})

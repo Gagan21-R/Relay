@@ -15,8 +15,8 @@ export const openAssistant = (section: string, context?: any) => opener?.(sectio
 
 const PAGE_SECTION: Record<string, string> = {
   "": "map.page", feed: "feed.page", incidents: "incidents.page", "fast-verify": "fastverify.page", plans: "plans.page", dispatch: "dispatch.page",
-  resources: "resources.page", shelters: "shelters.page", alerts: "alerts.page", blackout: "blackout.page", phone: "phone.page", radio: "radio.page",
-  scenario: "scenario.page", twin3d: "twin3d.page", metrics: "metrics.page", audit: "audit.page", field: "field.page", about: "about.page",
+  resources: "resources.page", shelters: "shelters.page", alerts: "alerts.page", blackout: "blackout.page", phone: "phone.page",
+  scenario: "scenario.page", agents: "agents.page", workflow: "workflow.page", lab: "lab.page", comms: "comms.page", metrics: "metrics.page", audit: "audit.page", field: "field.page", about: "about.page",
 };
 
 /** The "Explain me" button placed on page headers and panels. */

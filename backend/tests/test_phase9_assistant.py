@@ -2,7 +2,7 @@
 from app.services.assistant import S
 
 PAGES = ["map", "feed", "incidents", "fastverify", "plans", "dispatch", "resources", "shelters", "alerts", "blackout",
-         "phone", "radio", "scenario", "twin3d", "metrics", "audit", "field", "about"]
+         "phone", "scenario", "metrics", "audit", "field", "about"]
 
 
 def test_every_page_has_an_explanation():

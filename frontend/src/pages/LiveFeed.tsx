@@ -23,7 +23,7 @@ export default function LiveFeed() {
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Stat label="reports" value={all.length} />
         <Stat label="languages" value={langs.length} />
-        <Stat label="arrived without internet (SMS, voice, radio)" value={offline} />
+        <Stat label="arrived without internet (SMS, voice, sat-phone)" value={offline} />
         <Stat label="could not get out (zone internet down)" value={blocked.length} tone={blocked.length ? "bg-paper" : "bg-white"} />
       </div>
       <div className="card flex flex-wrap items-center gap-2 p-3 text-sm">

@@ -45,6 +45,8 @@ def road_condition(db: Session, r: Road) -> dict:
 
 
 def _usable(r: Road, vehicle: str) -> bool:
+    if vehicle == "boat":   # afloat on a flooded road, or carried on a trailer wherever a truck can go
+        return r.status == "flooded" or (r.status == "open" and bool({"boat", "truck"} & set(r.allowed_vehicles or [])))
     return r.status == "open" and vehicle in (r.allowed_vehicles or [])
 
 

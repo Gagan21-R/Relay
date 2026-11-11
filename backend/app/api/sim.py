@@ -24,7 +24,7 @@ class NetworkChange(BaseModel):
 
 @router.post("/network")
 def network(body: NetworkChange, db: Session = Depends(get_db)):
-    """Internet DOWN in a zone: web, social and field-app reports from inside it stop; SMS, voice and radio continue."""
+    """Internet DOWN in a zone: web, social and field-app reports from inside it stop; SMS, voice and satellite phones continue."""
     z = db.scalar(select(Zone).where(Zone.code == body.zone_code))
     if not z:
         raise HTTPException(404, f"zone {body.zone_code} not found")

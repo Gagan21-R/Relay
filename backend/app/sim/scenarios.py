@@ -1,6 +1,6 @@
-"""Scenario definitions for the digital twin. The three hand-built ones are in Kodagu; the Scenario Lab adds ~47
+"""Scenario definitions. The three hand-built ones are in Kodagu; the Scenario Lab adds ~47
 generated ones across India (app.sim.lab). All synthetic. They share the world but differ in the
-hazard footprint, the signal timeline and which reports arrive, so the map and the 3D twin look and behave differently."""
+hazard footprint, the signal timeline and which reports arrive, so the map looks and behaves differently."""
 from app.sim import kodagu_reports as KR
 from app.sim import kodagu_world as KW
 from app.sim import lab

@@ -6,6 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core import state
+from app.core.roles import Actor, current_actor, require_officer
 from app.db import get_db
 from app.models import Alert, AuditLog, Dispatch, Incident, Plan, Report, Zone
 from app.sim import engine, lab
@@ -14,11 +15,17 @@ from app.sim.scenarios import SCENARIOS
 router = APIRouter(prefix="/api/lab", tags=["scenario lab"])
 
 
+def _center(sc: dict) -> list:
+    from app.sim import worlds
+    w = worlds.get(sc.get("world", "kodagu"))
+    return w["center"]
+
+
 def _summary(sid: str, sc: dict) -> dict:
     return {"id": sid, "name": sc["name"], "disaster": sc.get("disaster", sc["hazard"]), "difficulty": sc.get("difficulty", "intermediate"),
             "state": sc.get("state", "Karnataka"), "region": sc.get("region", []), "description": sc["description"],
             "objectives": sc.get("objectives", []), "expected": sc.get("expected", []), "stages": sc.get("stages", []),
-            "language": sc.get("language"), "lab": bool(sc.get("lab")), "colour": sc.get("colour"),
+            "language": sc.get("language"), "lab": bool(sc.get("lab")), "colour": sc.get("colour"), "center": _center(sc),
             "events": [{"t": t, "what": why} for t, _, _, why in sc.get("events", [])]}
 
 
@@ -127,3 +134,48 @@ def report(db: Session = Depends(get_db)):
 def current(db: Session = Depends(get_db)):
     return {"scenario": state.get(db, "scenario"), "world": state.get(db, "world"), "disaster": state.disaster(db)}
 
+
+
+# ---------------- guided run ----------------
+class GuideStart(BaseModel):
+    scenario: str | None = None
+
+
+@router.get("/guide")
+def guide_info(db: Session = Depends(get_db)):
+    from app.sim import guide
+    return guide.info(db)
+
+
+@router.post("/guide/start")
+def guide_start(body: GuideStart, db: Session = Depends(get_db)):
+    """Launch (or restart) a scenario at T+0 and reset the guided steps."""
+    from app.sim import guide
+    if body.scenario and body.scenario not in SCENARIOS:
+        raise HTTPException(404, f"unknown scenario {body.scenario}")
+    out = guide.start(db, body.scenario)
+    db.commit()
+    return out
+
+
+@router.post("/guide/step/{n}")
+def guide_step(n: int, db: Session = Depends(get_db)):
+    from app.sim import guide
+    out = guide.run_step(db, n)
+    db.commit()
+    return out
+
+
+class GuideAct(BaseModel):
+    kind: str = Field(pattern="^(approve_plan|dispatch_all|send_comms|confirm_all|approve_and_dispatch)$")
+    plan_id: int | None = None
+
+
+@router.post("/guide/act/{n}")
+def guide_act(n: int, body: GuideAct, db: Session = Depends(get_db), actor: Actor = Depends(current_actor)):
+    """The Duty Officer action a waiting step asks for. Only a Duty Officer may do it (403 otherwise)."""
+    from app.sim import guide
+    require_officer(actor, "act in the guided run")
+    out = guide.act(db, n, body.kind, body.plan_id)
+    db.commit()
+    return out

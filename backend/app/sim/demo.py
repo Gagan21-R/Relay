@@ -170,7 +170,7 @@ def run_step(db: Session, n: int, who: str = "Duty officer") -> dict:
             src = db.scalar(select(Source).where(Source.name == "NDRF-2 (satphone)")) or Source(type="field_team", name="NDRF-2 (satphone)", reliability_score=0.85)
             db.add(src)
             db.flush()
-            rep = ingest.submit(db, channel="radio_entry", source=src, lat=z.lat, lng=z.lng, adapter=f"recon:{t.id}",
+            rep = ingest.submit(db, channel="satphone", source=src, lat=z.lat, lng=z.lng, adapter=f"recon:{t.id}",
                                 text="[satphone · NDRF team 2] Hattihole reached on foot: 40 houses damaged, about 300 people at the temple hall, need food, drinking water and a medical team.")
             db.refresh(t)
             db.refresh(z)

@@ -43,11 +43,11 @@ const TEAM = [
   { name: "Monitoring & Replanning", q: "Has something changed?", icon: RefreshCw, tone: "bg-mint-300", kind: "module" },
   { name: "Blackout Detection", q: "Which areas have gone silent?", icon: EyeOff, tone: "bg-brand-300", kind: "module" },
   { name: "Rumour Control", q: "What do people need to know is false?", icon: Megaphone, tone: "bg-pink-300", kind: "module" },
-  { name: "Digital Twin", q: "What if…?", icon: FlaskConical, tone: "bg-lime-300", kind: "module" },
+  { name: "Scenario Lab", q: "What if…?", icon: FlaskConical, tone: "bg-lime-300", kind: "module" },
 ];
 const PEOPLE = [
   { name: "Duty officer", job: "approves every plan, confirms or refutes, publishes corrections", icon: ClipboardCheck },
-  { name: "Field teams", job: "check Fast Verify cases, report by app, radio or satellite phone", icon: Users },
+  { name: "Field teams", job: "check Fast Verify cases, report by app or satellite phone", icon: Users },
   { name: "Citizens", job: "report by SMS, voice, web — in their own language — and confirm deliveries", icon: UserRound },
 ];
 
@@ -135,7 +135,7 @@ export default function About() {
 
       {/* LANGUAGE MARQUEE */}
       <div className="border-b-2 border-ink bg-ink py-3 text-2xl font-extrabold text-white">
-        <Marquee fast>{["ಕನ್ನಡ", "हिंदी", "മലയാളം", "தமிழ்", "తెలుగు", "मराठी", "বাংলা", "English", "Kanglish", "Hinglish", "Manglish", "SMS", "Voice", "Radio", "Sat-phone"].map((w, i) =>
+        <Marquee fast>{["ಕನ್ನಡ", "हिंदी", "മലയാളം", "தமிழ்", "తెలుగు", "मराठी", "বাংলা", "English", "Kanglish", "Hinglish", "Manglish", "SMS", "Voice", "Sat-phone"].map((w, i) =>
           <span key={w} className={`flex items-center gap-10 ${i % 3 === 0 ? "text-lime-400" : i % 3 === 1 ? "text-pink-400" : "text-white"}`}>{w}<span className="text-sun-400">✦</span></span>)}</Marquee>
       </div>
 

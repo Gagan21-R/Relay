@@ -176,3 +176,31 @@ def reject_comm(cid: int, db: Session = Depends(get_db), actor: Actor = Depends(
 @router.post("/communications/{cid}/send")
 def send_comm(cid: int, db: Session = Depends(get_db), actor: Actor = Depends(current_actor)):
     return _act(db, cid, actor, comms.send, "send a public message")
+
+
+# ---------------- agent conversations ----------------
+@router.get("/agents/messages")
+def agent_messages(limit: int = 300, agent: str | None = None, topic: str | None = None, conversation: str | None = None,
+                   db: Session = Depends(get_db)):
+    """Messages between agents (newest first). Filter by agent (sender or recipient), topic or conversation."""
+    from app.agents.bus import _row
+    from app.models import AgentMessage
+    q = select(AgentMessage).order_by(AgentMessage.id.desc())
+    if agent:
+        q = q.where((AgentMessage.sender == agent) | (AgentMessage.recipient == agent))
+    if topic:
+        q = q.where(AgentMessage.topic == topic)
+    if conversation:
+        q = q.where(AgentMessage.conversation == conversation)
+    return [_row(m) for m in db.scalars(q.limit(min(limit, 2000)))]
+
+
+@router.get("/agents/summary")
+def agent_summary(db: Session = Depends(get_db)):
+    """Who talks to whom, how often, about what — the edges of the live agent network."""
+    from collections import Counter
+
+    from app.models import AgentMessage
+    edges = Counter((m.sender, m.recipient, m.topic) for m in db.scalars(select(AgentMessage)))
+    return {"edges": [{"from": a, "to": b, "topic": t, "count": n} for (a, b, t), n in edges.most_common()],
+            "total": sum(edges.values())}

@@ -173,15 +173,11 @@ def build_plan(db: Session, trigger: str) -> Plan:
     assignments, unmet, chosen_vols = [], [], set()
     n = 0
 
-    def add(target: dict, wants: dict, crew: int, zone: Zone, why: str, evidence: dict, priority: float, need: str):
+    def make_line(d: Depot, r: dict, lines: list, target: dict, crew: int, need: str, reason: str, evidence: dict, priority: float) -> dict:
         nonlocal n
-        d, r, how = _pick_depot(db, pool, zone, wants, crew, need)
-        if not d:
-            unmet.append({**target, "wants": wants, "why": f"no depot can serve it: {how}", "evidence": evidence})
-            return
-        lines, short = _take(pool, d.id, wants)
-        pool[d.id]["boats" if r["vehicle"] == "boat" else "vehicles"] -= 1
-        pool[d.id]["volunteers"] -= crew
+        vkey = "boats" if r["vehicle"] == "boat" else "vehicles"
+        pool[d.id][vkey] = pool[d.id].get(vkey, 0) - 1
+        pool[d.id]["volunteers"] = pool[d.id].get("volunteers", 0) - crew
         n += 1
         end = [target["lat"], target["lng"]]
         ranking = volunteers.rank(db, need, target["lat"], target["lng"], r["vehicle"], exclude=chosen_vols)
@@ -195,13 +191,62 @@ def build_plan(db: Session, trigger: str) -> Plan:
             "route_zones": r["zones"], "route_roads": r["roads"], "route_names": r["road_names"], "safety": r["safety"],
             "unverified_roads": r["unverified_roads"], "route_why": r["why"], "alternatives": r["alternatives"], "shortest": r["shortest"],
             "route_points": [[d.lat, d.lng], *r["points"][1:-1], end] if len(r["points"]) > 1 else [[d.lat, d.lng], end],
-            "priority": round(priority, 1), "reason": f"{why}; {how}" + (f"; short by {', '.join(f'{v} {k}' for k, v in short.items())}" if short else ""),
-            "evidence": evidence, "recommended_volunteer": top and {k: top[k] for k in ("code", "name", "score", "reasons")},
+            "priority": round(priority, 1), "reason": reason, "evidence": evidence,
+            "recommended_volunteer": top and {k: top[k] for k in ("code", "name", "score", "reasons")},
             "volunteer_ranking": [{k: x[k] for k in ("rank", "code", "name", "score", "reasons")} for x in ranking["ranked"][:3]]}
         line["precedent"] = precedents.lookup(db, precedents.signature(db, line))
         assignments.append(line)
+        return line
+
+    def add(target: dict, wants: dict, crew: int, zone: Zone, why: str, evidence: dict, priority: float, need: str):
+        d, r, how = _pick_depot(db, pool, zone, wants, crew, need)
+        if not d:
+            unmet.append({**target, "wants": wants, "why": f"no depot can serve it: {how}", "evidence": evidence})
+            return
+        lines, short = _take(pool, d.id, wants)
+        short_txt = ", ".join(f"{v} {k}" for k, v in short.items())
+        make_line(d, r, lines, target, crew, need, f"{why}; {how}" + (f"; short by {short_txt}" if short else ""), evidence, priority)
         if short:
-            unmet.append({**target, "wants": short, "why": "partially covered: depot stock ran out", "evidence": evidence})
+            short = negotiate(target, zone, d, short, need, evidence, priority)
+        if short:
+            unmet.append({**target, "wants": short, "why": "partially covered: no depot can supply the rest (escalated by the Resource agent)",
+                          "evidence": evidence})
+
+    def negotiate(target: dict, zone: Zone, d: Depot, short: dict, need: str, evidence: dict, priority: float) -> dict:
+        """Ask the Resource agent for a second source; accept offers the plan can still carry, decline the rest."""
+        from app.agents import bus
+        key = f"incident:{target['incident_id']}" if target.get("incident_id") else f"shelter:{target.get('shelter_id')}"
+        short_txt = ", ".join(f"{v} {k}" for k, v in short.items())
+        replies = bus.ask(db, "coordination", "resource", "stock_shortfall",
+                          f"For {target['to_name']} I am short of {short_txt} after taking what {d.name} has. Can another depot cover the rest?",
+                          {"zone_id": zone.id, "target": target["to_name"], "short": short, "exclude_depot": d.id,
+                           "pool": {str(k): v for k, v in pool.items()}, "vehicles": _vehicles_for(db, need)},
+                          conversation=f"shortfall:{state.now(db):.2f}:{key}")
+        left = dict(short)
+        for m in replies:
+            if m.performative != "propose":
+                continue
+            for o in m.content.get("offers", []):
+                od = db.get(Depot, o["depot_id"])
+                p = pool.get(od.id, {})
+                if p.get("volunteers", 0) < CREW["default"]:
+                    bus.reply(db, m, "decline", f"{od.name} has the stock but no free crew left in this plan", {"depot_id": od.id})
+                    continue
+                r2 = routing.plan_route(db, db.get(Zone, od.zone_id).code, zone.code, [o["vehicle"]])
+                want = {k: min(v, left.get(k, 0)) for k, v in o["items"].items() if left.get(k, 0) > 0}
+                if not r2 or not want:
+                    bus.reply(db, m, "decline", f"{od.name}: the route or the need changed since your offer", {"depot_id": od.id})
+                    continue
+                got, _ = _take(pool, od.id, want)
+                for g in got:
+                    left[g["resource_type"]] = left.get(g["resource_type"], 0) - g["quantity"]
+                left = {k: v for k, v in left.items() if v >= 1}
+                ln = make_line(od, r2, got, target, CREW["default"], need,
+                               f"second source for {target['to_name']}, negotiated with the Resource agent ({o['km']} km, {o['safety']})",
+                               {**evidence, "negotiated": True}, priority)
+                got_txt = ", ".join(str(g["quantity"]) + " " + g["resource_type"] for g in got)
+                bus.reply(db, m, "accept", f"Accepted: {got_txt} from {od.name} as plan line #{ln['line']}", {"depot_id": od.id, "line": ln["line"]})
+        return left
 
     # 1. shelter shortages (forecast)
     for t in analysis["transfers"]:
@@ -223,6 +268,13 @@ def build_plan(db: Session, trigger: str) -> Plan:
             continue
         if inc.confidence_level not in PLANNABLE and not (inc.life_safety and inc.confidence_level == "unverified"):
             continue
+        if inc.life_safety and inc.confidence_level == "unverified":
+            from app.agents import bus
+            ans = bus.ask(db, "coordination", "trust", "credibility_check",
+                          f"#{inc.id} {inc.title} is unverified but life-safety. Before I put a team on it: is it still credible?",
+                          {"incident_id": inc.id}, conversation=f"credibility:{inc.id}:{state.now(db):.1f}")
+            if ans and not ans[0].content.get("plannable", True):
+                continue
         wants = resource.incident_demand(inc)
         if inc.life_safety and inc.confidence_level == "unverified":
             wants = {**{k: max(1, round(v * 0.5)) for k, v in wants.items()}, "medical_kits": max(1, wants.get("medical_kits", 0))}
@@ -298,7 +350,7 @@ def approve(db: Session, plan: Plan, actor, comment: str | None, assign_recommen
         if a.get("kind") == "unmet":
             continue
         # a rerouted target: the old, not-yet-moving task is cancelled and replaced by this line
-        for old in db.scalars(select(Dispatch).where(Dispatch.status.in_(["created", "approved", "assigned"]))):
+        for old in db.scalars(select(Dispatch).where(Dispatch.status.in_(["created", "approved", "assigned"]), Dispatch.plan_id != plan.id)):
             if _dispatch_key(old) == _target_key(a):
                 if old.volunteer_id and old.status == "assigned":
                     v = db.get(Volunteer, old.volunteer_id)
@@ -666,14 +718,43 @@ def _route_blocked(db: Session, d: Dispatch) -> str | None:
     from app.models import Road
     codes = (d.route_info or {}).get("roads") or []
     for r in db.scalars(select(Road).where(Road.code.in_(codes))):
-        if r.status != "open":
+        if r.status != "open" and not (d.vehicle == "boat" and r.status == "flooded"):
             return f"{r.name} {r.status}"
     return None
 
 
 def run(db: Session, st: dict) -> dict:
+    """The Monitoring agent's triggers arrive as a replan request; the answer is a plan proposal for the Duty Officer."""
+    from app.agents import bus
     triggers = st.get("triggers") or []
     if not triggers:
         return {"summary": "no trigger"}
-    plan = build_plan(db, "; ".join(t["why"] for t in triggers[:3]) + (f" (+{len(triggers) - 3} more)" if len(triggers) > 3 else ""))
-    return {"plan_id": plan.id, "summary": f"plan v{plan.version} proposed"}
+    why = "; ".join(t["why"] for t in triggers[:3]) + (f" (+{len(triggers) - 3} more)" if len(triggers) > 3 else "")
+    replies = bus.ask(db, "monitor", "coordination", "replan", f"Something changed: {why}. Please re-plan.",
+                      {"triggers": [t["key"] for t in triggers], "why": why}, conversation=f"replan:{state.now(db):.2f}")
+    pid = next((m.content.get("plan_id") for m in replies if m.content.get("plan_id")), None)
+    plan = db.get(Plan, pid) if pid else None
+    return {"plan_id": pid, "summary": f"plan v{plan.version} proposed" if plan else "no plan"}
+
+
+def handle(db: Session, msg) -> list[tuple]:
+    """Requests the Coordination agent answers: re-plan (from Monitor) and ground checks (from Trust)."""
+    if msg.topic == "replan":
+        plan = build_plan(db, msg.content.get("why", "monitor request"))
+        lines = [a for a in plan.assignments if a.get("kind") != "unmet"]
+        unmet = sum(1 for a in plan.assignments if a.get("kind") == "unmet")
+        changed = len((plan.changes or {}).get("changed", []))
+        return [("propose", "replan", f"Plan v{plan.version} ready: {len(lines)} deliveries, {changed} changed from before, {unmet} unmet. "
+                 "Sending it to the Duty Officer.", {"plan_id": plan.id, "version": plan.version}),
+                ("propose", "approval", f"Plan v{plan.version} needs your approval ({len(lines)} deliveries, {changed} changed).",
+                 {"_to": "duty_officer", "plan_id": plan.id})]
+    if msg.topic == "ground_check":
+        c = msg.content
+        rk = volunteers.rank(db, "recon", c["lat"], c["lng"])
+        top = rk["ranked"][0] if rk["ranked"] else None
+        if not top:
+            return [("decline", "ground_check", "No volunteer is free right now; keep it on Fast Verify and call the reporter back", {})]
+        return [("propose", "ground_check", f"{top['code']} {top['name']} is free and {top['km']} km away (score {top['score']}): "
+                 "suggest a ground check. A Duty Officer decides; nothing is assigned yet.",
+                 {"incident_id": c["incident_id"], "volunteer": top["code"], "km": top["km"], "reasons": top["reasons"]})]
+    return [("decline", msg.topic, f"Coordination agent does not handle '{msg.topic}'", {})]

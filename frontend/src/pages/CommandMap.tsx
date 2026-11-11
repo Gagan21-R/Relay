@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Circle, CircleMarker, MapContainer, Marker, Polygon, Polyline, TileLayer, Tooltip, useMap } from "react-leaflet";
+import { Circle, CircleMarker, MapContainer, Marker, Polygon, Polyline, Popup, TileLayer, Tooltip, useMap } from "react-leaflet";
 import { Layers, X } from "lucide-react";
 import { PageHeader } from "../components/Layout";
 import { Explain } from "../components/Assistant";
@@ -14,12 +14,13 @@ import { Breakdown, ConfidenceBadge, LANG_NAMES, Panel, PRIORITY_STYLE, simTime 
 import { useApi } from "../hooks/useApi";
 import { LiveEvent, useLiveEvents } from "../hooks/useLive";
 import { Incident, SimState } from "../services/types";
-import { DATA_BADGE, DisasterProfilePanel, useActiveDisaster, useGdacs } from "../components/Disaster";
+import { DATA_BADGE, DISASTER_ICON, DisasterProfilePanel, useActiveDisaster, useGdacs } from "../components/Disaster";
+import { startGuide } from "../components/Guide";
 
 export const KODAGU_CENTER: [number, number] = [12.42, 75.78];
 const PCOL: Record<string, string> = { P1: "#E11D48", P2: "#F97316", P3: "#EAB308", P4: "#3B82F6" };
 const SCOL: Record<string, string> = { open: "#14C48A", full: "#F5B800", inaccessible: "#E11D48", unconfirmed: "#FF8A3D", closed: "#150A2E" };
-const LAYERS = ["incidents", "shelters", "depots", "routes", "flood", "blackout", "roads", "pulses", "hospitals", "gdacs"] as const;
+const LAYERS = ["incidents", "shelters", "depots", "routes", "flood", "blackout", "roads", "pulses", "hospitals", "gdacs", "scenarios"] as const;
 type LayerKey = typeof LAYERS[number];
 type Sel = { kind: "incident" | "shelter" | "zone" | "depot"; id: number } | null;
 
@@ -65,6 +66,12 @@ function ScenarioView({ center, zoom }: { center?: [number, number]; zoom?: numb
   return null;
 }
 
+function IndiaView({ go }: { go: number }) {
+  const map = useMap();
+  useEffect(() => { if (go) map.flyTo([22.6, 80.5], 5, { duration: 0.9 }); }, [go, map]);
+  return null;
+}
+
 function FlyTo({ target }: { target: [number, number] | null }) {
   const map = useMap();
   useEffect(() => { if (target) map.flyTo(target, Math.max(map.getZoom(), 12), { duration: 0.6 }); }, [target, map]);
@@ -91,6 +98,8 @@ export default function CommandMap() {
   const roads = useApi<any[]>("/api/roads", ["signal", "sim"], 600);
   const hospitals = useApi<any[]>("/api/hospitals", ["sim"], 800);
   const gdacs = useGdacs();
+  const lab = useApi<any>("/api/lab/scenarios");
+  const [india, setIndia] = useState(0);
   const dis = useActiveDisaster();
   const ov = dis?.overlay ?? { label: "flood extent", colour: "#2E5BFF", fill: 0.35 };
   const [sel, setSel] = useState<Sel>(null);
@@ -99,7 +108,7 @@ export default function CommandMap() {
   const [feed, setFeed] = useState<any[]>([]);
   const [tab, setTab] = useState<string>("priorities");
   const [agentLog, setAgentLog] = useState<any[]>([]);
-  useLiveEvents(useCallback((e: LiveEvent) => setAgentLog((l) => [e.data, ...l].slice(0, 12)), []), ["audit"]);
+  useLiveEvents(useCallback((e: LiveEvent) => setAgentLog((l) => [e.data, ...l].slice(0, 12)), []), ["agent_message"]);
   const vols = useApi<any[]>("/api/volunteers", ["dispatch", "refresh"], 800);
   const onReport = useCallback((e: LiveEvent) => {
     const r = e.data;
@@ -145,6 +154,23 @@ export default function CommandMap() {
             <HatchDefs />
             <FlyTo target={fly} />
             <ScenarioView center={sim.data?.scenario?.center} zoom={sim.data?.scenario?.zoom} />
+            <IndiaView go={india} />
+            {on.scenarios && (lab.data?.scenarios ?? []).filter((sc: any) => Array.isArray(sc.center) && sc.center.length === 2).map((sc: any) => {
+              const current = sim.data?.scenario?.id === sc.id;
+              return (
+                <CircleMarker key={`sc-${sc.id}`} center={sc.center} radius={current ? 13 : 10}
+                  pathOptions={{ color: "#150A2E", weight: current ? 4 : 2, fillColor: sc.colour ?? "#9A5CFF", fillOpacity: current ? 0.35 : 0.8 }}>
+                  <Tooltip>{DISASTER_ICON[sc.disaster]} {sc.name} · {sc.difficulty}{current ? " · running now" : " · click to run"}</Tooltip>
+                  <Popup>
+                    <div className="space-y-1 text-xs">
+                      <p className="text-sm font-extrabold">{DISASTER_ICON[sc.disaster]} {sc.name}</p>
+                      <p>{sc.state} · {sc.difficulty} · {sc.region.slice(0, 3).join(", ")}</p>
+                      <p className="text-ink/70">{sc.description}</p>
+                      <button className="btn-pop !px-2 !py-1 !text-xs" onClick={() => startGuide(sc.id)}>{current ? "Restart guided run" : "Run this scenario (guided)"}</button>
+                    </div>
+                  </Popup>
+                </CircleMarker>);
+            })}
             {on.flood && (sim.data?.flood_extent ?? []).map((p, i) => (
               <Polygon key={`f${i}`} positions={p as [number, number][]} pathOptions={{ color: ov.colour, weight: 1.5, fillColor: ov.colour, fillOpacity: ov.fill, className: "flood-poly" }}>
                 <Tooltip sticky>{dis?.name ?? "Hazard"} · {ov.label} v{sim.data?.flood_version} (simulated satellite-style product)</Tooltip>
@@ -207,6 +233,9 @@ export default function CommandMap() {
               </Circle>
             ))}
           </MapContainer>
+          <button className="btn-pop absolute right-3 top-3 z-[500] !px-3 !py-1.5 !text-xs" onClick={() => { setOn({ ...on, scenarios: true }); setIndia((x) => x + 1); }}>
+            🇮🇳 All of India · pick a scenario
+          </button>
           <div className="pointer-events-none absolute bottom-3 left-3 z-[500] rounded-2xl border-2 border-ink bg-white/95 p-2.5 text-[11px] font-bold shadow-hard-sm">
             <p className="mb-1 font-extrabold uppercase tracking-wider">legend</p>
             <p><span style={{ color: PCOL.P1 }}>●</span> P1 <span style={{ color: PCOL.P2 }}>●</span> P2 <span style={{ color: PCOL.P3 }}>●</span> P3 <span style={{ color: PCOL.P4 }}>●</span> P4 · thick = verified · dashed = unverified · grey = false</p>
@@ -272,8 +301,9 @@ export default function CommandMap() {
                   <p className="mt-2 text-[11px] text-ink/60">Reliability = (on-time confirmations + 1) / (assigned tasks + 2). Separate from reporter reliability and approval precedents.</p>
                 </Panel>}
                 {tab === "agents" && <Panel title="Agent activity" section="audit.page" tone="bg-sun-400">
-                  {!agentLog.length ? <p className="text-sm text-ink/60">Agent actions appear here as they happen.</p> :
-                    <ul className="space-y-1 text-[11px]">{agentLog.map((a, i) => <li key={i} className="rounded-lg bg-paper px-2 py-1"><span className={`badge mr-1 ${a.actor_type === "human" ? "bg-pink-300" : "bg-cobalt-200"}`}>{a.actor}</span>{a.summary}</li>)}</ul>}
+                  {!agentLog.length ? <p className="text-sm text-ink/60">Messages between agents appear here as they happen.</p> :
+                    <ul className="space-y-1 text-[11px]">{agentLog.map((a, i) => <li key={i} className="rounded-lg bg-paper px-2 py-1"><span className="badge mr-1 bg-cobalt-200">{a.sender} → {a.recipient?.replace("_", " ")} · {a.performative}</span>{a.summary}</li>)}</ul>}
+                  <a href="/agents" className="mt-2 block text-xs font-extrabold underline">All conversations →</a>
                 </Panel>}
               </motion.div>
             )}

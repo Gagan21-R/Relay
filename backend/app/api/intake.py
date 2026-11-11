@@ -1,4 +1,4 @@
-"""Intake endpoints for every channel: web, SMS (Twilio-style webhook), voice (IVR), field app, radio console, feeds."""
+"""Intake endpoints for every channel: web, SMS (Twilio-style webhook), voice (IVR), field app, feeds."""
 import time
 import uuid
 
@@ -136,38 +136,6 @@ def intake_field(body: FieldReport, db: Session = Depends(get_db)):
     return {"report": _report_out(db, r), "duplicate": False}
 
 
-# ---- radio / operator console ----
-RADIO_TIERS = {"satphone": ("field_team", 0.85), "police_wireless": ("official_agency", 0.9), "forest_radio": ("official_agency", 0.85),
-               "railway_radio": ("official_agency", 0.85), "ham": ("volunteer", 0.7)}
-
-
-class RadioEntry(BaseModel):
-    operator: str = "Control room operator"
-    kind: str = Field("satphone", pattern="^(satphone|police_wireless|forest_radio|railway_radio|ham)$")
-    callsign: str = Field(min_length=1, max_length=80)
-    zone_code: str | None = None
-    message: str = Field(min_length=2, max_length=2000)
-
-
-@router.post("/radio")
-def intake_radio(body: RadioEntry, db: Session = Depends(get_db)):
-    typ, rel = RADIO_TIERS[body.kind]
-    name = f"{body.callsign} ({body.kind.replace('_', ' ')})"
-    src = db.scalar(select(Source).where(Source.name == name))
-    if not src:
-        src = Source(type=typ, name=name, reliability_score=rel, preferred_language="en")
-        db.add(src)
-        db.flush()
-    z = db.scalar(select(Zone).where(Zone.code == body.zone_code)) if body.zone_code else None
-    r = ingest.submit(db, channel="radio_entry", source=src, text=body.message, adapter=body.kind,
-                      lat=z.lat if z else None, lng=z.lng if z else None)
-    r.extraction = {**(r.extraction or {}), "operator": body.operator, "operator_zone": body.zone_code}
-    state.audit(db, body.operator, "radio_entry", f"{name}: {body.message[:80]}", actor_type="human", object_type="report", object_id=r.id)
-    db.commit()
-    return {"report": _report_out(db, r)}
-
-
-# ---- feed adapters ----
 @router.get("/feeds")
 def feeds():
     return [{"name": a.name, "channel": a.channel, "description": a.description} for a in ADAPTERS.values()]

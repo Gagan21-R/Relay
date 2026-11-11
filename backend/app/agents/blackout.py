@@ -2,7 +2,7 @@
 Risk per zone = hazard + population + silence + infrastructure loss + missing-contact reports + vulnerability, each
 with its points and reason (zones.blackout_breakdown). Above the threshold: a blackout alert, a ranked list of silent
 zones (population × hazard × hours silent), and a reconnaissance task with an estimate of likely needs and supplies to
-pre-position, which goes through human approval. A report from inside the zone (radio, satellite phone, field app,
+pre-position, which goes through human approval. A report from inside the zone (satellite phone, field app,
 drone) completes the task, resolves the alert and the zone returns to the normal pipeline.
 Also produces the shelter/road triggers for Monitoring & Replanning."""
 import math
@@ -76,24 +76,16 @@ def _estimate(db: Session, z: Zone, h: float) -> dict:
 def _plan_recon(db: Session, z: Zone, r: dict) -> ReconTask:
     roads_open = any(x for x in (routing.route(db, d_z.code, z.code) for d_z in db.scalars(select(Zone).where(Zone.id.in_(select(Depot.zone_id))))))
     method = "field_team_satphone" if roads_open else ("helicopter" if z.population >= 1000 else "drone")
-    est = _estimate(db, z, r["hazard"])
-    best = None
-    for d in db.scalars(select(Depot)):
-        dz = db.get(Zone, d.zone_id)
-        rt = routing.route(db, dz.code, z.code)
-        km = rt["km"] if rt else 999
-        if best is None or km < best[1]:
-            best = (d, km, rt)
-    depot = best[0]
-    pre = []
-    for rt_, q in est["needs_one_day"].items():
-        cap = CARRY[method].get(rt_)
-        if not cap:
-            continue
-        item = db.scalar(select(InventoryItem).where(InventoryItem.location_type == "depot", InventoryItem.location_id == depot.id, InventoryItem.resource_type == rt_))
-        give = min(q, cap, int(item.quantity) if item else 0)
-        if give > 0:
-            pre.append({"resource_type": rt_, "quantity": give, "unit": UNITS.get(rt_, "")})
+    # ask the Resource agent what the team should carry (it owns stock and per-person standards)
+    from app.agents import bus
+    replies = bus.ask(db, "blackout", "resource", "recon_supplies",
+                      f"{z.name} has been silent for {r['hours_silent']} h ({z.population:,} people, risk {r['score']:.2f}). "
+                      f"I am proposing a {method.replace('_', ' ')} recon: what should it carry, and from where?",
+                      {"zone_id": z.id, "method": method, "hazard": r["hazard"]}, conversation=f"recon:{z.code}:{state.now(db):.1f}")
+    offer = next((m.content for m in replies if m.performative == "propose"), None) or {}
+    est, pre = offer.get("estimate", _estimate(db, z, r["hazard"])), offer.get("prepositioned", [])
+    depot = db.get(Depot, offer["depot_id"]) if offer.get("depot_id") else db.scalars(select(Depot)).first()
+    best = (depot, (offer.get("route") or {}).get("km", 999), offer.get("route"))
     label = {"field_team_satphone": "field team with satellite phone", "helicopter": "helicopter", "drone": "drone"}[method]
     t = ReconTask(zone_id=z.id, method=method, team=f"{label} from {depot.name}", risk_score=r["score"], risk_breakdown=r,
                   estimated_needs=est, prepositioned=pre, from_depot_id=depot.id, created_at_sim=state.now(db),
@@ -104,6 +96,10 @@ def _plan_recon(db: Session, z: Zone, r: dict) -> ReconTask:
     db.add(t)
     db.flush()
     carried = ", ".join(f"{p['quantity']} {p['resource_type']}" for p in pre)
+    from app.agents import bus
+    bus.send(db, "blackout", "duty_officer", "propose", "recon",
+             f"{z.name} ({z.population:,} people) is silent. I propose a {label} from {depot.name} carrying {carried or 'no supplies'}. Approve?",
+             {"recon_id": t.id, "zone": z.code}, conversation=f"recon:{z.code}:{state.now(db):.1f}")
     state.audit(db, "blackout", "recon_proposed", f"{z.name}: {label}, pre-position {carried}", object_type="recon", object_id=t.id)
     emit("recon", row(t))
     return t

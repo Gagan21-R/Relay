@@ -1,4 +1,4 @@
-"""Digital twin / scenario engine. A scenario is a timeline of signals, shelter check-ins and reports; `advance_to(t)`
+"""Scenario engine. A scenario is a timeline of signals, shelter check-ins and reports; `advance_to(t)`
 releases every event up to simulated hour t through the same channels and agents a live deployment would use.
 A background clock plays the timeline at a chosen speed; what-if events change the world at any moment."""
 from sqlalchemy import delete, select
@@ -61,7 +61,7 @@ def _release(db: Session, event: tuple) -> None:
     else:
         _, channel, who, text = payload[:4]
         silenced = set(state.get(db, "silenced_zones", []))
-        if silenced and (payload[4] or {}).get("origin_zone") in silenced and channel != "radio_entry":
+        if silenced and (payload[4] or {}).get("origin_zone") in silenced and channel != "satphone":
             return  # a silenced village sends nothing (what-if event)
         ingest.from_timeline(db, channel=channel, who=who, text=text, received_at=t, media=KR.MEDIA.get(text))
 

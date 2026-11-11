@@ -84,3 +84,19 @@ class Precedent(Base):
     detail: Mapped[dict] = mapped_column(JSON, default=dict)
     decided_by: Mapped[str] = mapped_column(String(120))
     at_sim: Mapped[float] = mapped_column(Float, default=0.0)
+
+
+class AgentMessage(Base):
+    """One message between two agents (FIPA-style performatives). Agents ask, offer, accept, decline and escalate;
+    the replies change what they do next. Every message is stored, pushed live and shown in the UI."""
+    __tablename__ = "agent_messages"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    conversation: Mapped[str] = mapped_column(String(80), index=True)
+    sender: Mapped[str] = mapped_column(String(24))
+    recipient: Mapped[str] = mapped_column(String(24))
+    performative: Mapped[str] = mapped_column(String(16))     # inform request propose accept decline escalate reply
+    topic: Mapped[str] = mapped_column(String(40))
+    summary: Mapped[str] = mapped_column(Text)
+    content: Mapped[dict] = mapped_column(JSON, default=dict)
+    in_reply_to: Mapped[int | None] = mapped_column(Integer)
+    sim_time: Mapped[float] = mapped_column(Float, default=0.0)

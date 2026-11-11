@@ -229,3 +229,30 @@ check → docs.
   map re-centred → replan with reason → approve → 409 on unverified dispatch → verify → assigned volunteer dispatches
   → public message drafted in en/hi/bn with facts preserved → Metrics shows the new sections.
 - **Not tested**: Docker Compose, PostgreSQL, Gemini, Twilio, live GDACS, Nominatim (stated in README).
+
+---
+
+# Round 3 — agents talk, guided run, workflow, run anywhere (done)
+
+User asked: (1) agents must communicate, (2) remove the 3D twin and radio, (3) the disaster dropdown and map clicks
+must run the full model for that disaster/place, (4) a guided sequence that takes the user to each page as work
+happens, (5) a flowchart of the complete workflow.
+
+- **Agent bus** (`agents/bus.py`, `agent_messages`): inform/request/propose/accept/decline/escalate/reply, synchronous
+  `ask()` so conversations are deterministic. Conversations that change outcomes: Coordination ⇄ Resource shortfall
+  negotiation (second-source lines or escalation), Coordination ⇄ Trust credibility checks, Trust ⇄ Coordination ground
+  checks, Blackout ⇄ Resource recon supplies, Monitor → Coordination → Duty Officer replans; plus Intake → Trust →
+  Triage → Monitor hand-offs. API `/api/agents/messages`, `/api/agents/summary`; Agent conversations page (network + threads).
+- **Removed** the 3D twin (and the `three` dependency) and the radio console (page, API, adapter, tests). The recon
+  team's satellite-phone report remains on the Blackout page (channel renamed `satphone`).
+- **Run anywhere**: disaster menu opens that disaster's scenarios across India; map has India-wide pins and an
+  "All of India" button; either starts a guided run. Bug found: the dropdown only changed the profile.
+- **Guided run** (`sim/guide.py`, `/api/lab/guide/*`, overlay): 14 steps for any scenario; auto-advances; waits for the
+  Duty Officer (403 for others); handles repeated disruptions in step 13.
+- **Workflow page** (`/workflow`): 17 steps / 5 phases with agents, messages, human gates and the loop; lights up live.
+- **Bugs found in the browser and fixed**: guide start lost under React's dev double-mount; a map pin without
+  coordinates crashed the map; boats could not use flooded roads (Puducherry plan had 0 deliveries) — boats now float on
+  flooded roads and are trailered on open ones; non-water footprints now close roads as "blocked", not "flooded";
+  approving a plan cancelled its own negotiated second-source line.
+- Checks: 104 pytest (6 new) + 5 vitest; build clean; in the browser: Cyclone → Puducherry → guided run to the plan
+  approval; Workflow and Agent conversations pages render live.

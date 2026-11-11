@@ -79,4 +79,11 @@ def run(db: Session, st: dict) -> dict:
         emit("incident", row(inc))
     db.flush()
     ranked = db.scalars(select(Incident).where(Incident.status != "resolved").order_by(Incident.priority_score.desc()).limit(3)).all()
+    if ids:
+        from app.agents import bus
+        changed = [db.get(Incident, i) for i in ids if db.get(Incident, i)]
+        bus.send(db, "triage", "monitor", "inform", "priorities",
+                 "Re-ranked " + ", ".join(f"#{i.id} {i.title} → {i.priority_score:.0f}/100" for i in changed[:3])
+                 + ". Top now: " + "; ".join(f"#{i.id} {i.priority_score:.0f}" for i in ranked) + ". Watch for anything that needs a plan.",
+                 {"incident_ids": [i.id for i in changed], "top": [i.id for i in ranked]}, conversation=f"priorities:{state.now(db):.2f}")
     return {"summary": "top: " + "; ".join(f"#{i.id} {i.priority_score:.0f}" for i in ranked)}

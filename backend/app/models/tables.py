@@ -148,7 +148,7 @@ class Report(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     ref: Mapped[str] = mapped_column(String(16), unique=True)                 # R-1042
     source_id: Mapped[int | None] = mapped_column(ForeignKey("sources.id"))
-    channel: Mapped[str] = mapped_column(String(24))                           # web sms voice field_app social_feed news_feed official_feed radio_entry
+    channel: Mapped[str] = mapped_column(String(24))                           # web sms voice field_app social_feed news_feed official_feed satphone
     adapter: Mapped[str | None] = mapped_column(String(32))
     raw_text: Mapped[str] = mapped_column(Text)
     original_language: Mapped[str | None] = mapped_column(String(8))

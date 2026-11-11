@@ -60,7 +60,7 @@ export default function Blackout() {
                 {z.recon.status === "pending_approval" && <button className="btn-pop mt-3" disabled={busy} onClick={() => approve(z.recon.id)}><Check size={15} aria-hidden />Approve recon + supplies</button>}
                 {z.recon.status === "in_progress" && (
                   <div className="mt-3 space-y-2">
-                    <p className="label flex items-center gap-1"><Radio size={12} aria-hidden />Team report (satellite phone / radio)</p>
+                    <p className="label flex items-center gap-1"><Radio size={12} aria-hidden />Team report (satellite phone)</p>
                     <textarea className="input" rows={3} placeholder={`e.g. ${z.name} reached on foot: 40 houses damaged, about 300 people at the temple hall, need food, drinking water and a medical team.`}
                       value={msg[z.recon.id] ?? ""} onChange={(e) => setMsg({ ...msg, [z.recon.id]: e.target.value })} />
                     <div className="flex flex-wrap gap-2">

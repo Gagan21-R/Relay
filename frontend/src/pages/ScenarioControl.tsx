@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { Clapperboard, FastForward, Flame, Pause, Play, RotateCcw, SkipForward, Zap } from "lucide-react";
 import { PageHeader } from "../components/Layout";
-import { startDemo } from "../components/DemoOverlay";
+import { startGuide } from "../components/Guide";
 import { Explain } from "../components/Assistant";
 import { Panel } from "../components/ui";
 import { useApi } from "../hooks/useApi";
@@ -33,8 +33,8 @@ export default function ScenarioControl() {
   const tl = d?.timeline;
   return (
     <div className="space-y-4">
-      <PageHeader title={t("nav.scenario")} sub={t("pages.scenario")} kicker={d ? `T+${d.clock.toFixed(1)} h · ${d.active?.name ?? ""}` : "digital twin"} tone="bg-brand-300" section="scenario.page">
-        <button className="btn-pop px-5 py-2.5 text-base" onClick={startDemo}><Clapperboard size={18} aria-hidden />Run Demo</button>
+      <PageHeader title={t("nav.scenario")} sub={t("pages.scenario")} kicker={d ? `T+${d.clock.toFixed(1)} h · ${d.active?.name ?? ""}` : "scenario control"} tone="bg-brand-300" section="scenario.page">
+        <button className="btn-pop px-5 py-2.5 text-base" onClick={() => startGuide()}><Clapperboard size={18} aria-hidden />Run guided</button>
         <Explain id="scenario.demo" />
       </PageHeader>
       <div className="grid gap-4 md:grid-cols-3">

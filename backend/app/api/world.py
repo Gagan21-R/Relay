@@ -184,7 +184,7 @@ def summary(db: Session = Depends(get_db)):
         "clock": state.now(db),
         "reports": len(reports),
         "languages": len({r.original_language for r in reports if r.original_language}),
-        "offline_channel_reports": sum(1 for r in reports if r.channel in ("sms", "voice", "radio_entry")),
+        "offline_channel_reports": sum(1 for r in reports if r.channel in ("sms", "voice", "satphone")),
         "blocked_reports": sum(1 for r in reports if r.status == "blocked"),
         "incidents": len(incs),
         "levels": levels,

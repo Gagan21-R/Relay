@@ -9,7 +9,7 @@
 5. Source reliability updates when a person confirms or refutes an incident."""
 from functools import lru_cache
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.api.common import row
@@ -338,11 +338,51 @@ def run(db: Session, st: dict) -> dict:
         emit("incident", row(inc))
     db.flush()
     ids = [i for i in touched if db.get(Incident, i)]
+    _talk(db, st, ids)
     if ids:
         state.audit(db, "trust", "incidents_scored",
                     "; ".join(f"#{i.id} {i.confidence_level} {i.confidence_score:.2f}" for i in touched.values() if db.get(Incident, i.id)),
                     outputs={"incident_ids": ids}, push=False)
     return {"incident_ids": ids, "summary": f"{len(ids)} incident(s) clustered and scored"}
+
+
+# ---------- conversations with other agents ----------
+def _talk(db: Session, st: dict, ids: list[int]) -> None:
+    from app.agents import bus
+    for rid in st.get("report_ids", []):
+        r = db.get(Report, rid)
+        if not r or not r.incident_id:
+            continue
+        inc = db.get(Incident, r.incident_id)
+        n = db.scalar(select(func.count()).select_from(Report).where(Report.incident_id == inc.id))
+        bus.send(db, "trust", "triage", "inform", "incident_update",
+                 (f"{r.ref} is a duplicate: it joins #{inc.id} {inc.title} ({n} reports)" if n > 1 else f"{r.ref} opens new incident #{inc.id} {inc.title}")
+                 + f" — {inc.confidence_level} {inc.confidence_score:.0%}" + (", flagged as a possible rumour" if r.rumour_signals else "")
+                 + ". Please re-rank.", {"report": r.ref, "incident_id": inc.id, "level": inc.confidence_level, "reports": n},
+                 conversation=f"report:{r.ref}")
+    for iid in ids:
+        inc = db.get(Incident, iid)
+        conv = f"ground_check:{iid}"
+        if inc and inc.fast_verify and inc.lat is not None and not bus.already(db, conv):
+            bus.ask(db, "trust", "coordination", "ground_check",
+                    f"#{iid} {inc.title} is life-safety but only {inc.confidence_level} ({inc.confidence_score:.0%}). "
+                    "I cannot verify it from reports alone: who could check on the ground fastest?",
+                    {"incident_id": iid, "lat": inc.lat, "lng": inc.lng, "need": inc.category}, conversation=conv)
+
+
+def handle(db: Session, msg) -> list[tuple]:
+    """Coordination asks whether an incident is still credible enough to send resources."""
+    if msg.topic != "credibility_check":
+        return [("decline", msg.topic, f"Trust agent does not handle '{msg.topic}'", {})]
+    inc = db.get(Incident, msg.content["incident_id"])
+    contra = [x for x in (inc.confidence_breakdown or {}).get("penalties", []) if "contradict" in str(x).lower()]
+    ok = inc.confidence_level in ("verified", "likely") or (inc.life_safety and inc.confidence_level == "unverified")
+    why = (f"#{inc.id} is {inc.confidence_level} ({inc.confidence_score:.0%})"
+           + (f", {len(contra)} contradiction(s)" if contra else ", no contradictions")
+           + (": go ahead" if ok and inc.confidence_level in ("verified", "likely") else
+              ": send a small team that verifies on arrival" if ok else ": do not send resources yet"))
+    return [("reply", "credibility_check", why, {"incident_id": inc.id, "plannable": ok, "level": inc.confidence_level,
+                                                  "score": inc.confidence_score, "contradictions": len(contra)})]
 
 
 # ---------- people's decisions ----------

@@ -11,19 +11,26 @@ def flood_polygons(db: Session) -> list:
     return list(state.get(db, "flood_extent", [])) + list(state.get(db, "extra_flood", []))
 
 
+WATER_HAZARDS = {"flood", "cyclone", "tsunami"}
+
+
 def apply_flood_to_roads(db: Session, source: str) -> list[str]:
-    """Mark roads whose interior is under water as flooded (field 'blocked' reports are left alone). Returns changed codes."""
+    """Close roads whose interior lies in the hazard footprint (field 'blocked' reports are left alone). Water hazards
+    (flood, cyclone surge, tsunami) make a road 'flooded' — passable by boat; other footprints (fire perimeter, gas
+    plume, earthquake damage, landslide) make it 'blocked'. Returns changed codes."""
     polys = flood_polygons(db)
     changed = []
+    closed_as = "flooded" if state.disaster(db) in WATER_HAZARDS else "blocked"
     for r in db.scalars(select(Road)):
         under = any(geo.in_any(p[0], p[1], polys) for p in geo.road_samples(r.points))
         if under and r.status == "open":
             # remote sensing is not ground truth: the closure is applied (caution) but stays unverified
-            r.status, r.status_source, r.updated_at, r.status_verified = "flooded", source, state.now(db), False
-            db.add(RoadReport(road_id=r.id, status="flooded", source=source, source_type="satellite", verified=False,
+            r.status, r.status_source, r.updated_at, r.status_verified = closed_as, source, state.now(db), False
+            db.add(RoadReport(road_id=r.id, status=closed_as, source=source, source_type="satellite", verified=False,
                               reported_at=state.now(db), note="hazard footprint crosses this road"))
             changed.append(r.code)
-        elif not under and r.status == "flooded":
+        elif not under and r.status in ("flooded", "blocked") and not r.status_verified and " v" in (r.status_source or "") \
+                and r.status_source.split(" v")[0] == source.split(" v")[0]:
             # water receded on the image: reopen for planning, but a person must verify before it counts as safe
             r.status, r.status_source, r.updated_at, r.status_verified = "open", source + " (receded, unverified)", state.now(db), False
             changed.append(r.code)

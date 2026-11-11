@@ -22,7 +22,7 @@ def test_kannada_sms_appears_live_with_translation_and_kannada_reply(client):
     assert r["replies"][0]["language"] == "kn"
 
 
-def test_internet_down_stops_web_social_field_but_not_sms_voice_radio(client):
+def test_internet_down_stops_web_social_field_but_not_sms_voice(client):
     assert client.post("/api/sim/network", json={"zone_code": "somwarpet", "internet_down": True}).json()["internet_down"]
     try:
         web = client.post("/api/intake/web", json={"text": "Somwarpet: 30 people need drinking water"}).json()
@@ -30,11 +30,10 @@ def test_internet_down_stops_web_social_field_but_not_sms_voice_radio(client):
         sms = client.post("/api/intake/sms", json={"from": "+919845577001", "body": "ಸೋಮವಾರಪೇಟೆಯಲ್ಲಿ 30 ಜನಕ್ಕೆ ಕುಡಿಯುವ ನೀರು ಬೇಕು"}).json()
         voice = client.post("/api/intake/voice/simulate", data={"phone": "+919845577002", "language": "kn",
                                                                 "transcript": "ಸೋಮವಾರಪೇಟೆಯಲ್ಲಿ 10 ಜನಕ್ಕೆ ಊಟ ಬೇಕು"}).json()
-        radio = client.post("/api/intake/radio", json={"kind": "ham", "callsign": "VU2-KDG", "message": "Somwarpet 12 people need food"}).json()
         assert web["blocked"] and web["report"]["status"] == "blocked"
         assert field["report"]["status"] == "blocked"
         assert sms["report"]["status"] in ("processed", "clarifying") and sms["replies"]
-        assert voice["report"]["status"] != "blocked" and radio["report"]["status"] != "blocked"
+        assert voice["report"]["status"] != "blocked"
     finally:
         client.post("/api/sim/network", json={"zone_code": "somwarpet", "internet_down": False})
     assert "somwarpet" not in client.get("/api/state").json()["network_down"]

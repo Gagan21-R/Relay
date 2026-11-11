@@ -19,15 +19,15 @@
     "alerts": "Alerts",
     "phone": "Phone simulator",
     "scenario": "Scenario control",
-    "twin3d": "3D twin",
     "metrics": "Metrics",
     "audit": "Audit log",
     "field": "Field app",
-    "radio": "Radio console",
     "blackout": "Blackout & recon",
     "about": "About RELAY",
     "lab": "Scenario Lab",
-    "comms": "Public messages"
+    "comms": "Public messages",
+    "agents": "Agent conversations",
+    "workflow": "How RELAY works"
   },
   "status": {
     "live": "Live",
@@ -57,11 +57,9 @@
     "alerts": "Shortages, blackouts, inaccessible shelters, rumours and overdue deliveries.",
     "phone": "A mock phone: send an SMS or record a voice call in any language and watch it reach the dashboard.",
     "scenario": "The disaster digital twin: start a scenario, inject events and speed up time.",
-    "twin3d": "A 3D view of the active scenario that changes with every scenario and event.",
     "metrics": "Evaluation on a labelled synthetic dataset. Evaluated on synthetic data; real-world validation pending.",
     "audit": "Every agent action and human decision, with inputs and outputs.",
     "field": "Mobile field reporting that works offline and syncs later.",
-    "radio": "Enter reports received by HAM radio, police wireless, forest/railway radio or satellite phone.",
     "blackout": "Silent zones ranked by risk: hazard, population, silence, infrastructure loss and missing-contact reports.",
     "about": "The story: what RELAY does, who does what, and the evidence behind it."
   },

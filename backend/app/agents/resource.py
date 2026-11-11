@@ -176,3 +176,91 @@ def run(db: Session, st: dict) -> dict:
                 alerts.resolve(db, k, "condition cleared", actor="resource")
     return {"shortages": [{"key": k} for k in live_keys if k.startswith("shortage")],
             "summary": f"{len(a['projected'])} projected, {len(a['current'])} current shortage(s), {len(a['stale'])} stale stock row(s)"}
+
+
+# ---------------- messages from other agents ----------------
+def handle(db: Session, msg) -> list[tuple]:
+    """Requests the Resource agent answers. Returns (performative, topic, summary, content) replies."""
+    if msg.topic == "stock_shortfall":
+        return _shortfall(db, msg.content)
+    if msg.topic == "recon_supplies":
+        return _recon_supplies(db, msg.content)
+    return [("decline", msg.topic, f"Resource agent does not handle '{msg.topic}'", {})]
+
+
+def _shortfall(db: Session, c: dict) -> list[tuple]:
+    """Coordination is short of some items for one destination. Offer other depots that still have FRESH stock in the
+    plan's reservation pool and can reach the place; mention stale stock (needs a recount, cannot be promised);
+    escalate to the Duty Officer what nobody can supply."""
+    now = state.now(db)
+    pool = {int(k): v for k, v in (c.get("pool") or {}).items()}
+    zone = db.get(Zone, c["zone_id"])
+    offers, stale, left = [], [], dict(c["short"])
+    for d in db.scalars(select(Depot).order_by(Depot.id)):
+        if d.id == c.get("exclude_depot") or not zone:
+            continue
+        r = routing.plan_route(db, db.get(Zone, d.zone_id).code, zone.code, c.get("vehicles"))
+        if not r:
+            continue
+        p = pool.get(d.id, {})
+        if p.get("vehicles", 0) < 1 and p.get("boats", 0) < 1:
+            continue
+        give = {rt: min(q, p.get(rt, 0)) for rt, q in left.items() if p.get(rt, 0) > 0}
+        give = {rt: (int(q) if rt == "boats" else round(q)) for rt, q in give.items() if q >= 1}
+        if give:
+            offers.append({"depot_id": d.id, "depot": d.name, "items": give, "km": r["km"], "safety": r["safety"], "vehicle": r["vehicle"]})
+            for rt, q in give.items():
+                left[rt] = left[rt] - q
+            left = {k: v for k, v in left.items() if v >= 1}
+        for i in db.scalars(select(InventoryItem).where(InventoryItem.location_type == "depot", InventoryItem.location_id == d.id)):
+            if i.resource_type in c["short"] and now - i.last_updated_at > S.STALE_STOCK_H and i.quantity > 0:
+                stale.append({"depot": d.name, "resource_type": i.resource_type, "quantity": round(i.quantity), "age_h": round(now - i.last_updated_at, 1)})
+    out = []
+    if offers:
+        out.append(("propose", "stock_shortfall",
+                    "I can cover it from " + "; ".join(f"{o['depot']} ({', '.join(f'{q} {k}' for k, q in o['items'].items())}, {o['km']} km, {o['safety']})" for o in offers),
+                    {"offers": offers, "stale": stale}))
+    if stale and left:
+        out.append(("inform", "stock_shortfall", "Stale stock I cannot promise until someone recounts it: "
+                    + "; ".join(f"{s['quantity']} {s['resource_type']} at {s['depot']} (counted {s['age_h']} h ago)" for s in stale), {"stale": stale}))
+    if left:
+        alerts.raise_alert(db, type="shortage", severity="high", key=f"external:{c['zone_id']}:{','.join(sorted(left))}", actor="resource",
+                           message=f"No depot can supply {', '.join(f'{round(v)} {k}' for k, v in left.items())} for {c.get('target', 'a destination')}: request outside help",
+                           related={"zone_id": c["zone_id"]})
+        out.append(("escalate", "stock_shortfall", f"Nobody in the district can supply {', '.join(f'{round(v)} {k}' for k, v in left.items())} "
+                    f"for {c.get('target')}: Duty Officer, please request outside help", {"_to": "duty_officer", "missing": left}))
+    if not out:
+        out.append(("decline", "stock_shortfall", "No other depot can reach it with fresh stock", {}))
+    return out
+
+
+def _recon_supplies(db: Session, c: dict) -> list[tuple]:
+    """Blackout asks what a recon team should carry into a silent zone: estimate one day of need from the
+    per-person standards and offer it from the nearest depot that can reach the zone, within what the method carries."""
+    from app.agents.blackout import AFFECTED_SHARE, CARRY
+    z = db.get(Zone, c["zone_id"])
+    affected = round(z.population * AFFECTED_SHARE)
+    needs = {rt: math.ceil(affected * per) for rt, per in state.standards(db).items() if per > 0}
+    needs["blankets"] = math.ceil(affected * 0.3 * (1 if c.get("hazard", 1) >= 0.7 else 0.5))
+    best = None
+    for d in db.scalars(select(Depot).order_by(Depot.id)):
+        rt = routing.route(db, db.get(Zone, d.zone_id).code, z.code)
+        km = rt["km"] if rt else 999
+        if best is None or km < best[1]:
+            best = (d, km, rt)
+    depot = best[0]
+    pre = []
+    for rt_, q in needs.items():
+        cap = CARRY[c["method"]].get(rt_)
+        if not cap:
+            continue
+        item = db.scalar(select(InventoryItem).where(InventoryItem.location_type == "depot", InventoryItem.location_id == depot.id, InventoryItem.resource_type == rt_))
+        give = min(q, cap, int(item.quantity) if item else 0)
+        if give > 0:
+            pre.append({"resource_type": rt_, "quantity": give, "unit": UNITS.get(rt_, "")})
+    est = {"affected_estimate": affected, "basis": f"{z.population:,} people × {AFFECTED_SHARE:.0%} × one day at per-person standards", "needs_one_day": needs}
+    carried = ", ".join(str(p["quantity"]) + " " + p["resource_type"] for p in pre) or "nothing (no stock)"
+    return [("propose", "recon_supplies",
+             f"For ~{affected:,} people in {z.name}: carry {carried} "
+             f"from {depot.name} ({'no open road' if not best[2] else str(best[1]) + ' km'}); a full day needs {', '.join(f'{v} {k}' for k, v in needs.items())}",
+             {"estimate": est, "depot_id": depot.id, "depot": depot.name, "route": best[2], "prepositioned": pre})]

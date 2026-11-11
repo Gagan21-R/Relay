@@ -5,7 +5,6 @@ import CommandMap from "./pages/CommandMap";
 import LiveFeed from "./pages/LiveFeed";
 import PhoneSimulator from "./pages/PhoneSimulator";
 import FieldApp from "./pages/FieldApp";
-import RadioConsole from "./pages/RadioConsole";
 import About from "./pages/About";
 import Incidents from "./pages/Incidents";
 import FastVerify from "./pages/FastVerify";
@@ -19,10 +18,11 @@ import Audit from "./pages/Audit";
 import ScenarioControl from "./pages/ScenarioControl";
 import ScenarioLab from "./pages/ScenarioLab";
 import Communications from "./pages/Communications";
+import Agents from "./pages/Agents";
+import Workflow from "./pages/Workflow";
 
-// heavy pages (three.js, charts) load on demand
+// heavy pages (charts) load on demand
 const Resources = lazy(() => import("./pages/Resources"));
-const Twin3D = lazy(() => import("./pages/Twin3D"));
 const Metrics = lazy(() => import("./pages/Metrics"));
 const wait = (el: JSX.Element) => <Suspense fallback={<p className="p-6 text-sm font-bold">Loading…</p>}>{el}</Suspense>;
 
@@ -35,7 +35,6 @@ export default function App() {
         <Route path="feed" element={<LiveFeed />} />
         <Route path="phone" element={<PhoneSimulator />} />
         <Route path="field" element={<FieldApp />} />
-        <Route path="radio" element={<RadioConsole />} />
         <Route path="about" element={<About />} />
         <Route path="incidents" element={<Incidents />} />
         <Route path="fast-verify" element={<FastVerify />} />
@@ -49,7 +48,8 @@ export default function App() {
         <Route path="scenario" element={<ScenarioControl />} />
         <Route path="lab" element={<ScenarioLab />} />
         <Route path="comms" element={<Communications />} />
-        <Route path="twin3d" element={wait(<Twin3D />)} />
+        <Route path="agents" element={<Agents />} />
+        <Route path="workflow" element={<Workflow />} />
         <Route path="metrics" element={wait(<Metrics />)} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

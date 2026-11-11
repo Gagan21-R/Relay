@@ -1,4 +1,4 @@
-// "Internet DOWN in zone X": web, social and field-app reports from that zone stop; SMS, voice and radio continue.
+// "Internet DOWN in zone X": web, social and field-app reports from that zone stop; SMS, voice and satellite phones continue.
 import { Wifi, WifiOff } from "lucide-react";
 import { api } from "../services/api";
 import { useApi } from "../hooks/useApi";
@@ -13,7 +13,7 @@ export default function NetworkPanel({ explain }: { explain?: React.ReactNode })
   };
   return (
     <Panel title="Network status" explain={explain} section="phone.network">
-      <p className="mb-2 text-xs text-ink/60">Cut the internet in a zone. Reports needing internet from inside it stop arriving; SMS, voice calls and radio still get through.</p>
+      <p className="mb-2 text-xs text-ink/60">Cut the internet in a zone. Reports needing internet from inside it stop arriving; SMS and voice calls still get through.</p>
       <div className="grid grid-cols-2 gap-1.5">
         {(data ?? []).map((z) => (
           <button key={z.code} onClick={() => toggle(z)} aria-pressed={z.internet_down}

@@ -8,17 +8,23 @@
 - [ ] Say once, up front: *"Places are real; every report, person and stock count is synthetic. Docker, Gemini and
       Twilio integrations exist but were not tested — this is the offline mode."*
 
+## Easiest: the guided run
+Choose a disaster in the header (or click a pin after **All of India** on the map) → pick a place → the **guided run**
+walks all 14 steps and opens each page as the work happens there. It stops where a Duty Officer decides: press the
+button in the guide or act on the page. Keep **How RELAY works** open in a second tab — its steps light up as you go.
+
 ## The three-minute demo — six beats
 
 **Beat 1 · Disaster selection (0:00–0:25)** — *Scenario Lab*
-- Filter *cyclone* → launch **Canning — cyclone (West Bengal)** with *Launch at T+4.5*. The map and header switch to
-  the Sundarbans; the disaster selector shows *Cyclone*.
+- Disaster menu → *Cyclone* → **Canning (West Bengal)** → the guided run starts; the map and header switch to the
+  Sundarbans. (Or *Scenario Lab* → *Launch only* to drive it yourself.)
 - Line: *"Nine disasters, one architecture: the cyclone profile changes severity weights, resource standards, overlays
   and recommendations. 50 scenarios cover every state and UT."*
 - Command map → *Disaster* tab: profile and GDACS items labelled **FALLBACK** (*"we never pass samples off as live"*).
 
-**Beat 2 · Reports and evidence (0:25–0:55)** — *Live feed*, *Incidents*
+**Beat 2 · Reports, evidence and agents talking (0:25–0:55)** — *Live feed*, *Agent conversations*, *Incidents*
 - Point at a Bengali SMS, its English duplicate and its romanized/Hindi copy: one incident, counted once.
+- *Agent conversations*: Intake → Trust → Triage hand-offs; Coordination asks Resource for boats and accepts a second depot's offer.
 - Open the incident: confidence and priority breakdowns, every report behind it.
 - Optional: *Phone simulator* → send `Mane olage neeru bandide.` → detected Kannada (romanized), flood, rescue; RELAY
   asks for the location in Kannada.
@@ -50,7 +56,7 @@
 - Close: *"Synthetic data, honest numbers, a person decides every action."*
 
 ## Longer demo
-*Scenario control → Run Demo* plays the original 12-step Kodagu story on the live system (≈ 2 min): reports in five
+*Scenario control → Run guided* runs the 14-step guided run on the current scenario; the original Kodagu story (≈ 2 min): reports in five
 languages, cross-language duplicates, dam-burst rumour corrected in 8 languages, shortages, a plan, approval, officer-
 verified routes and dispatch, the Kannada **ಹೌದು** as evidence then officer confirmation, an internet blackout, a shelter
 cut off by flood and a replan, and the silent village found by blackout detection.

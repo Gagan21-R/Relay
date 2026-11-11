@@ -16,7 +16,7 @@ export const CHANNELS: Record<string, { icon: any; label: string; internet: bool
   social_feed: { icon: Rss, label: "Social", internet: true },
   news_feed: { icon: Newspaper, label: "News", internet: true },
   official_feed: { icon: Building2, label: "Official", internet: true },
-  radio_entry: { icon: Radio, label: "Radio / sat-phone", internet: false },
+  satphone: { icon: Radio, label: "Satellite phone (recon)", internet: false },
 };
 
 export function ChannelBadge({ channel }: { channel: string }) {
