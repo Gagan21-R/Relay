@@ -1,39 +1,62 @@
-# RELAY demo rehearsal checklist
+# RELAY demo
 
 ## Before you present
-- [ ] `docker compose up --build` (or backend + frontend locally) and wait for "Application startup complete".
-- [ ] Open http://localhost:5180 — the ticker shows **Live** and **Mock mode**; the Command map shows Kodagu.
-- [ ] Projector check: zoom the browser to 110–125%; the layout reflows (the menu collapses below 1024 px).
-- [ ] Open a second tab on **/phone** (Phone simulator) and one on **/public** (public corrections).
-- [ ] Optional: language switch EN → ಕನ್ನಡ → हिंदी once, then back to EN.
+- [ ] Start the backend (`python -m uvicorn app.main:app --port 8010` in `backend/`) and the frontend (`npm run dev` in
+      `frontend/`). Wait for "Application startup complete". Everything runs offline in mock mode.
+- [ ] Open http://localhost:5180 — the header shows **Live**, **Mock mode**, **Disaster: Flood**, **Acting as: Duty Officer**.
+- [ ] Projector: zoom the browser to 110–125%.
+- [ ] Say once, up front: *"Places are real; every report, person and stock count is synthetic. Docker, Gemini and
+      Twilio integrations exist but were not tested — this is the offline mode."*
 
-## The 12-step Run Demo (≈ 2 minutes)
-Go to **Scenario control → Run Demo**. It resets to T+0 and plays each step on the live system; the caption card
-navigates to the page where the step happens. Say one line per step:
+## The three-minute demo — six beats
 
-1. **Reports arrive** — "web, social and SMS, in Kannada, Hindi, Malayalam, Tamil and English."
-2. **Duplicates grouped** — "a Kannada SMS and an English tweet about Karadigodu: one incident, counted once."
-3. **Rumour → correction** — "the dam bulletin contradicts the forward; correction in 8 languages, by SMS too."
-4. **Prioritised** — open any incident: "every point of the score has a reason."
-5. **Shortage** — "water at Napoklu camp runs out in about a day; the nearest depot with fresh stock is proposed."
-6. **Plan** — "each line has a reason and its evidence; unmet needs are listed honestly."
-7. **You approve** — press *Approve plan as Duty officer*. "Nothing moves without a person."
-8. **Tracking** — trucks move on the map along open roads.
-9. **ಹೌದು** — "the camp manager replies YES in Kannada; the delivery is confirmed and stock moves."
-10. **Internet down** — "web and social from Kushalnagar stop; SMS still gets through; a silent zone is flagged."
-11. **Replan** — "flood water cuts the roads to Siddapura camp; a new plan waits for approval."
-12. **The village with no phones** — press *Approve recon as Duty officer*. "Silence is a signal: Hattihole sent
-    nothing; the recon team carries supplies; its satellite-phone report turns the village into incidents."
+**Beat 1 · Disaster selection (0:00–0:25)** — *Scenario Lab*
+- Filter *cyclone* → launch **Canning — cyclone (West Bengal)** with *Launch at T+4.5*. The map and header switch to
+  the Sundarbans; the disaster selector shows *Cyclone*.
+- Line: *"Nine disasters, one architecture: the cyclone profile changes severity weights, resource standards, overlays
+  and recommendations. 50 scenarios cover every state and UT."*
+- Command map → *Disaster* tab: profile and GDACS items labelled **FALLBACK** (*"we never pass samples off as live"*).
 
-## Live extras (if time allows)
-- [ ] **Phone simulator**: tap *Kanglish · no location* → RELAY asks where you are, in Kannada → reply "Siddapura school".
-- [ ] **Network toggle**: cut Kushalnagar, send a web report (blocked) and an SMS (arrives).
-- [ ] **Explain me**: on any panel, press *Explain me* → ask "what should I do next?".
-- [ ] **Same-report analyser** (Incidents page): compare a Kannada SMS and an English tweet.
-- [ ] **3D twin**: switch scenario (Harangi release / Madikeri landslides) on Scenario control → the twin rebuilds.
-- [ ] **Metrics**: point at the held-out column and the "synthetic data" disclaimer.
+**Beat 2 · Reports and evidence (0:25–0:55)** — *Live feed*, *Incidents*
+- Point at a Bengali SMS, its English duplicate and its romanized/Hindi copy: one incident, counted once.
+- Open the incident: confidence and priority breakdowns, every report behind it.
+- Optional: *Phone simulator* → send `Mane olage neeru bandide.` → detected Kannada (romanized), flood, rescue; RELAY
+  asks for the location in Kannada.
+
+**Beat 3 · Resources and volunteer assignment (0:55–1:20)** — *Plans*
+- Each line: depot → destination by vehicle, **route safety label**, **suggested volunteer** with score, and the
+  **precedent count**.
+- Line: *"Volunteer choice is a deterministic tool — skills, reliability, distance, vehicle; ties by ID. The LLM never
+  picks people, quantities or routes."*
+
+**Beat 4 · Planning and approval (1:20–1:50)** — *Plans* → *Tasks & dispatch*
+- Point at **Previous vs updated**: *"the Canning–Gosaba road was reported blocked by a citizen — unverified — so the
+  plan reroutes through Kakdwip; every change needs approval."*
+- **Approve & assign volunteers.** On *Tasks*, press **dispatch** on a task: **409 — route not verified**. Press
+  **verify route**, then switch *Acting as* to the assigned volunteer and **dispatch** their own task. (Another
+  volunteer gets 403.)
+
+**Beat 5 · Disruption, rerouting, regional-language communication (1:50–2:30)** — *Scenario Lab*, *Public messages*
+- *Scenario Lab* → **+1 h** twice: stage 2 cuts a shelter off; the stage bar moves; a new plan appears with the reason.
+- *Public messages* → template *shelter open* → **Draft in each language**: English, Hindi, Bengali, each with
+  **facts preserved**; Mizo or Khasi would get English, clearly marked. **Approve**, then **Send (mock SMS)**.
+- On *Tasks*: a delivered task shows *recipient said YES — evidence; officer must confirm*. Confirm as Duty Officer.
+
+**Beat 6 · Verification, evaluation and the Lab (2:30–3:00)** — *Scenario Lab* → *Final report*, then *Metrics*
+- **Final report**: decisions, successes, failures, unresolved, objective checks.
+- *Metrics*: duplicate precision **0.95 (development) / 1.00 (held-out), measured**; per-language and per-input-type
+  results (romanized Tamil/Telugu/Marathi/Bengali are the weak spot); verified-only vs all-reports; 0 routes through a
+  closed road; 50/50 scenarios ran, 0 rumour-led incidents planned.
+- Close: *"Synthetic data, honest numbers, a person decides every action."*
+
+## Longer demo
+*Scenario control → Run Demo* plays the original 12-step Kodagu story on the live system (≈ 2 min): reports in five
+languages, cross-language duplicates, dam-burst rumour corrected in 8 languages, shortages, a plan, approval, officer-
+verified routes and dispatch, the Kannada **ಹೌದು** as evidence then officer confirmation, an internet blackout, a shelter
+cut off by flood and a replan, and the silent village found by blackout detection.
 
 ## If something goes wrong
-- Dashboard says *Offline*: the backend is not running on :8010; restart it and refresh.
-- Demo caption shows an error: press the **Scenario control → Run Demo** button again (it resets to T+0).
-- To reset everything: `python -m app.sim.seed --reset` in `backend/` (or `make seed`).
+- *Offline* pill: the backend is not running on :8010; restart it and refresh.
+- A button returns **403**: check *Acting as* in the header (only a Duty Officer can approve, verify routes or confirm).
+- **409**: the task is not in the right state (e.g. route not verified yet) — the message says which step is missing.
+- Reset a Lab scenario: *Scenario Lab → Reset*. Reset everything: `python -m app.sim.seed --reset` in `backend/`.

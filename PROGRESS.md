@@ -182,3 +182,50 @@ Read this file and the master prompt first after any context reset, then continu
 - Final delivery checks (this machine, SQLite fallback; Docker not available here): clean database → auto-seed (82
   reports, 19 incidents) → full 12-step Run Demo via API completes → reset to T+12. 67 pytest + 5 vitest pass,
   typecheck clean, `npm run build` clean, `make eval` results in backend/eval/results.json.
+
+---
+
+# Enhancement round — "Final Implementation & Enhancement Prompt" (done)
+
+Continued the existing build; nothing working was removed. Order followed: inspect → multi-disaster → multilingual →
+routes → memory/volunteers → lifecycle/permissions/replanning → Scenario Lab → evaluation/safety → frontend → offline
+check → docs.
+
+- **Multi-disaster**: `app/disasters.py` (9 profiles: indicators, life-threat weights, per-person standards, overlay,
+  fleet, recommendations); `state.disaster/standards` used by triage, resource, blackout; selector API + header;
+  per-report disaster type; GDACS service with live/stale/fallback labels (fallback in mock mode).
+- **Multilingual**: 19 languages with support levels (full 8 · basic 7 · pending 4) and template status; detection for
+  Odia, Gujarati, Gurmukhi, Meitei Mayek, Devanagari hi/mr/ne markers, Assamese vs Bengali, Mizo and Khasi cues;
+  lexicon and glossary additions; review flags on reports; the brief's three Kannada examples tested end to end.
+  Outgoing: `public_templates.py` (3 templates × 13 languages), `services/comms.py` (fact check, English fallback,
+  approval before mock send), Public messages page.
+- **Routes**: `services/routing.py` rewritten — vehicle suitability, road kind/surface, verified + fresh status,
+  caution-first road reports (`RoadReport`), safest-not-shortest with penalties, alternatives, safety label, ETA
+  reliability; officer verification of road reports; dispatch requires a verified route.
+- **Memory / volunteers**: `Volunteer`, `Precedent`, `Hospital`, `RoadReport`, `Communication` tables;
+  `services/volunteers.py` (deterministic ranking, tie by ID, reliability (on_time+1)/(assigned+2));
+  `services/precedents.py` (factual counts only).
+- **Lifecycle / permissions**: coordination rewritten — created → approved → assigned → dispatched → delivered →
+  confirmed (+failed/cancelled); `Forbidden` → 403, `InvalidTransition` → 409; roles from X-Role/X-Actor (no login);
+  SMS YES and check-ins are evidence only; volunteer reliability updated on confirmation. Plans carry `changes`
+  (previous vs updated, reasons, approval needed); stale routes and stale pending plans trigger replans.
+- **Worlds and Scenario Lab**: world specs (`sim/worlds.py`), generic `load_world`; `sim/lab.py` generates 47 scenarios
+  (all 36 states/UTs, 9 disasters, 3 levels, multi-stage events) + 3 Kodagu = 50; Lab API (launch, reset, status,
+  final report) and page; map and 3D twin re-centre per scenario.
+- **Ground truth isolated**: Kodagu labels moved to `eval/ground_truth.py`; scenario messages carry only origin zone;
+  test fails if `app/` imports `eval`. LLM extraction schema `extra="forbid"`; prompt-injection tests with a fake LLM.
+- **Evaluation** (`eval/extended.py`, `eval/multilingual_probe.py`): probe set per language and input type,
+  verified-only vs all-reports allocation, route rules under 13 simulated closures, all 50 scenarios replayed. Measured
+  results are in README; duplicate precision reported as measured (0.95 dev / 1.00 held-out), not as 0.70.
+- **Bug found by the evaluation**: a sensational forwarded rumour merged into a real incident (Anantapur). Fixed in
+  `trust.needs_compatible`; re-run shows 0 rumour-led incidents planned, 0 mixed incidents across 50 scenarios.
+- **Bug found in the browser**: a plan pending approval kept a route through a road closed after it was proposed.
+  Monitor now replaces such plans (`stale_plan` trigger).
+- **Frontend**: Tasks board, Plans comparison panel, Scenario Lab, Public messages, Metrics sections, map tabs
+  (priorities / arriving / disaster / volunteers / agents), hospitals and GDACS layers, disaster-styled overlays,
+  role switcher, disaster selector, Explain-me sections for every new panel.
+- **Migration** `e2a1` (new tables/columns, server defaults, status rename) — upgrade/downgrade checked on SQLite only.
+- Checks: 98 pytest + 5 vitest pass; typecheck and `npm run build` clean; in the browser: Lab launch (Sundarbans) →
+  map re-centred → replan with reason → approve → 409 on unverified dispatch → verify → assigned volunteer dispatches
+  → public message drafted in en/hi/bn with facts preserved → Metrics shows the new sections.
+- **Not tested**: Docker Compose, PostgreSQL, Gemini, Twilio, live GDACS, Nominatim (stated in README).
