@@ -6,7 +6,7 @@ DISTRICT = {"name": "Kodagu", "state": "Karnataka", "center": [12.42, 75.76], "e
 # code, name, lat, lng, population, normal reports/hour, vulnerability, gazetteer aliases (several scripts and spellings)
 ZONES = [
     ("madikeri", "Madikeri", 12.4244, 75.7382, 33000, 3.0, {"elderly_share": 0.11, "children_share": 0.22, "medical_facilities": 2, "remoteness": 0.1},
-     ["madikeri", "mercara", "madkeri", "madikeri town", "ಮಡಿಕೇರಿ", "मडिकेरी", "മടിക്കേരി", "மடிகேரி", "మడికేరి"]),
+     ["madikeri", "mercara", "madkeri", "madikeri town", "ಮಡಿಕೇರಿ", "मडिकेरी", "മടിക്കേരി", "மடிகேரி", "మడికేరి", "মাদিকেরি"]),
     ("makkandur", "Makkandur", 12.4716, 75.7712, 4200, 0.4, {"elderly_share": 0.16, "children_share": 0.2, "medical_facilities": 0, "remoteness": 0.5},
      ["makkandur", "makkanduru", "makkandoor", "ಮಕ್ಕಂದೂರು", "ಮಕ್ಕಂದೂರಿನಲ್ಲಿ", "मक्कंदूर"]),
     ("jodupala", "Jodupala", 12.4898, 75.6290, 1800, 0.3, {"elderly_share": 0.14, "children_share": 0.2, "medical_facilities": 0, "remoteness": 0.6},
@@ -18,9 +18,9 @@ ZONES = [
     ("siddapura", "Siddapura", 12.3540, 75.8840, 8000, 0.8, {"elderly_share": 0.12, "children_share": 0.24, "medical_facilities": 1, "remoteness": 0.3},
      ["siddapura", "siddapur", "siddhapura", "ಸಿದ್ದಾಪುರ", "सिद्दापुर", "സിദ്ധാപുര", "karadigodu", "karadigod", "ಕರಡಿಗೋಡು", "करडिगोडु"]),
     ("kushalnagar", "Kushalnagar", 12.4580, 75.9590, 16000, 1.6, {"elderly_share": 0.1, "children_share": 0.23, "medical_facilities": 1, "remoteness": 0.1},
-     ["kushalnagar", "kushalnagara", "kushal nagar", "ಕುಶಾಲನಗರ", "ಕುಶಾಲನಗರದ", "कुशालनगर", "കുശാൽനഗർ", "குஷால்நகர்", "harangi", "ಹಾರಂಗಿ", "हारंगी"]),
+     ["kushalnagar", "kushalnagara", "kushal nagar", "ಕುಶಾಲನಗರ", "ಕುಶಾಲನಗರದ", "कुशालनगर", "കുശാൽനഗർ", "குஷால்நகர்", "குஷால்நகர", "കുശാൽനഗറ", "harangi", "ಹಾರಂಗಿ", "हारंगी"]),
     ("somwarpet", "Somwarpet", 12.5970, 75.8510, 9000, 0.9, {"elderly_share": 0.13, "children_share": 0.2, "medical_facilities": 1, "remoteness": 0.3},
-     ["somwarpet", "somavarapete", "somvarpet", "ಸೋಮವಾರಪೇಟೆ", "ಸೋಮವಾರಪೇಟೆಯಲ್ಲಿ", "सोमवारपेट"]),
+     ["somwarpet", "somavarapete", "somvarpet", "ಸೋಮವಾರಪೇಟೆ", "ಸೋಮವಾರಪೇಟೆಯಲ್ಲಿ", "सोमवारपेट", "సోమవారపేట"]),
     ("virajpet", "Virajpet", 12.1970, 75.8050, 18000, 1.8, {"elderly_share": 0.11, "children_share": 0.22, "medical_facilities": 2, "remoteness": 0.2},
      ["virajpet", "virajapete", "virajpete", "ವಿರಾಜಪೇಟೆ", "विराजपेट", "വിരാജ്പേട്ട", "விராஜ்பேட்டை"]),
     ("hattihole", "Hattihole", 12.5450, 75.7850, 2400, 0.4, {"elderly_share": 0.2, "children_share": 0.21, "medical_facilities": 0, "remoteness": 0.8},

@@ -13,7 +13,9 @@ from langgraph.graph import END, StateGraph
 from sqlalchemy.orm import Session
 
 from app.agents import coordination, intake, monitor, resource, triage, trust
+from app.api.common import row
 from app.models import Report, Zone
+from app.ws.manager import emit
 
 AGENTS = ["intake", "trust", "triage", "resource", "monitor", "coordination"]
 FROM_INSIDE_ZONE = {"web", "social_feed", "field_app"}      # channels that need the zone's own internet
@@ -49,7 +51,10 @@ def n_intake(st: RelayState, config: RunnableConfig) -> dict[str, Any]:
             r.status, blocked = "blocked", True
         elif r.status != "clarifying":
             r.status = "processed"
-    db.flush()
+        db.flush()
+        emit("report", row(r))
+        if r.status == "blocked":
+            emit("network", {"zone": z.code, "name": z.name, "internet_down": True, "blocked_report": r.ref, "channel": r.channel})
     return {"blocked": blocked, "trace": _trace(st, "intake", f"{len(st.get('report_ids', []))} report(s) extracted", blocked=blocked)}
 
 

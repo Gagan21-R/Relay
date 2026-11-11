@@ -2,7 +2,7 @@ import { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
-  Activity, AlertTriangle, BarChart3, Box, ClipboardCheck, Database, FlaskConical, Home, Inbox, Map as MapIcon, Menu,
+  Activity, AlertTriangle, BarChart3, Box, ClipboardCheck, Database, EyeOff, FlaskConical, RadioTower, Home, Inbox, Map as MapIcon, Menu,
   Package, PhoneCall, ScrollText, ShieldAlert, Smartphone, Truck, X,
 } from "lucide-react";
 import { setUiLang, UI_LANGS } from "../i18n";
@@ -26,6 +26,8 @@ export const NAV = [
     { to: "/shelters", key: "shelters", icon: Home },
     { to: "/alerts", key: "alerts", icon: AlertTriangle },
     { to: "/phone", key: "phone", icon: PhoneCall },
+    { to: "/radio", key: "radio", icon: RadioTower },
+    { to: "/blackout", key: "blackout", icon: EyeOff },
     { to: "/scenario", key: "scenario", icon: FlaskConical },
   ] },
   { group: "prove", items: [

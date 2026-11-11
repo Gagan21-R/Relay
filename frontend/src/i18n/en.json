@@ -1,15 +1,49 @@
 {
-  "brand": { "name": "RELAY", "tag": "Resilient Emergency Logistics & Adaptive Yield" },
-  "nav": {
-    "see": "See", "decide": "Decide", "act": "Act", "prove": "Prove",
-    "map": "Command map", "feed": "Live report feed", "incidents": "Incidents", "fastVerify": "Fast Verify",
-    "plans": "Plans & approvals", "dispatch": "Dispatch tracker", "resources": "Resources", "shelters": "Shelters",
-    "alerts": "Alerts", "phone": "Phone simulator", "scenario": "Scenario control", "twin3d": "3D twin",
-    "metrics": "Metrics", "audit": "Audit log", "field": "Field app"
+  "brand": {
+    "name": "RELAY",
+    "tag": "Resilient Emergency Logistics & Adaptive Yield"
   },
-  "status": { "live": "Live", "connecting": "Connecting", "offline": "Offline", "mock": "Mock mode", "keys": "Live AI", "db": "Database" },
-  "common": { "comingIn": "Arrives in phase {{phase}}", "language": "Language", "synthetic": "Synthetic scenario data" },
-  "map": { "title": "Command map", "sub": "Kodagu district, Karnataka. Real OpenStreetMap basemap; incidents, shelters and depots will stream in live.", "district": "Kodagu district (scenario area)" },
+  "nav": {
+    "see": "See",
+    "decide": "Decide",
+    "act": "Act",
+    "prove": "Prove",
+    "map": "Command map",
+    "feed": "Live report feed",
+    "incidents": "Incidents",
+    "fastVerify": "Fast Verify",
+    "plans": "Plans & approvals",
+    "dispatch": "Dispatch tracker",
+    "resources": "Resources",
+    "shelters": "Shelters",
+    "alerts": "Alerts",
+    "phone": "Phone simulator",
+    "scenario": "Scenario control",
+    "twin3d": "3D twin",
+    "metrics": "Metrics",
+    "audit": "Audit log",
+    "field": "Field app",
+    "radio": "Radio console",
+    "blackout": "Blackout & recon"
+  },
+  "status": {
+    "live": "Live",
+    "connecting": "Connecting",
+    "offline": "Offline",
+    "mock": "Mock mode",
+    "keys": "Live AI",
+    "db": "Database"
+  },
+  "common": {
+    "comingIn": "Arrives in phase {{phase}}",
+    "language": "Language",
+    "synthetic": "Synthetic scenario data"
+  },
+  "map": {
+    "title": "Command map",
+    "sub": "Kodagu district, Karnataka. Real OpenStreetMap basemap; incidents, shelters and depots will stream in live.",
+    "district": "Kodagu district (scenario area)"
+  },
   "pages": {
     "feed": "Every report from every channel, as it arrives: original text, language, English translation and linked incident.",
     "incidents": "Clustered incidents ranked by priority, with the confidence and priority breakdown that explains each rank.",
@@ -24,6 +58,8 @@
     "twin3d": "A 3D view of the active scenario that changes with every scenario and event.",
     "metrics": "Evaluation on a labelled synthetic dataset. Evaluated on synthetic data; real-world validation pending.",
     "audit": "Every agent action and human decision, with inputs and outputs.",
-    "field": "Mobile field reporting that works offline and syncs later."
+    "field": "Mobile field reporting that works offline and syncs later.",
+    "radio": "Enter reports received by HAM radio, police wireless, forest/railway radio or satellite phone.",
+    "blackout": "Silent zones ranked by risk: hazard, population, silence, infrastructure loss and missing-contact reports."
   }
 }

@@ -50,3 +50,14 @@ Read this file and the master prompt first after any context reset, then continu
 - Decision: phone numbers are kept only in memory for replies (hash+mask in DB); real providers reply by conversation.
 - Probe: rule extraction matches zone/need/people on all 82 seed reports (seed texts; held-out eval in Phase 11).
 - Checks: 35 tests pass (kn/hi/ml/en native, romanized and code-mixed; clarification SMS; voice; radio; field; feeds).
+
+## Phase 4 — Live feed, Phone Simulator, Network toggle (done)
+- Backend: `POST /api/sim/network` (per-zone internet DOWN; blocked reports are stored with status `blocked` = "did
+  not get out" so the demo can show what was lost), `GET /api/sim/samples` (13 quick messages, all 8 languages +
+  structured + rumour + YES), live `report`/`sms`/`network` WebSocket events from the pipeline.
+- Frontend: Live Report Feed (channel icon, language badge, original + EN with method/confidence, filters, blocked
+  counter), Phone Simulator (mock phone thread, sample buttons, phone personas, voice call via MediaRecorder + browser
+  speech recognition or typed transcript, network grid, "arriving now" stream), `/field` offline-queue app
+  (localStorage, GPS or zone pick, idempotent sync, simulate-no-signal), Radio Console.
+- Checks (browser): Kannada SMS on the dashboard in 171 ms with translation and a Kannada auto-reply; with
+  Kushalnagar DOWN a web report is blocked while SMS/radio arrive. 38 pytest + 3 vitest pass.

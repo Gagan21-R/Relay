@@ -2,11 +2,13 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import CommandMap from "./pages/CommandMap";
 import Planned from "./pages/Planned";
+import LiveFeed from "./pages/LiveFeed";
+import PhoneSimulator from "./pages/PhoneSimulator";
+import FieldApp from "./pages/FieldApp";
+import RadioConsole from "./pages/RadioConsole";
 
 // [path, nav key, page key, phase that fills it]
 const PLANNED: [string, string, string, number][] = [
-  ["feed", "feed", "feed", 4],
-  ["phone", "phone", "phone", 4],
   ["incidents", "incidents", "incidents", 5],
   ["fast-verify", "fastVerify", "fastVerify", 5],
   ["resources", "resources", "resources", 6],
@@ -18,7 +20,7 @@ const PLANNED: [string, string, string, number][] = [
   ["twin3d", "twin3d", "twin3d", 10],
   ["metrics", "metrics", "metrics", 11],
   ["audit", "audit", "audit", 2],
-  ["field", "field", "field", 3],
+  ["blackout", "blackout", "blackout", 8],
 ];
 
 export default function App() {
@@ -26,6 +28,10 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<CommandMap />} />
+        <Route path="feed" element={<LiveFeed />} />
+        <Route path="phone" element={<PhoneSimulator />} />
+        <Route path="field" element={<FieldApp />} />
+        <Route path="radio" element={<RadioConsole />} />
         {PLANNED.map(([path, nav, page, phase]) => (
           <Route key={path} path={path} element={<Planned navKey={nav} pageKey={page} phase={phase} />} />
         ))}
