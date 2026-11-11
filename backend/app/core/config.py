@@ -15,6 +15,7 @@ class Settings(BaseSettings):
 
     # PostgreSQL in Docker; a local SQLite file when Postgres is not available (same SQLAlchemy models).
     database_url: str = "sqlite:///./relay_dev.db"
+    auto_seed: bool = True          # seed the Kodagu scenario on first start when the database is empty
 
     gemini_api_key: str = ""
     gemini_model: str = "gemini-2.0-flash"

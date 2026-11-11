@@ -6,7 +6,8 @@ from typing import Any
 
 from fastapi import WebSocket
 
-EVENT_TYPES = {"hello", "report", "incident", "plan", "dispatch", "alert", "network", "sim", "audit", "sms_reply"}
+EVENT_TYPES = {"hello", "report", "incident", "plan", "dispatch", "alert", "network", "sim", "audit", "sms", "signal",
+               "shelter", "inventory", "zone", "recon", "demo", "refresh"}
 
 
 class LiveHub:
@@ -49,3 +50,33 @@ class LiveHub:
 
 
 hub = LiveHub()
+_loop: asyncio.AbstractEventLoop | None = None
+_muted = False
+
+
+def bind_loop(loop: asyncio.AbstractEventLoop) -> None:
+    global _loop
+    _loop = loop
+
+
+def mute(on: bool) -> None:
+    """Bulk operations (seeding a whole scenario) mute per-row events and send one summary instead."""
+    global _muted
+    _muted = on
+
+
+def emit(kind: str, data: Any) -> None:
+    """Push an event from synchronous code (agents run in worker threads). Never raises, never blocks."""
+    if _muted or _loop is None or not hub.clients:
+        return
+    try:
+        running = asyncio.get_running_loop()
+    except RuntimeError:
+        running = None
+    try:
+        if running is _loop:
+            _loop.create_task(hub.broadcast(kind, data))
+        else:
+            asyncio.run_coroutine_threadsafe(hub.broadcast(kind, data), _loop)
+    except Exception:  # noqa: BLE001 - live push is best effort; the database is the source of truth
+        pass

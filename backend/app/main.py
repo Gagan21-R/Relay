@@ -1,28 +1,31 @@
 """RELAY backend: FastAPI app, routers and the /ws/live WebSocket."""
+import asyncio
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import system
+from app.api import system, world
 from app.core.config import get_settings
-from app.db import Base, engine
-from app.ws.manager import hub
+from app.sim.seed import seed
+from app.ws.manager import bind_loop, hub
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    # Alembic owns the schema on PostgreSQL; the local SQLite fallback creates tables directly.
-    if get_settings().is_sqlite:
-        Base.metadata.create_all(engine)
+    bind_loop(asyncio.get_running_loop())
+    # Auto-seed on first start (no-op when data exists). On PostgreSQL, Alembic has already created the schema.
+    if get_settings().auto_seed:
+        await asyncio.to_thread(seed)
     yield
 
 
-app = FastAPI(title="RELAY API", version="0.1.0", lifespan=lifespan,
+app = FastAPI(title="RELAY API", version="0.2.0", lifespan=lifespan,
               description="Resilient Emergency Logistics & Adaptive Yield: multi-agent disaster response coordination.")
 app.add_middleware(CORSMiddleware, allow_origins=get_settings().cors_list, allow_credentials=True,
                    allow_methods=["*"], allow_headers=["*"])
 app.include_router(system.router)
+app.include_router(world.router)
 
 
 @app.websocket("/ws/live")
