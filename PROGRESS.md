@@ -256,3 +256,19 @@ happens, (5) a flowchart of the complete workflow.
   approving a plan cancelled its own negotiated second-source line.
 - Checks: 104 pytest (6 new) + 5 vitest; build clean; in the browser: Cyclone → Puducherry → guided run to the plan
   approval; Workflow and Agent conversations pages render live.
+
+---
+
+# Round 4 — UI redesign: brutalist · minimal · surreal (done)
+
+- New design tokens (bone / ink / signal vermilion, square corners, hard shadows, Syne + Space Grotesk + JetBrains Mono +
+  Instrument Serif); the old colour names kept as roles so every page restyled at once; inline map/chart colours swapped.
+- Surreal + motion primitives: Moon, orb, Eye (follows the pointer, blinks), Door, Ladder, Cloud, Drip, SplitText,
+  Magnetic, Parallax; black page wipe between routes.
+- App shell: numbered brutalist index navigation, black ticker, square controls; page headers with a dusk panel and one
+  surreal object each; Panel, Stat, Empty, Breakdown, badges, Explain and Ask RELAY restyled.
+- Landing page rebuilt as a creative-agency portfolio: surreal hero scene, manifesto, live index, case-study rows with
+  hover previews, capabilities, team showcase with surreal portraits, process, research, contact form (still files a
+  real report — checked: R-1007 detected Kannada), giant footer wordmark.
+- Checked in the browser at phone-pane and 1440 px widths; fixed mid-word headline breaks, an 18 px horizontal
+  overflow, and clipped contact/footer type. Build clean; 5 vitest pass; backend untouched.

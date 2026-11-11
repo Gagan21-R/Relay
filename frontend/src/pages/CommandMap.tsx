@@ -18,18 +18,18 @@ import { DATA_BADGE, DISASTER_ICON, DisasterProfilePanel, useActiveDisaster, use
 import { startGuide } from "../components/Guide";
 
 export const KODAGU_CENTER: [number, number] = [12.42, 75.78];
-const PCOL: Record<string, string> = { P1: "#E11D48", P2: "#F97316", P3: "#EAB308", P4: "#3B82F6" };
-const SCOL: Record<string, string> = { open: "#14C48A", full: "#F5B800", inaccessible: "#E11D48", unconfirmed: "#FF8A3D", closed: "#150A2E" };
+const PCOL: Record<string, string> = { P1: "#FF3D1F", P2: "#E07A3A", P3: "#C9A94C", P4: "#5A4FD6" };
+const SCOL: Record<string, string> = { open: "#5F8F64", full: "#C9A94C", inaccessible: "#FF3D1F", unconfirmed: "#D9895B", closed: "#0B0B0C" };
 const LAYERS = ["incidents", "shelters", "depots", "routes", "flood", "blackout", "roads", "pulses", "hospitals", "gdacs", "scenarios"] as const;
 type LayerKey = typeof LAYERS[number];
 type Sel = { kind: "incident" | "shelter" | "zone" | "depot"; id: number } | null;
 
 const shelterIcon = (status: string, name: string) => L.divIcon({ className: "relay-pin", iconSize: [26, 26], iconAnchor: [13, 13],
-  html: `<div title="${name}" style="width:24px;height:24px;border:2.5px solid #150A2E;border-radius:6px;background:${SCOL[status] ?? "#fff"};box-shadow:2px 2px 0 #150A2E;display:grid;place-items:center;font:800 12px sans-serif;color:#150A2E">⌂</div>` });
+  html: `<div title="${name}" style="width:24px;height:24px;border:2.5px solid #0B0B0C;border-radius:0;background:${SCOL[status] ?? "#fff"};box-shadow:2px 2px 0 #0B0B0C;display:grid;place-items:center;font:700 12px 'JetBrains Mono',monospace;color:#0B0B0C">⌂</div>` });
 const depotIcon = L.divIcon({ className: "relay-pin", iconSize: [26, 26], iconAnchor: [13, 13],
-  html: `<div style="width:20px;height:20px;transform:rotate(45deg);border:2.5px solid #150A2E;background:#9A5CFF;box-shadow:2px 2px 0 #150A2E"></div>` });
+  html: `<div style="width:20px;height:20px;transform:rotate(45deg);border:2.5px solid #0B0B0C;background:#0B0B0C;box-shadow:2px 2px 0 #0B0B0C"></div>` });
 const truckIcon = (overdue: boolean) => L.divIcon({ className: "relay-pin", iconSize: [30, 22], iconAnchor: [15, 11],
-  html: `<div style="padding:1px 4px;border:2px solid #150A2E;border-radius:6px;background:${overdue ? "#FF2E86" : "#C8FF2E"};font:800 11px sans-serif;box-shadow:2px 2px 0 #150A2E">🚚</div>` });
+  html: `<div style="padding:1px 4px;border:2px solid #0B0B0C;border-radius:0;background:${overdue ? "#FF3D1F" : "#F6F4EF"};font:700 11px 'JetBrains Mono',monospace;box-shadow:2px 2px 0 #0B0B0C">🚚</div>` });
 
 function along(points: number[][], f: number): [number, number] {
   if (points.length < 2) return points[0] as [number, number];
@@ -51,7 +51,7 @@ function HatchDefs() {
     if (svg && !svg.querySelector("#relay-hatch")) {
       const ns = "http://www.w3.org/2000/svg";
       const defs = document.createElementNS(ns, "defs");
-      defs.innerHTML = `<pattern id="relay-hatch" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)"><rect width="10" height="10" fill="rgba(225,29,72,.12)"/><line x1="0" y1="0" x2="0" y2="10" stroke="#E11D48" stroke-width="4"/></pattern>`;
+      defs.innerHTML = `<pattern id="relay-hatch" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)"><rect width="10" height="10" fill="rgba(225,29,72,.12)"/><line x1="0" y1="0" x2="0" y2="10" stroke="#FF3D1F" stroke-width="4"/></pattern>`;
       svg.prepend(defs);
     }
   });
@@ -101,7 +101,7 @@ export default function CommandMap() {
   const lab = useApi<any>("/api/lab/scenarios");
   const [india, setIndia] = useState(0);
   const dis = useActiveDisaster();
-  const ov = dis?.overlay ?? { label: "flood extent", colour: "#2E5BFF", fill: 0.35 };
+  const ov = dis?.overlay ?? { label: "flood extent", colour: "#5A4FD6", fill: 0.35 };
   const [sel, setSel] = useState<Sel>(null);
   const [fly, setFly] = useState<[number, number] | null>(null);
   const [pulses, setPulses] = useState<Pulse[]>([]);
@@ -136,7 +136,7 @@ export default function CommandMap() {
         <span className="flex items-center gap-1 text-xs font-extrabold uppercase tracking-wider"><Layers size={14} aria-hidden />layers</span>
         {LAYERS.map((l) => (
           <button key={l} onClick={() => setOn({ ...on, [l]: !on[l] })} aria-pressed={on[l]}
-            className={`rounded-full border-2 border-ink px-2.5 py-0.5 text-xs font-bold transition-all ${on[l] ? "bg-ink text-white" : "bg-white text-ink/60 line-through"}`}>{l}</button>
+            className={`border-[1.5px] border-ink px-2 py-0.5 font-mono text-[10.5px] font-bold uppercase transition-all ${on[l] ? "bg-ink text-bone" : "bg-bone text-ink/50 line-through"}`}>{l}</button>
         ))}
         <Explain id="map.layers" />
         <span className="ml-auto flex flex-wrap gap-1.5">
@@ -159,7 +159,7 @@ export default function CommandMap() {
               const current = sim.data?.scenario?.id === sc.id;
               return (
                 <CircleMarker key={`sc-${sc.id}`} center={sc.center} radius={current ? 13 : 10}
-                  pathOptions={{ color: "#150A2E", weight: current ? 4 : 2, fillColor: sc.colour ?? "#9A5CFF", fillOpacity: current ? 0.35 : 0.8 }}>
+                  pathOptions={{ color: "#0B0B0C", weight: current ? 4 : 2, fillColor: sc.colour ?? "#0B0B0C", fillOpacity: current ? 0.35 : 0.8 }}>
                   <Tooltip>{DISASTER_ICON[sc.disaster]} {sc.name} · {sc.difficulty}{current ? " · running now" : " · click to run"}</Tooltip>
                   <Popup>
                     <div className="space-y-1 text-xs">
@@ -178,12 +178,12 @@ export default function CommandMap() {
             ))}
             {on.blackout && silent.map((z) => (
               <Polygon key={`b${z.id}`} positions={z.polygon} eventHandlers={{ click: () => pick({ kind: "zone", id: z.id }) }}
-                pathOptions={{ color: "#E11D48", weight: 3, dashArray: "8 6", fillOpacity: 1, className: "blackout-hatch" }}>
+                pathOptions={{ color: "#FF3D1F", weight: 3, dashArray: "8 6", fillOpacity: 1, className: "blackout-hatch" }}>
                 <Tooltip sticky>SILENT · {z.name} · risk {Math.round(z.blackout_score * 100)}% · click for the breakdown</Tooltip>
               </Polygon>
             ))}
             {on.roads && (roads.data ?? []).map((r) => (
-              <Polyline key={r.code} positions={r.points} pathOptions={{ color: r.status === "open" ? "#150A2E" : "#E11D48", weight: r.status === "open" ? 2 : 4, opacity: r.status === "open" ? 0.35 : 0.9, dashArray: r.status === "open" ? undefined : "4 6" }}>
+              <Polyline key={r.code} positions={r.points} pathOptions={{ color: r.status === "open" ? "#0B0B0C" : "#FF3D1F", weight: r.status === "open" ? 2 : 4, opacity: r.status === "open" ? 0.35 : 0.9, dashArray: r.status === "open" ? undefined : "4 6" }}>
                 <Tooltip sticky>{r.name} · {r.status}{r.status !== "open" ? ` (${r.status_source})` : ""}</Tooltip>
               </Polyline>
             ))}
@@ -192,7 +192,7 @@ export default function CommandMap() {
               const pos = d.status === "delivered" ? d.route[d.route.length - 1] : along(d.route, f);
               return (
                 <span key={`d${d.id}`}>
-                  <Polyline positions={d.route} pathOptions={{ color: "#7C3AED", weight: 4, opacity: 0.8, dashArray: d.status === "dispatched" ? "8 8" : undefined }} />
+                  <Polyline positions={d.route} pathOptions={{ color: "#0B0B0C", weight: 4, opacity: 0.8, dashArray: d.status === "dispatched" ? "8 8" : undefined }} />
                   <Marker position={pos} icon={truckIcon(d.overdue)}><Tooltip>D-{d.id} → {d.to_name} · {d.status.replace("_", " ")} · ETA {simTime(d.eta)}</Tooltip></Marker>
                 </span>
               );
@@ -211,24 +211,24 @@ export default function CommandMap() {
               return (
                 <CircleMarker key={`i${i.id}`} center={[i.lat!, i.lng!]} radius={7 + Math.min(10, Math.log2((i.people_affected || 1) + 1) * 1.6)}
                   eventHandlers={{ click: () => pick({ kind: "incident", id: i.id }, [i.lat!, i.lng!]) }}
-                  pathOptions={{ color: "#150A2E", weight: i.confidence_level === "verified" ? 3 : 2, dashArray: ["unverified", "disputed"].includes(i.confidence_level) ? "3 4" : undefined,
+                  pathOptions={{ color: "#0B0B0C", weight: i.confidence_level === "verified" ? 3 : 2, dashArray: ["unverified", "disputed"].includes(i.confidence_level) ? "3 4" : undefined,
                     fillColor: isFalse ? "#9CA3AF" : PCOL[p.label], fillOpacity: isFalse ? 0.4 : 0.85 }}>
                   <Tooltip>{p.label} · {i.title} · {i.confidence_level}{i.fast_verify ? " · FAST VERIFY" : ""}</Tooltip>
                 </CircleMarker>
               );
             })}
             {on.hospitals && (hospitals.data ?? []).map((h) => (
-              <CircleMarker key={`h${h.id}`} center={[h.lat, h.lng]} radius={7} pathOptions={{ color: "#150A2E", weight: 2, fillColor: "#fff", fillOpacity: 1 }}>
+              <CircleMarker key={`h${h.id}`} center={[h.lat, h.lng]} radius={7} pathOptions={{ color: "#0B0B0C", weight: 2, fillColor: "#fff", fillOpacity: 1 }}>
                 <Tooltip>✚ {h.name} · {h.beds ?? "?"} beds · {h.status} (synthetic)</Tooltip>
               </CircleMarker>
             ))}
             {on.gdacs && (gdacs.data?.items ?? []).filter((g) => g.lat != null).map((g) => (
-              <CircleMarker key={g.id} center={[g.lat, g.lng]} radius={11} pathOptions={{ color: "#150A2E", weight: 2, dashArray: g.data === "live" ? undefined : "2 4", fillColor: g.level === "Red" ? "#E11D48" : g.level === "Orange" ? "#F97316" : "#14C48A", fillOpacity: 0.55 }}>
+              <CircleMarker key={g.id} center={[g.lat, g.lng]} radius={11} pathOptions={{ color: "#0B0B0C", weight: 2, dashArray: g.data === "live" ? undefined : "2 4", fillColor: g.level === "Red" ? "#FF3D1F" : g.level === "Orange" ? "#E07A3A" : "#5F8F64", fillOpacity: 0.55 }}>
                 <Tooltip>GDACS {g.type} · {g.name} · {g.level} · <b>{g.data.toUpperCase()}</b>{g.data === "fallback" ? " (illustrative sample, not a real alert)" : ""}</Tooltip>
               </CircleMarker>
             ))}
             {on.pulses && pulses.filter((p) => Date.now() - p.born < 9000).map((p) => (
-              <Circle key={`p${p.id}-${p.born}`} center={[p.lat, p.lng]} radius={900} pathOptions={{ color: "#FF2E86", weight: 3, fillOpacity: 0.15, className: "pulse-ring" }}>
+              <Circle key={`p${p.id}-${p.born}`} center={[p.lat, p.lng]} radius={900} pathOptions={{ color: "#FF3D1F", weight: 3, fillOpacity: 0.15, className: "pulse-ring" }}>
                 <Tooltip permanent direction="top">{p.channel} · {LANG_NAMES[p.lang ?? ""] ?? p.lang}</Tooltip>
               </Circle>
             ))}
@@ -268,7 +268,7 @@ export default function CommandMap() {
               <motion.div key="tabs" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                 <div className="mb-2 flex flex-wrap gap-1" role="tablist" aria-label="Side panel">
                   {TABS.map(([k, label]) => <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
-                    className={`rounded-full border-2 border-ink px-2.5 py-0.5 text-xs font-extrabold ${tab === k ? "bg-ink text-white" : "bg-white"}`}>{label}</button>)}
+                    className={`border-[1.5px] border-ink px-2 py-0.5 font-mono text-[10.5px] font-bold uppercase ${tab === k ? "bg-ink text-bone" : "bg-bone"}`}>{label}</button>)}
                 </div>
                 {tab === "arriving" && <Panel title="Arriving now" section="feed.page" tone="bg-pink-400">
                   {!feed.length ? <p className="text-sm font-medium text-ink/60">Reports pulse on the map as they arrive. Send one from the phone simulator, or click any marker for its evidence.</p> : (

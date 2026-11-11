@@ -323,6 +323,18 @@ blackout & recon, phone simulator, **Scenario Lab**, scenario control, metrics, 
 radio console were removed; recon teams still report by satellite phone on the Blackout page.) Every page and panel has **Explain me**. The UI chrome
 switches between English, ಕನ್ನಡ and हिंदी.
 
+### Design: brutalist · minimal · surreal
+
+The whole UI follows one system (`frontend/tailwind.config.js`, `src/index.css`, `src/components/motion.tsx`):
+**brutalist** — a visible grid, square corners, thick black rules, hard offset shadows, monospace index numbers and
+labels; **minimal** — bone paper, black ink and a single signal colour (vermilion), with muted tones only where colour
+carries meaning (priority, status); **surreal** — a dusk sky, a levitating moon and orb, an eye that follows the
+pointer, a door open onto night, a ladder out of the frame and melting drips, one per page header and a full scene on
+the landing page. Motion: letter-by-letter headlines, a black wipe between pages, parallax, magnetic buttons, clip
+reveals and marquees (all respect reduced-motion). The landing page (`/about`) is built like a creative-agency
+portfolio: hero, manifesto, live index, case-study previews, capabilities, team showcase (the agents and the Duty
+Officer), process, research and a contact form that files a real report.
+
 ## Human in the loop, explainability, privacy
 
 - Nothing is approved, dispatched or confirmed, and no public message is sent, without a person. Every agent action and

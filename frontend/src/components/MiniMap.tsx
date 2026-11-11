@@ -11,13 +11,13 @@ export default function MiniMap({ routes, height = 320, children }: { routes: Mi
       <MapContainer center={[12.42, 75.78]} zoom={10} style={{ height: "100%", width: "100%" }} scrollWheelZoom={false}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" maxZoom={18} attribution='&copy; OpenStreetMap contributors' />
         {routes.map((r) => (
-          <Polyline key={r.id} positions={r.points as [number, number][]} pathOptions={{ color: r.color ?? "#7C3AED", weight: 5, opacity: 0.9, dashArray: r.dashed ? "8 8" : undefined }}>
+          <Polyline key={r.id} positions={r.points as [number, number][]} pathOptions={{ color: r.color ?? "#0B0B0C", weight: 5, opacity: 0.9, dashArray: r.dashed ? "8 8" : undefined }}>
             {r.label && <Tooltip sticky>{r.label}</Tooltip>}
           </Polyline>
         ))}
         {routes.map((r) => r.points.length > 0 && (
           <CircleMarker key={`e${r.id}`} center={(r.end ?? r.points[r.points.length - 1]) as [number, number]} radius={7}
-            pathOptions={{ color: "#150A2E", weight: 2, fillColor: r.color ?? "#7C3AED", fillOpacity: 1 }}>
+            pathOptions={{ color: "#0B0B0C", weight: 2, fillColor: r.color ?? "#0B0B0C", fillOpacity: 1 }}>
             {r.label && <Tooltip>{r.label}</Tooltip>}
           </CircleMarker>
         ))}

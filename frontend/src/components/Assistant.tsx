@@ -24,7 +24,7 @@ export function Explain({ id, context, label }: { id: string; context?: any; lab
   const { t } = useTranslation();
   return (
     <button type="button" onClick={(e) => { e.stopPropagation(); openAssistant(id, context); }}
-      className="group inline-flex shrink-0 items-center gap-1 rounded-full border-2 border-ink bg-lime-300 px-2 py-0.5 text-[11px] font-extrabold text-ink shadow-hard-sm transition-all hover:-translate-y-0.5 hover:-rotate-2 hover:bg-lime-400"
+      className="group inline-flex shrink-0 items-center gap-1 border-[1.5px] border-ink bg-bone px-1.5 py-[1px] font-mono text-[10.5px] font-bold uppercase tracking-[0.06em] text-ink transition-all hover:-translate-y-0.5 hover:bg-ink hover:text-bone"
       aria-label={`${t("assistant.explain")}: ${id}`}>
       <Sparkles size={12} className="transition-transform group-hover:rotate-45" aria-hidden />{label ?? t("assistant.explain")}
     </button>
@@ -59,9 +59,9 @@ export default function AssistantDrawer() {
   return (
     <>
       {!open && (
-        <motion.button initial={{ scale: 0 }} animate={{ scale: 1 }} whileHover={{ rotate: -4, scale: 1.05 }}
+        <motion.button initial={{ scale: 0 }} animate={{ scale: 1 }} whileHover={{ x: -3, y: -3 }}
           onClick={() => opener?.(pageSection)} aria-label={t("assistant.ask")}
-          className="fixed bottom-4 right-4 z-[1100] flex items-center gap-2 rounded-full border-2 border-ink bg-pink-400 px-4 py-3 text-sm font-extrabold text-ink shadow-hard">
+          className="fixed bottom-4 right-4 z-[1100] flex items-center gap-2 border-2 border-ink bg-ink px-4 py-3 font-mono text-[12px] font-bold uppercase tracking-[0.08em] text-bone shadow-hard-pink">
           <MessageCircleQuestion size={18} aria-hidden />{t("assistant.ask")}
         </motion.button>
       )}
@@ -70,8 +70,8 @@ export default function AssistantDrawer() {
           <motion.aside role="dialog" aria-label={t("assistant.title")} initial={{ x: 480, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: 480, opacity: 0 }}
             transition={{ type: "spring", stiffness: 260, damping: 28 }}
             className="fixed bottom-0 right-0 top-0 z-[1300] flex w-[min(440px,100vw)] flex-col border-l-2 border-ink bg-paper shadow-hard-lg">
-            <header className="relative overflow-hidden border-b-2 border-ink bg-brand-500 p-4 text-white">
-              <div className="pat-dots absolute inset-0 opacity-10" aria-hidden />
+            <header className="relative overflow-hidden border-b-2 border-ink bg-ink p-4 text-bone">
+              <span className="absolute -right-6 -top-8 h-24 w-24 animate-levitate rounded-full orb" aria-hidden />
               <div className="relative flex items-center gap-2">
                 <span className="grid h-9 w-9 place-items-center rounded-xl border-2 border-ink bg-lime-400 text-ink"><Sparkles size={18} aria-hidden /></span>
                 <div className="flex-1"><p className="mega text-2xl">{t("assistant.title")}</p><p className="text-[11px] font-bold text-brand-100">{t("assistant.sub")}</p></div>
@@ -108,7 +108,7 @@ export default function AssistantDrawer() {
             <div className="border-t-2 border-ink p-3">
               <div className="mb-2 flex flex-wrap gap-1">
                 {[t("assistant.s1"), t("assistant.s2"), t("assistant.s3")].map((s) => (
-                  <button key={s} className="rounded-full border-2 border-ink bg-white px-2 py-0.5 text-[11px] font-bold hover:bg-lime-300" onClick={() => ask(section, s, context)}>{s}</button>
+                  <button key={s} className="border-[1.5px] border-ink bg-bone px-2 py-0.5 font-mono text-[10.5px] font-bold uppercase hover:bg-ink hover:text-bone" onClick={() => ask(section, s, context)}>{s}</button>
                 ))}
               </div>
               <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); if (q.trim()) { ask(section, q.trim(), context); setQ(""); } }}>

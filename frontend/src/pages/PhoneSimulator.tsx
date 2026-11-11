@@ -53,7 +53,7 @@ function MockPhone({ phone, samples }: { phone: string; samples: Samples["messag
       {err && <p className="mt-2 text-xs text-pink-500">{err}</p>}
       <div className="mt-3 flex flex-wrap gap-1.5">
         {samples.map((s) => (
-          <button key={s.label} onClick={() => send(s.text)} disabled={busy} className="rounded-full border border-ink bg-lime-300 px-2.5 py-1 text-xs font-bold text-ink shadow-hard-sm transition-transform hover:-translate-y-0.5" title={s.text}>{s.label}</button>
+          <button key={s.label} onClick={() => send(s.text)} disabled={busy} className="border border-ink bg-bone px-2.5 py-1 text-xs font-bold text-ink shadow-hard-sm transition-transform hover:-translate-y-0.5" title={s.text}>{s.label}</button>
         ))}
       </div>
     </div>

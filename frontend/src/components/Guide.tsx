@@ -99,7 +99,7 @@ export default function GuideOverlay() {
         <button className="rounded-lg border-2 border-white/50 p-1" onClick={() => setS((x) => ({ ...x, open: false, running: false }))} aria-label="Close guided run"><X size={14} /></button>
       </div>
       <div className="flex gap-1 px-4 pt-3" aria-hidden>
-        {Array.from({ length: total }, (_, i) => <span key={i} className={`h-2 flex-1 rounded-full border border-ink ${i + 1 < s.step || (i + 1 === s.step && o?.status === "done") ? "bg-lime-400" : i + 1 === s.step ? (o?.status === "waiting" ? "bg-pink-400" : "animate-pulse bg-sun-400") : "bg-paper"}`} />)}
+        {Array.from({ length: total }, (_, i) => <span key={i} className={`h-2 flex-1 border border-ink ${i + 1 < s.step || (i + 1 === s.step && o?.status === "done") ? "bg-lime-400" : i + 1 === s.step ? (o?.status === "waiting" ? "bg-pink-400" : "animate-pulse bg-sun-400") : "bg-paper"}`} />)}
       </div>
       {!s.collapsed && (
         <div className="grid max-h-[46vh] grid-cols-[150px_1fr] gap-3 overflow-y-auto p-4">

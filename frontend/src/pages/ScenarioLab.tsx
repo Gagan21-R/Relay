@@ -58,7 +58,7 @@ export default function ScenarioLab() {
               return (
                 <div key={s.name} className="flex-1 rounded-xl border-2 border-ink bg-white p-2 text-[11px]">
                   <p className="font-extrabold">{s.name}{st.current_stage === s.name ? " · now" : ""}</p>
-                  <div className="my-1 h-2 rounded-full border border-ink bg-paper"><div className="h-full rounded-full bg-brand-500" style={{ width: `${pct * 100}%` }} /></div>
+                  <div className="my-1 h-2 border border-ink bg-paper"><div className="h-full bg-signal" style={{ width: `${pct * 100}%` }} /></div>
                   <p className="text-ink/70">{simTime(s.from_t)}–{simTime(s.to_t)}: {s.summary}</p>
                 </div>);
             })}

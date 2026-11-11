@@ -56,7 +56,7 @@ export default function ScenarioControl() {
             <span className="mega text-5xl tabular-nums">T+{(d?.clock ?? 0).toFixed(1)}<span className="text-xl text-ink/50"> h</span></span>
             <span className={`badge ${running ? "bg-lime-400" : "bg-white"}`}>{running ? `playing ×${d.active.speed}` : "paused"}</span>
           </div>
-          <div className="mt-3 h-3 overflow-hidden rounded-full border-2 border-ink bg-paper"><div className="h-full bg-brand-500 transition-all" style={{ width: `${tl ? (tl.released / Math.max(1, tl.total)) * 100 : 0}%` }} /></div>
+          <div className="mt-3 h-3 overflow-hidden border-2 border-ink bg-paper"><div className="h-full bg-signal transition-all" style={{ width: `${tl ? (tl.released / Math.max(1, tl.total)) * 100 : 0}%` }} /></div>
           <p className="mt-1 text-xs font-bold text-ink/60">{tl?.released ?? 0} of {tl?.total ?? 0} timeline events released (scenario runs to T+{tl?.end_t ?? 12} h)</p>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             {running ? <button className="btn-ghost" onClick={() => call("/api/sim/clock", { action: "pause" }, "Paused")}><Pause size={15} aria-hidden />Pause</button>

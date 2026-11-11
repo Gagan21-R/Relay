@@ -24,15 +24,15 @@ function SetBlock({ s, label, tone }: { s: any; label: string; tone: string }) {
       <div className="mt-4 grid gap-4 xl:grid-cols-2">
         <div>
           <p className="label">Duplicate detection per language</p>
-          <div className="h-56"><ResponsiveContainer><BarChart data={dup}><CartesianGrid strokeDasharray="3 3" stroke="#150A2E22" /><XAxis dataKey="lang" fontSize={11} /><YAxis domain={[0, 1]} fontSize={11} />
-            <Tooltip contentStyle={{ border: "2px solid #150A2E", borderRadius: 12 }} /><Legend wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="precision" fill="#7C3AED" stroke="#150A2E" radius={[5, 5, 0, 0]} /><Bar dataKey="recall" fill="#C8FF2E" stroke="#150A2E" radius={[5, 5, 0, 0]} /></BarChart></ResponsiveContainer></div>
+          <div className="h-56"><ResponsiveContainer><BarChart data={dup}><CartesianGrid strokeDasharray="3 3" stroke="#0B0B0C22" /><XAxis dataKey="lang" fontSize={11} /><YAxis domain={[0, 1]} fontSize={11} />
+            <Tooltip contentStyle={{ border: "2px solid #0B0B0C", borderRadius: 12 }} /><Legend wrapperStyle={{ fontSize: 11 }} />
+            <Bar dataKey="precision" fill="#0B0B0C" stroke="#0B0B0C" radius={[5, 5, 0, 0]} /><Bar dataKey="recall" fill="#F6F4EF" stroke="#0B0B0C" radius={[5, 5, 0, 0]} /></BarChart></ResponsiveContainer></div>
         </div>
         <div>
           <p className="label">Extraction accuracy and translation coverage per language</p>
-          <div className="h-56"><ResponsiveContainer><BarChart data={ext}><CartesianGrid strokeDasharray="3 3" stroke="#150A2E22" /><XAxis dataKey="lang" fontSize={11} /><YAxis domain={[0, 1]} fontSize={11} />
-            <Tooltip contentStyle={{ border: "2px solid #150A2E", borderRadius: 12 }} /><Legend wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="zone" fill="#2E5BFF" stroke="#150A2E" /><Bar dataKey="need" fill="#FF2E86" stroke="#150A2E" /><Bar dataKey="people" fill="#FFD23F" stroke="#150A2E" /><Bar dataKey="translated" fill="#14C48A" stroke="#150A2E" /></BarChart></ResponsiveContainer></div>
+          <div className="h-56"><ResponsiveContainer><BarChart data={ext}><CartesianGrid strokeDasharray="3 3" stroke="#0B0B0C22" /><XAxis dataKey="lang" fontSize={11} /><YAxis domain={[0, 1]} fontSize={11} />
+            <Tooltip contentStyle={{ border: "2px solid #0B0B0C", borderRadius: 12 }} /><Legend wrapperStyle={{ fontSize: 11 }} />
+            <Bar dataKey="zone" fill="#5A4FD6" stroke="#0B0B0C" /><Bar dataKey="need" fill="#FF3D1F" stroke="#0B0B0C" /><Bar dataKey="people" fill="#E2CF98" stroke="#0B0B0C" /><Bar dataKey="translated" fill="#5F8F64" stroke="#0B0B0C" /></BarChart></ResponsiveContainer></div>
         </div>
       </div>
       <div className="mt-4 grid gap-4 md:grid-cols-[auto_1fr] md:items-center">

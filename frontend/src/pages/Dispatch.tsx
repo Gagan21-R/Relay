@@ -19,7 +19,7 @@ const COLS = [
   { k: "confirmed", label: "Confirmed by Duty Officer", tone: "bg-mint-300" },
   { k: "failed", label: "Failed / cancelled", tone: "bg-pink-300" },
 ];
-const ROUTE_COLOR: Record<string, string> = { assigned: "#F5B800", dispatched: "#2E5BFF", delivered: "#FF6A00", confirmed: "#14C48A", failed: "#E11D48" };
+const ROUTE_COLOR: Record<string, string> = { assigned: "#C9A94C", dispatched: "#5A4FD6", delivered: "#B85A27", confirmed: "#5F8F64", failed: "#FF3D1F" };
 
 export function SafetyBadge({ label }: { label?: string }) {
   if (!label) return null;
@@ -102,7 +102,7 @@ export default function Dispatch() {
               const items = all.filter((d) => c.k === "failed" ? ["failed", "cancelled"].includes(d.status) : d.status === c.k);
               return (
                 <section key={c.k} className="min-w-[230px] rounded-2xl border-2 border-ink bg-paper">
-                  <h2 className={`flex items-center justify-between rounded-t-[14px] border-b-2 border-ink px-3 py-2 text-sm font-extrabold ${c.tone}`}>{c.label}<span className="font-mono">{items.length}</span></h2>
+                  <h2 className={`flex items-center justify-between border-b-2 border-ink px-3 py-2 text-sm font-extrabold ${c.tone}`}>{c.label}<span className="font-mono">{items.length}</span></h2>
                   <div className="space-y-2 p-2">{items.map((d) => <TaskCard key={d.id} d={d} act={act} />)}</div>
                 </section>
               );
