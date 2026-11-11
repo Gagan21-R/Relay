@@ -149,3 +149,16 @@ Read this file and the master prompt first after any context reset, then continu
 - Audit Log page (actor type, action, text filters, inputs/outputs). i18n: nav, page headers, status and assistant UI in
   EN/KN/HI (deep panel copy stays English — noted as a limitation).
 - Checks: every page renders with seed data; Kannada switch works; no console errors after startup; 64 tests pass.
+
+## Phase 10 — Digital twin, scenario engine, Run Demo, 3D (done)
+- `sim/scenarios.py`: 3 scenarios (Kodagu monsoon flood; Harangi dam release; Madikeri hill landslides) with their own
+  signal timelines, hazard polygons and report subsets. `sim/engine.py`: fresh reset, background clock (`clock_loop`,
+  speed = sim hours per real second), timeline info, what-if events (close/reopen road, flood shelter, drop inventory,
+  cut/restore internet, spike reports, silence village).
+- `sim/demo.py` + `/api/sim/demo/step/{n}`: all 12 deck steps on the live system; 7 (plan) and 12 (recon) wait for a
+  person. Frontend `DemoOverlay` (global, navigates to each step's page, approve buttons), Scenario Control page,
+  `/twin3d` three.js twin rebuilt from live state (terrain seeded per scenario, water/debris from hazard polygons,
+  villages by population, silent zones dark + red beacon, shelters by status, depots, pins, moving trucks).
+- Checks: Run Demo completes all 12 steps from a fresh start and re-runs (pytest, twice); in the browser all 12 ran
+  with UI approvals. Fix: demo captions use CSS animation (framer exit animations stall when frames are paused).
+  66 backend tests pass.

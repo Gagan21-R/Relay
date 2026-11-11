@@ -17,11 +17,11 @@ import Blackout from "./pages/Blackout";
 import Alerts from "./pages/Alerts";
 import PublicCorrections from "./pages/PublicCorrections";
 import Audit from "./pages/Audit";
+import ScenarioControl from "./pages/ScenarioControl";
+import Twin3D from "./pages/Twin3D";
 
 // [path, nav key, page key, phase that fills it]
 const PLANNED: [string, string, string, number][] = [
-  ["scenario", "scenario", "scenario", 10],
-  ["twin3d", "twin3d", "twin3d", 10],
   ["metrics", "metrics", "metrics", 11],
 ];
 
@@ -45,6 +45,8 @@ export default function App() {
         <Route path="blackout" element={<Blackout />} />
         <Route path="alerts" element={<Alerts />} />
         <Route path="audit" element={<Audit />} />
+        <Route path="scenario" element={<ScenarioControl />} />
+        <Route path="twin3d" element={<Twin3D />} />
         {PLANNED.map(([path, nav, page, phase]) => (
           <Route key={path} path={path} element={<Planned navKey={nav} pageKey={page} phase={phase} />} />
         ))}

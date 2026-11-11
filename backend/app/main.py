@@ -19,7 +19,9 @@ async def lifespan(_: FastAPI):
     # Auto-seed on first start (no-op when data exists). On PostgreSQL, Alembic has already created the schema.
     if get_settings().auto_seed:
         await asyncio.to_thread(seed)
+    task = asyncio.create_task(sim.clock_loop())
     yield
+    task.cancel()
 
 
 app = FastAPI(title="RELAY API", version="0.2.0", lifespan=lifespan,

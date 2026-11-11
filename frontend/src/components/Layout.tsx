@@ -12,6 +12,7 @@ import { useLiveStatus } from "../hooks/useLive";
 import { useApi } from "../hooks/useApi";
 import { Blob, Marquee } from "./motion";
 import AssistantDrawer, { Explain } from "./Assistant";
+import DemoOverlay from "./DemoOverlay";
 
 export const NAV = [
   { group: "see", tint: "bg-lime-400", items: [
@@ -159,6 +160,7 @@ export default function Layout() {
         </main>
       </div>
       <AssistantDrawer />
+      <DemoOverlay />
     </div>
   );
 }
