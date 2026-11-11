@@ -269,11 +269,11 @@ under `backend/app/` imports it. All numbers below are **measured** by `python -
 | **Multilingual probe set** (38 developer-written messages, 15 languages, 2–6 each) | language detected 38/38 · need 0.89 · people 1.00 · disaster type 0.64 (n=14) |
 | — by input type | native 23 msgs: need 1.00 · **romanized 12 msgs: need 0.67** · mixed 3 msgs: need 1.00 |
 | — misses | romanized Tamil, Telugu, Marathi and Bengali needs not recognised (left unfixed: the probe set is held out) |
-| **Verified-only vs all reports** (Kodagu T+12, same stock) | verified-only: 11 incident lines, 0 to false incidents · all reports: 12 lines, 1 to a false incident, 1 more unmet need |
+| **Verified-only vs all reports** (Kodagu T+12, same stock) | verified-only: 12 incident lines, 0 to false incidents · all reports: 13 lines, 1 to a false incident, 1 more unmet need |
 | **Routes under simulated closures** (each of 13 Kodagu roads closed in turn, 390 queries) | 0 routes used a closed road · 0 unverified routes labelled safe · 3 destinations unreachable after a closure |
 | **All 50 scenarios replayed** to T+10 | 50/50 ran, 0 errors · 0 rumour-led incidents planned · 0 incidents mixing rumour and real reports · 2.68 reports per incident |
-| Time to a feasible plan | 0.36 s mean (Kodagu, mock mode) |
-| Evidence traceability · shortage detection | 12/12 plan lines linked to evidence · 6/6 injected shortages detected |
+| Time to a feasible plan | 0.46 s mean (Kodagu, mock mode, including agent negotiation) |
+| Evidence traceability · shortage detection | 13/13 plan lines linked to evidence · 6/6 injected shortages detected |
 | Delivery confirmation | 5 of 10 delivered tasks confirmed by the officer after a recipient YES; the rest have no recipient phone and wait for a field report or check-in |
 
 **About the "0.70" duplicate-precision figure in the brief:** we report what we measured (0.95 development, 1.00

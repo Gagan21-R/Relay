@@ -1,6 +1,6 @@
 {
   "disclaimer": "Evaluated on synthetic data; real-world validation pending.",
-  "generated_in_seconds": 230.6,
+  "generated_in_seconds": 284.5,
   "mode": "mock (rule-based extraction, local embeddings)",
   "development": {
     "reports": 82,
@@ -597,14 +597,14 @@
   },
   "operations": {
     "plan_generation_seconds": {
-      "mean": 0.358,
-      "max": 0.433,
+      "mean": 0.463,
+      "max": 0.526,
       "runs": 5,
       "all_feasible": true
     },
     "evidence_traceability": {
-      "traced_lines": 12,
-      "lines": 12,
+      "traced_lines": 13,
+      "lines": 13,
       "rate": 1.0
     },
     "shortage_detection": {
@@ -613,7 +613,7 @@
       "rate": 1.0
     },
     "delivery_verification": {
-      "dispatched": 13,
+      "dispatched": 15,
       "reached_destination": 10,
       "confirmed": 5,
       "rate_of_reached": 0.5,
@@ -1064,16 +1064,16 @@
   },
   "allocation_policy": {
     "verified_only": {
-      "incident_lines": 11,
-      "lines_to_real_incidents": 11,
+      "incident_lines": 12,
+      "lines_to_real_incidents": 12,
       "lines_to_false_incidents": 0,
       "kit_units_to_false": 0,
       "kit_units_total": 370,
       "unmet_lines": 6
     },
     "all_reports": {
-      "incident_lines": 12,
-      "lines_to_real_incidents": 11,
+      "incident_lines": 13,
+      "lines_to_real_incidents": 12,
       "lines_to_false_incidents": 1,
       "kit_units_to_false": 1,
       "kit_units_total": 371,
@@ -1108,7 +1108,7 @@
         "reports": 75,
         "incidents": 20,
         "situations": null,
-        "plans": 9,
+        "plans": 12,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1118,7 +1118,7 @@
         "reports": 45,
         "incidents": 12,
         "situations": null,
-        "plans": 6,
+        "plans": 7,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1138,7 +1138,7 @@
         "reports": 17,
         "incidents": 6,
         "situations": 4,
-        "plans": 3,
+        "plans": 5,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1148,7 +1148,7 @@
         "reports": 17,
         "incidents": 6,
         "situations": 4,
-        "plans": 3,
+        "plans": 5,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1158,7 +1158,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 3,
+        "plans": 4,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1168,7 +1168,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 5,
+        "plans": 6,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1198,7 +1198,7 @@
         "reports": 10,
         "incidents": 4,
         "situations": 3,
-        "plans": 1,
+        "plans": 2,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1218,7 +1218,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 5,
+        "plans": 6,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1228,7 +1228,7 @@
         "reports": 17,
         "incidents": 7,
         "situations": 4,
-        "plans": 5,
+        "plans": 9,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1238,7 +1238,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 4,
+        "plans": 6,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1248,7 +1248,7 @@
         "reports": 17,
         "incidents": 6,
         "situations": 4,
-        "plans": 5,
+        "plans": 9,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1258,7 +1258,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 4,
+        "plans": 6,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1268,7 +1268,7 @@
         "reports": 17,
         "incidents": 6,
         "situations": 4,
-        "plans": 5,
+        "plans": 9,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1278,7 +1278,7 @@
         "reports": 10,
         "incidents": 4,
         "situations": 3,
-        "plans": 3,
+        "plans": 5,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1288,7 +1288,7 @@
         "reports": 17,
         "incidents": 6,
         "situations": 4,
-        "plans": 5,
+        "plans": 9,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1298,7 +1298,7 @@
         "reports": 10,
         "incidents": 5,
         "situations": 3,
-        "plans": 3,
+        "plans": 5,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1308,7 +1308,7 @@
         "reports": 17,
         "incidents": 6,
         "situations": 4,
-        "plans": 6,
+        "plans": 8,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1318,7 +1318,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 3,
+        "plans": 6,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1328,7 +1328,7 @@
         "reports": 17,
         "incidents": 6,
         "situations": 4,
-        "plans": 7,
+        "plans": 8,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1338,7 +1338,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 5,
+        "plans": 8,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1348,7 +1348,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 5,
+        "plans": 8,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1358,7 +1358,7 @@
         "reports": 10,
         "incidents": 4,
         "situations": 3,
-        "plans": 5,
+        "plans": 7,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1378,7 +1378,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 2,
+        "plans": 4,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1388,7 +1388,7 @@
         "reports": 17,
         "incidents": 6,
         "situations": 4,
-        "plans": 4,
+        "plans": 5,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1398,7 +1398,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 3,
+        "plans": 5,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1408,7 +1408,7 @@
         "reports": 10,
         "incidents": 4,
         "situations": 3,
-        "plans": 1,
+        "plans": 3,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1418,7 +1418,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 2,
+        "plans": 4,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1428,7 +1428,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 4,
+        "plans": 5,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1438,7 +1438,7 @@
         "reports": 10,
         "incidents": 4,
         "situations": 3,
-        "plans": 2,
+        "plans": 4,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1448,7 +1448,7 @@
         "reports": 10,
         "incidents": 4,
         "situations": 3,
-        "plans": 2,
+        "plans": 3,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1458,7 +1458,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 4,
+        "plans": 5,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1468,7 +1468,7 @@
         "reports": 10,
         "incidents": 4,
         "situations": 3,
-        "plans": 2,
+        "plans": 3,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1478,7 +1478,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 4,
+        "plans": 5,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1488,7 +1488,7 @@
         "reports": 10,
         "incidents": 4,
         "situations": 3,
-        "plans": 2,
+        "plans": 3,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1498,7 +1498,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 4,
+        "plans": 5,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1518,7 +1518,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 4,
+        "plans": 5,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1528,7 +1528,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 4,
+        "plans": 5,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1538,7 +1538,7 @@
         "reports": 17,
         "incidents": 6,
         "situations": 4,
-        "plans": 6,
+        "plans": 8,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1548,7 +1548,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 6,
+        "plans": 7,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1558,7 +1558,7 @@
         "reports": 17,
         "incidents": 6,
         "situations": 4,
-        "plans": 5,
+        "plans": 7,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1568,7 +1568,7 @@
         "reports": 13,
         "incidents": 5,
         "situations": 4,
-        "plans": 5,
+        "plans": 7,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1578,7 +1578,7 @@
         "reports": 10,
         "incidents": 4,
         "situations": 3,
-        "plans": 5,
+        "plans": 6,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1588,7 +1588,7 @@
         "reports": 17,
         "incidents": 7,
         "situations": 4,
-        "plans": 6,
+        "plans": 7,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       },
@@ -1598,7 +1598,7 @@
         "reports": 17,
         "incidents": 7,
         "situations": 4,
-        "plans": 6,
+        "plans": 8,
         "rumour_planned": false,
         "incidents_mixing_rumour_and_real": 0
       }
