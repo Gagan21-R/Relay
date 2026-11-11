@@ -1,0 +1,35 @@
+# One command: `docker compose up --build` starts PostgreSQL (+PostGIS), the API and the dashboard with seed data.
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: relay
+      POSTGRES_PASSWORD: relay
+      POSTGRES_DB: relay
+    ports: ["5432:5432"]
+    volumes: [dbdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U relay -d relay"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build: ./backend
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://relay:relay@db:5432/relay
+      CORS_ORIGINS: http://localhost:5180
+    depends_on:
+      db: { condition: service_healthy }
+    ports: ["8010:8010"]
+
+  frontend:
+    build: ./frontend
+    environment:
+      RELAY_API: http://backend:8010
+    depends_on: [backend]
+    ports: ["5180:5180"]
+
+volumes:
+  dbdata:

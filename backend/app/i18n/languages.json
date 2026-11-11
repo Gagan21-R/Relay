@@ -1,0 +1,11 @@
+{
+  "_note": "Adding a language is configuration: add an entry here (and UI strings in frontend/src/i18n if the dashboard should speak it).",
+  "en": { "name": "English",   "native": "English",  "script": "Latin",      "unicode_range": null,              "ivr_key": "1" },
+  "kn": { "name": "Kannada",   "native": "ಕನ್ನಡ",     "script": "Kannada",    "unicode_range": ["0C80", "0CFF"], "ivr_key": "2" },
+  "hi": { "name": "Hindi",     "native": "हिंदी",      "script": "Devanagari", "unicode_range": ["0900", "097F"], "ivr_key": "3" },
+  "ml": { "name": "Malayalam", "native": "മലയാളം",   "script": "Malayalam",  "unicode_range": ["0D00", "0D7F"], "ivr_key": "4" },
+  "ta": { "name": "Tamil",     "native": "தமிழ்",     "script": "Tamil",      "unicode_range": ["0B80", "0BFF"], "ivr_key": "5" },
+  "te": { "name": "Telugu",    "native": "తెలుగు",    "script": "Telugu",     "unicode_range": ["0C00", "0C7F"], "ivr_key": "6" },
+  "mr": { "name": "Marathi",   "native": "मराठी",     "script": "Devanagari", "unicode_range": ["0900", "097F"], "ivr_key": "7" },
+  "bn": { "name": "Bengali",   "native": "বাংলা",     "script": "Bengali",    "unicode_range": ["0980", "09FF"], "ivr_key": "8" }
+}

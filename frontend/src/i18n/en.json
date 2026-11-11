@@ -1,0 +1,29 @@
+{
+  "brand": { "name": "RELAY", "tag": "Resilient Emergency Logistics & Adaptive Yield" },
+  "nav": {
+    "see": "See", "decide": "Decide", "act": "Act", "prove": "Prove",
+    "map": "Command map", "feed": "Live report feed", "incidents": "Incidents", "fastVerify": "Fast Verify",
+    "plans": "Plans & approvals", "dispatch": "Dispatch tracker", "resources": "Resources", "shelters": "Shelters",
+    "alerts": "Alerts", "phone": "Phone simulator", "scenario": "Scenario control", "twin3d": "3D twin",
+    "metrics": "Metrics", "audit": "Audit log", "field": "Field app"
+  },
+  "status": { "live": "Live", "connecting": "Connecting", "offline": "Offline", "mock": "Mock mode", "keys": "Live AI", "db": "Database" },
+  "common": { "comingIn": "Arrives in phase {{phase}}", "language": "Language", "synthetic": "Synthetic scenario data" },
+  "map": { "title": "Command map", "sub": "Kodagu district, Karnataka. Real OpenStreetMap basemap; incidents, shelters and depots will stream in live.", "district": "Kodagu district (scenario area)" },
+  "pages": {
+    "feed": "Every report from every channel, as it arrives: original text, language, English translation and linked incident.",
+    "incidents": "Clustered incidents ranked by priority, with the confidence and priority breakdown that explains each rank.",
+    "fastVerify": "Life-safety reports with low confidence. They are never discarded: call back the reporter or send the nearest team.",
+    "plans": "Allocation plans from the Coordination agent. Nothing is dispatched until a person approves.",
+    "dispatch": "Every dispatch from pending to confirmed; overdue deliveries are highlighted.",
+    "resources": "Inventory per depot, burn rates and projected shortages.",
+    "shelters": "Capacity, occupancy, last confirmation and access status of every shelter.",
+    "alerts": "Shortages, blackouts, inaccessible shelters, rumours and overdue deliveries.",
+    "phone": "A mock phone: send an SMS or record a voice call in any language and watch it reach the dashboard.",
+    "scenario": "The disaster digital twin: start a scenario, inject events and speed up time.",
+    "twin3d": "A 3D view of the active scenario that changes with every scenario and event.",
+    "metrics": "Evaluation on a labelled synthetic dataset. Evaluated on synthetic data; real-world validation pending.",
+    "audit": "Every agent action and human decision, with inputs and outputs.",
+    "field": "Mobile field reporting that works offline and syncs later."
+  }
+}
