@@ -1,6 +1,6 @@
 {
   "disclaimer": "Evaluated on synthetic data; real-world validation pending.",
-  "generated_in_seconds": 53.2,
+  "generated_in_seconds": 230.6,
   "mode": "mock (rule-based extraction, local embeddings)",
   "development": {
     "reports": 82,
@@ -76,6 +76,50 @@
         "people": {
           "accuracy": 1.0,
           "n": 48
+        }
+      },
+      "per_input_type": {
+        "native": {
+          "zone": {
+            "accuracy": 1.0,
+            "n": 59
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 47
+          },
+          "people": {
+            "accuracy": 1.0,
+            "n": 41
+          }
+        },
+        "romanized": {
+          "zone": {
+            "accuracy": 1.0,
+            "n": 8
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 7
+          },
+          "people": {
+            "accuracy": 1.0,
+            "n": 6
+          }
+        },
+        "mixed": {
+          "zone": {
+            "accuracy": 1.0,
+            "n": 1
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 1
+          },
+          "people": {
+            "accuracy": 1.0,
+            "n": 1
+          }
         }
       },
       "per_language": {
@@ -223,11 +267,11 @@
     "duplicates": {
       "overall": {
         "precision": 1.0,
-        "recall": 0.947,
-        "f1": 0.973,
-        "tp": 18,
+        "recall": 1.0,
+        "f1": 1.0,
+        "tp": 19,
         "fp": 0,
-        "fn": 1
+        "fn": 0
       },
       "per_language": {
         "bn": {
@@ -248,19 +292,19 @@
         },
         "hi": {
           "precision": 1.0,
-          "recall": 0.667,
-          "f1": 0.8,
-          "tp": 2,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 3,
           "fp": 0,
-          "fn": 1
+          "fn": 0
         },
         "kn": {
           "precision": 1.0,
-          "recall": 0.889,
-          "f1": 0.941,
-          "tp": 8,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 9,
           "fp": 0,
-          "fn": 1
+          "fn": 0
         },
         "ml": {
           "precision": 1.0,
@@ -303,12 +347,56 @@
           "n": 27
         },
         "need": {
-          "accuracy": 0.955,
+          "accuracy": 1.0,
           "n": 22
         },
         "people": {
           "accuracy": 0.8,
           "n": 20
+        }
+      },
+      "per_input_type": {
+        "native": {
+          "zone": {
+            "accuracy": 0.88,
+            "n": 25
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 20
+          },
+          "people": {
+            "accuracy": 0.833,
+            "n": 18
+          }
+        },
+        "romanized": {
+          "zone": {
+            "accuracy": 0.5,
+            "n": 2
+          },
+          "need": {
+            "accuracy": 1.0,
+            "n": 2
+          },
+          "people": {
+            "accuracy": 0.5,
+            "n": 2
+          }
+        },
+        "mixed": {
+          "zone": {
+            "accuracy": null,
+            "n": 0
+          },
+          "need": {
+            "accuracy": null,
+            "n": 0
+          },
+          "people": {
+            "accuracy": null,
+            "n": 0
+          }
         }
       },
       "per_language": {
@@ -354,7 +442,7 @@
             "n": 2
           },
           "need": {
-            "accuracy": 0.5,
+            "accuracy": 1.0,
             "n": 2
           },
           "people": {
@@ -509,8 +597,8 @@
   },
   "operations": {
     "plan_generation_seconds": {
-      "mean": 0.268,
-      "max": 0.304,
+      "mean": 0.358,
+      "max": 0.433,
       "runs": 5,
       "all_feasible": true
     },
@@ -526,14 +614,996 @@
     },
     "delivery_verification": {
       "dispatched": 13,
-      "reached_destination": 13,
-      "confirmed": 8,
-      "rate_of_reached": 0.615,
+      "reached_destination": 10,
+      "confirmed": 5,
+      "rate_of_reached": 0.5,
       "methods": [
         "sms_reply"
       ],
       "note": "recipient replies are simulated; deliveries without a recipient phone stay unconfirmed until a field team or check-in confirms them"
     }
+  },
+  "multilingual_probes": {
+    "overall": {
+      "n": 38,
+      "lang": {
+        "accuracy": 1.0,
+        "n": 38
+      },
+      "need": {
+        "accuracy": 0.895,
+        "n": 38
+      },
+      "people": {
+        "accuracy": 1.0,
+        "n": 35
+      },
+      "disaster": {
+        "accuracy": 0.643,
+        "n": 14
+      }
+    },
+    "per_language": {
+      "as": {
+        "n": 2,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "need": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "disaster": {
+          "accuracy": null,
+          "n": 0
+        },
+        "support": "basic"
+      },
+      "bn": {
+        "n": 2,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "need": {
+          "accuracy": 0.5,
+          "n": 2
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "disaster": {
+          "accuracy": 0.0,
+          "n": 1
+        },
+        "support": "full"
+      },
+      "en": {
+        "n": 4,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "need": {
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "disaster": {
+          "accuracy": 0.667,
+          "n": 3
+        },
+        "support": "full"
+      },
+      "gu": {
+        "n": 2,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "need": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "disaster": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "support": "basic"
+      },
+      "hi": {
+        "n": 4,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "need": {
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "disaster": {
+          "accuracy": 0.0,
+          "n": 1
+        },
+        "support": "full"
+      },
+      "kha": {
+        "n": 2,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "need": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "disaster": {
+          "accuracy": null,
+          "n": 0
+        },
+        "support": "basic"
+      },
+      "kn": {
+        "n": 6,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 6
+        },
+        "need": {
+          "accuracy": 1.0,
+          "n": 6
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 3
+        },
+        "disaster": {
+          "accuracy": 0.75,
+          "n": 4
+        },
+        "support": "full"
+      },
+      "lus": {
+        "n": 2,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "need": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "disaster": {
+          "accuracy": null,
+          "n": 0
+        },
+        "support": "basic"
+      },
+      "ml": {
+        "n": 2,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "need": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "disaster": {
+          "accuracy": null,
+          "n": 0
+        },
+        "support": "full"
+      },
+      "mr": {
+        "n": 2,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "need": {
+          "accuracy": 0.5,
+          "n": 2
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "disaster": {
+          "accuracy": null,
+          "n": 0
+        },
+        "support": "full"
+      },
+      "ne": {
+        "n": 2,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "need": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "disaster": {
+          "accuracy": 1.0,
+          "n": 1
+        },
+        "support": "basic"
+      },
+      "or": {
+        "n": 2,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "need": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "disaster": {
+          "accuracy": 0.0,
+          "n": 1
+        },
+        "support": "basic"
+      },
+      "pa": {
+        "n": 2,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "need": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "disaster": {
+          "accuracy": 1.0,
+          "n": 1
+        },
+        "support": "basic"
+      },
+      "ta": {
+        "n": 2,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "need": {
+          "accuracy": 0.5,
+          "n": 2
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "disaster": {
+          "accuracy": null,
+          "n": 0
+        },
+        "support": "full"
+      },
+      "te": {
+        "n": 2,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "need": {
+          "accuracy": 0.5,
+          "n": 2
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "disaster": {
+          "accuracy": null,
+          "n": 0
+        },
+        "support": "full"
+      }
+    },
+    "per_input_type": {
+      "native": {
+        "n": 23,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 23
+        },
+        "need": {
+          "accuracy": 1.0,
+          "n": 23
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 22
+        },
+        "disaster": {
+          "accuracy": 0.7,
+          "n": 10
+        }
+      },
+      "romanized": {
+        "n": 12,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 12
+        },
+        "need": {
+          "accuracy": 0.667,
+          "n": 12
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 11
+        },
+        "disaster": {
+          "accuracy": 0.5,
+          "n": 2
+        }
+      },
+      "mixed": {
+        "n": 3,
+        "lang": {
+          "accuracy": 1.0,
+          "n": 3
+        },
+        "need": {
+          "accuracy": 1.0,
+          "n": 3
+        },
+        "people": {
+          "accuracy": 1.0,
+          "n": 2
+        },
+        "disaster": {
+          "accuracy": 0.5,
+          "n": 2
+        }
+      }
+    },
+    "errors": [
+      {
+        "lang": "ta",
+        "type": "romanized",
+        "text": "inga 7 peru maatikittaanga, udhavi venum seekiram",
+        "got": {
+          "language": "ta",
+          "needs": [
+            "other"
+          ],
+          "people": 7
+        }
+      },
+      {
+        "lang": "te",
+        "type": "romanized",
+        "text": "maa intlo neellu ledu, 6 mandi unnaru, sahayam kavali",
+        "got": {
+          "language": "te",
+          "needs": [
+            "other"
+          ],
+          "people": 6
+        }
+      },
+      {
+        "lang": "mr",
+        "type": "romanized",
+        "text": "ithe 5 lok adakle ahet, lavkar madat pahije",
+        "got": {
+          "language": "mr",
+          "needs": [
+            "other"
+          ],
+          "people": 5
+        }
+      },
+      {
+        "lang": "bn",
+        "type": "romanized",
+        "text": "amader para te 20 jon er jol lagbe",
+        "got": {
+          "language": "bn",
+          "needs": [
+            "other"
+          ],
+          "people": 20
+        }
+      }
+    ],
+    "not_evaluated": [
+      "brx",
+      "grt",
+      "mni",
+      "trp"
+    ],
+    "note": "38 developer-written probes (not native speakers), 2-6 per language: indicative only, NOT validated accuracy."
+  },
+  "allocation_policy": {
+    "verified_only": {
+      "incident_lines": 11,
+      "lines_to_real_incidents": 11,
+      "lines_to_false_incidents": 0,
+      "kit_units_to_false": 0,
+      "kit_units_total": 370,
+      "unmet_lines": 6
+    },
+    "all_reports": {
+      "incident_lines": 12,
+      "lines_to_real_incidents": 11,
+      "lines_to_false_incidents": 1,
+      "kit_units_to_false": 1,
+      "kit_units_total": 371,
+      "unmet_lines": 7
+    },
+    "note": "Same world, stock and moment; only the plannable-incident policy differs. Synthetic data."
+  },
+  "routes": {
+    "closures_simulated": 13,
+    "route_queries": 390,
+    "routes_using_a_closed_road": 0,
+    "unverified_routes_labelled_safe": 0,
+    "unreachable_after_closure": 3,
+    "safest_differs_from_shortest": 0,
+    "note": "Deterministic check of the routing rules on the Kodagu road graph; not a real-world ETA validation."
+  },
+  "scenarios": {
+    "ran": 50,
+    "errors": [],
+    "rumour_ever_planned": 0,
+    "incidents_mixing_rumour_and_real": 0,
+    "mean_reports_per_incident": 2.68,
+    "lab_incidents_vs_situations": {
+      "mean_incidents": 5.13,
+      "mean_designed_situations": 3.74,
+      "note": "incidents also include the rumour, vague and missing-contact messages"
+    },
+    "per_scenario": [
+      {
+        "scenario": "kodagu_flood",
+        "disaster": "flood",
+        "reports": 75,
+        "incidents": 20,
+        "situations": null,
+        "plans": 9,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "harangi_release",
+        "disaster": "flood",
+        "reports": 45,
+        "incidents": 12,
+        "situations": null,
+        "plans": 6,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "madikeri_landslides",
+        "disaster": "landslide",
+        "reports": 41,
+        "incidents": 10,
+        "situations": null,
+        "plans": 6,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "assam_brahmaputra_flood",
+        "disaster": "flood",
+        "reports": 17,
+        "incidents": 6,
+        "situations": 4,
+        "plans": 3,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "bihar_kosi_flood",
+        "disaster": "flood",
+        "reports": 17,
+        "incidents": 6,
+        "situations": 4,
+        "plans": 3,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "kerala_kuttanad_flood",
+        "disaster": "flood",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 3,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "mumbai_urban_flood",
+        "disaster": "flood",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 5,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "chennai_urban_flood",
+        "disaster": "flood",
+        "reports": 10,
+        "incidents": 4,
+        "situations": 3,
+        "plans": 2,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "srinagar_jhelum_flood",
+        "disaster": "flood",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 3,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "goa_mandovi_flood",
+        "disaster": "flood",
+        "reports": 10,
+        "incidents": 4,
+        "situations": 3,
+        "plans": 1,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "tripura_gomati_flood",
+        "disaster": "flood",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 3,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "punjab_sutlej_flood",
+        "disaster": "flood",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 5,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "odisha_puri_cyclone",
+        "disaster": "cyclone",
+        "reports": 17,
+        "incidents": 7,
+        "situations": 4,
+        "plans": 5,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "andhra_vizag_cyclone",
+        "disaster": "cyclone",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 4,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "sundarbans_cyclone",
+        "disaster": "cyclone",
+        "reports": 17,
+        "incidents": 6,
+        "situations": 4,
+        "plans": 5,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "kutch_cyclone",
+        "disaster": "cyclone",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 4,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "andaman_cyclone",
+        "disaster": "cyclone",
+        "reports": 17,
+        "incidents": 6,
+        "situations": 4,
+        "plans": 5,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "puducherry_cyclone",
+        "disaster": "cyclone",
+        "reports": 10,
+        "incidents": 4,
+        "situations": 3,
+        "plans": 3,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "lakshadweep_cyclone",
+        "disaster": "cyclone",
+        "reports": 17,
+        "incidents": 6,
+        "situations": 4,
+        "plans": 5,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "daman_cyclone",
+        "disaster": "cyclone",
+        "reports": 10,
+        "incidents": 5,
+        "situations": 3,
+        "plans": 3,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "sikkim_earthquake",
+        "disaster": "earthquake",
+        "reports": 17,
+        "incidents": 6,
+        "situations": 4,
+        "plans": 6,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "manipur_earthquake",
+        "disaster": "earthquake",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 3,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "delhi_earthquake",
+        "disaster": "earthquake",
+        "reports": 17,
+        "incidents": 6,
+        "situations": 4,
+        "plans": 7,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "ladakh_earthquake",
+        "disaster": "earthquake",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 5,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "mizoram_earthquake",
+        "disaster": "earthquake",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 5,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "chandigarh_earthquake",
+        "disaster": "earthquake",
+        "reports": 10,
+        "incidents": 4,
+        "situations": 3,
+        "plans": 5,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "wayanad_landslide",
+        "disaster": "landslide",
+        "reports": 17,
+        "incidents": 6,
+        "situations": 4,
+        "plans": 5,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "himachal_mandi_landslide",
+        "disaster": "landslide",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 2,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "joshimath_landslide",
+        "disaster": "landslide",
+        "reports": 17,
+        "incidents": 6,
+        "situations": 4,
+        "plans": 4,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "arunachal_capital_landslide",
+        "disaster": "landslide",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 3,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "nagaland_kohima_landslide",
+        "disaster": "landslide",
+        "reports": 10,
+        "incidents": 4,
+        "situations": 3,
+        "plans": 1,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "meghalaya_sohra_landslide",
+        "disaster": "landslide",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 2,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "almora_wildfire",
+        "disaster": "wildfire",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 4,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "simlipal_wildfire",
+        "disaster": "wildfire",
+        "reports": 10,
+        "incidents": 4,
+        "situations": 3,
+        "plans": 2,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "bandipur_wildfire",
+        "disaster": "wildfire",
+        "reports": 10,
+        "incidents": 4,
+        "situations": 3,
+        "plans": 2,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "bastar_wildfire",
+        "disaster": "wildfire",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 4,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "marathwada_drought",
+        "disaster": "drought",
+        "reports": 10,
+        "incidents": 4,
+        "situations": 3,
+        "plans": 2,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "barmer_drought",
+        "disaster": "drought",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 4,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "bundelkhand_drought",
+        "disaster": "drought",
+        "reports": 10,
+        "incidents": 4,
+        "situations": 3,
+        "plans": 2,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "anantapur_drought",
+        "disaster": "drought",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 4,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "haryana_heatwave",
+        "disaster": "heatwave",
+        "reports": 10,
+        "incidents": 4,
+        "situations": 3,
+        "plans": 2,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "vidarbha_heatwave",
+        "disaster": "heatwave",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 4,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "telangana_heatwave",
+        "disaster": "heatwave",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 4,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "nagapattinam_tsunami",
+        "disaster": "tsunami",
+        "reports": 17,
+        "incidents": 6,
+        "situations": 4,
+        "plans": 6,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "kollam_tsunami",
+        "disaster": "tsunami",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 6,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "little_andaman_tsunami",
+        "disaster": "tsunami",
+        "reports": 17,
+        "incidents": 6,
+        "situations": 4,
+        "plans": 5,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "vizag_gas_leak",
+        "disaster": "industrial",
+        "reports": 13,
+        "incidents": 5,
+        "situations": 4,
+        "plans": 5,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "ankleshwar_chemical",
+        "disaster": "industrial",
+        "reports": 10,
+        "incidents": 4,
+        "situations": 3,
+        "plans": 5,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "jharia_coalfire_industrial",
+        "disaster": "industrial",
+        "reports": 17,
+        "incidents": 7,
+        "situations": 4,
+        "plans": 6,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      },
+      {
+        "scenario": "bhopal_chemical",
+        "disaster": "industrial",
+        "reports": 17,
+        "incidents": 7,
+        "situations": 4,
+        "plans": 6,
+        "rumour_planned": false,
+        "incidents_mixing_rumour_and_real": 0
+      }
+    ],
+    "note": "Lab messages are template-generated, so this checks workflow behaviour, not language accuracy."
   },
   "notes": [
     "development = the seed reports the rules were built against; held-out = written after tuning, never used to tune",

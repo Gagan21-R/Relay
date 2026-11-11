@@ -8,6 +8,7 @@ import MiniMap from "../components/MiniMap";
 import { Empty, Panel, PRIORITY_STYLE, simTime } from "../components/ui";
 import { useApi } from "../hooks/useApi";
 import { api } from "../services/api";
+import { SafetyBadge } from "./Dispatch";
 
 const COLORS = ["#7C3AED", "#FF2E86", "#2E5BFF", "#FF6A00", "#14C48A", "#F5B800", "#150A2E"];
 const STATUS: Record<string, string> = { pending_approval: "bg-sun-400", approved: "bg-mint-400", rejected: "bg-pink-400", superseded: "bg-white", draft: "bg-white" };
@@ -58,7 +59,13 @@ export default function Plans() {
                         <span className="font-extrabold">{a.to_name}</span>
                         <label className="ml-auto flex items-center gap-1 text-xs font-bold"><input type="checkbox" checked={off} onChange={() => setRemove(off ? remove.filter((x) => x !== a.line) : [...remove, a.line])} />remove</label>
                       </div>
-                      <p className="mt-1 text-sm font-medium">{a.from_depot} → {a.km} km · ETA {a.eta_h} h · {a.team}</p>
+                      <p className="mt-1 text-sm font-medium">{a.from_depot} → {a.km} km by {a.vehicle} · ETA {a.eta_h} h{a.eta_reliable === false ? " (unreliable)" : ""} · {a.team}</p>
+                      <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[11px]">
+                        <SafetyBadge label={a.safety} />
+                        {a.recommended_volunteer && <span className="badge bg-lime-200">suggested {a.recommended_volunteer.code} · score {a.recommended_volunteer.score}</span>}
+                        {a.precedent && <span className="badge bg-paper" title={a.precedent.signature}>{a.precedent.text}</span>}
+                      </div>
+                      {a.route_why && <p className="mt-1 text-[11px] text-ink/70"><b>Route:</b> {(a.route_names ?? []).join(" + ") || "in town"} — {a.route_why}</p>}
                       <div className="mt-1.5 flex flex-wrap gap-1.5">
                         {a.resources.map((r: any) => {
                           const k = `${a.line}:${r.resource_type}`;
@@ -86,6 +93,20 @@ export default function Plans() {
             </Panel>
           </div>
           <div className="space-y-4 xl:sticky xl:top-28 xl:self-start">
+            <Panel title="Previous vs updated" tone="bg-tangerine-300" section="plans.changes">
+              {!(pending.changes?.changed?.length || pending.changes?.dropped?.length) ? <p className="text-sm font-medium text-ink/60">First plan, or nothing differs from the previous allocation.</p> : (
+                <ul className="space-y-1.5 text-xs">
+                  {(pending.changes.changed ?? []).map((c: any, i: number) => (
+                    <li key={i} className="rounded-xl border-2 border-ink/20 bg-white p-2"><b>#{c.line} {c.to}</b>: {c.change}
+                      {c.previous && <span className="text-ink/60"> (was {c.previous})</span>}<br /><span className="font-bold">Why:</span> {c.why}
+                      {c.replaces_dispatch && <span className="badge ml-1 bg-sun-300">replaces D-{c.replaces_dispatch} on approval</span>}
+                      <span className="badge ml-1 bg-pink-200">needs approval</span></li>))}
+                  {(pending.changes.dropped ?? []).map((c: any, i: number) => <li key={`d${i}`} className="rounded-xl bg-paper p-2">{c.to}: {c.change} ({c.previous})</li>)}
+                </ul>
+              )}
+              {pending.changes?.closed_roads?.length > 0 && <p className="mt-2 text-[11px] font-bold text-ink/60">Closed now: {pending.changes.closed_roads.join("; ")}</p>}
+              {pending.changes?.note && <p className="mt-1 text-[11px] font-bold">{pending.changes.note}</p>}
+            </Panel>
             <Panel title="Routes" tone="bg-cobalt-300">
               <MiniMap routes={lines.filter((a: any) => !remove.includes(a.line)).map((a: any) => ({ id: a.line, points: a.route_points, color: COLORS[lines.indexOf(a) % COLORS.length], label: `#${a.line} ${a.to_name}` }))} height={340} />
             </Panel>
@@ -97,11 +118,11 @@ export default function Plans() {
                   {edited ? (
                     <button className="btn-primary" disabled={busy} onClick={() => call(`/api/plans/${pending.id}/edit`, { approver_name: who, comment, remove_lines: remove, quantities: qty }, "Edited: new version awaits approval")}><Pencil size={15} aria-hidden />Save edits as v{pending.version + 1}</button>
                   ) : (
-                    <button className="btn-pop px-5" disabled={busy} onClick={() => call(`/api/plans/${pending.id}/approve`, { approver_name: who, comment }, "Approved: dispatches created")}><Check size={16} aria-hidden />Approve & dispatch</button>
+                    <button className="btn-pop px-5" disabled={busy} onClick={() => call(`/api/plans/${pending.id}/approve`, { approver_name: who, comment }, "Approved: tasks created and volunteers assigned — verify routes and dispatch on the Tasks page")}><Check size={16} aria-hidden />Approve & assign volunteers</button>
                   )}
                   <button className="btn-danger" disabled={busy} onClick={() => call(`/api/plans/${pending.id}/reject`, { approver_name: who, comment }, "Rejected")}><X size={15} aria-hidden />Reject</button>
                 </div>
-                <p className="text-xs font-medium text-ink/60">Approval decrements depot stock, assigns teams and starts tracking. Every decision is in the audit log.</p>
+                <p className="text-xs font-medium text-ink/60">Approval creates tasks and assigns the top-ranked free volunteer. Stock leaves the depot only when a task is dispatched, and dispatch needs a verified route. Only a Duty Officer can approve (the backend returns 403 otherwise). Every decision is in the audit log and in the precedent memory.</p>
               </div>
             </Panel>
           </div>

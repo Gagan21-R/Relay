@@ -13,7 +13,7 @@
     "incidents": "Incidents",
     "fastVerify": "Fast Verify",
     "plans": "Plans & approvals",
-    "dispatch": "Dispatch tracker",
+    "dispatch": "Tasks & dispatch",
     "resources": "Resources",
     "shelters": "Shelters",
     "alerts": "Alerts",
@@ -25,7 +25,9 @@
     "field": "Field app",
     "radio": "Radio console",
     "blackout": "Blackout & recon",
-    "about": "About RELAY"
+    "about": "About RELAY",
+    "lab": "Scenario Lab",
+    "comms": "Public messages"
   },
   "status": {
     "live": "Live",

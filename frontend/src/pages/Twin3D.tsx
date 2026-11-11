@@ -9,10 +9,22 @@ import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRe
 import { PageHeader } from "../components/Layout";
 import { useApi } from "../hooks/useApi";
 
-const K = 100; // world units per degree
-const C = { lat: 12.40, lng: 75.76 };
+// The view is re-centred on every scenario: centre and scale come from the scenario's world (Scenario Lab worlds span
+// a few km in a city to ~150 km in a desert), the river is the Cauvery for Kodagu and, for water-related disasters
+// elsewhere, a schematic channel through the affected places (labelled schematic in the legend).
+let K = 100; // world units per degree
+let C = { lat: 12.40, lng: 75.76 };
 const xz = (lat: number, lng: number) => new THREE.Vector3((lng - C.lng) * K, 0, -(lat - C.lat) * K);
-const RIVER = [[12.387, 75.50], [12.387, 75.532], [12.34, 75.62], [12.305, 75.701], [12.33, 75.80], [12.354, 75.884], [12.41, 75.93], [12.458, 75.959], [12.50, 76.02]];
+const KODAGU_RIVER = [[12.387, 75.50], [12.387, 75.532], [12.34, 75.62], [12.305, 75.701], [12.33, 75.80], [12.354, 75.884], [12.41, 75.93], [12.458, 75.959], [12.50, 76.02]];
+let RIVER: number[][] = KODAGU_RIVER;
+function setView(sc: any, zones: any[] | null) {
+  const world = sc?.world ?? "kodagu";
+  if (world === "kodagu" || !sc?.center) { C = { lat: 12.40, lng: 75.76 }; K = 100; RIVER = KODAGU_RIVER; return; }
+  C = { lat: sc.center[0], lng: sc.center[1] };
+  K = 100 * Math.pow(2, (sc.zoom ?? 10) - 10);
+  const wet = ["flood", "cyclone", "tsunami"].includes(sc.disaster);
+  RIVER = wet && zones?.length ? [...zones].sort((a, b) => a.lng - b.lng).map((z) => [z.lat - 0.004, z.lng]) : [];
+}
 const SCOL: Record<string, number> = { open: 0x14c48a, full: 0xf5b800, inaccessible: 0xe11d48, unconfirmed: 0xff8a3d, closed: 0x150a2e };
 const PCOL = (s: number) => (s >= 70 ? 0xe11d48 : s >= 50 ? 0xf97316 : s >= 30 ? 0xeab308 : 0x3b82f6);
 
@@ -22,6 +34,7 @@ function distToRiver(x: number, z: number) {
   let best = 1e9;
   for (let i = 1; i < RIVER.length; i++) {
     const a = xz(RIVER[i - 1][0], RIVER[i - 1][1]), b = xz(RIVER[i][0], RIVER[i][1]);
+    if (a.distanceTo(b) < 1e-6) continue;
     const dx = b.x - a.x, dz = b.z - a.z, t = Math.max(0, Math.min(1, ((x - a.x) * dx + (z - a.z) * dz) / (dx * dx + dz * dz)));
     best = Math.min(best, Math.hypot(x - (a.x + t * dx), z - (a.z + t * dz)));
   }
@@ -40,8 +53,9 @@ export default function Twin3D() {
   const dispatches = useApi<any[]>("/api/dispatches", ["dispatch", "refresh"], 400);
   const three = useRef<{ scene: THREE.Scene; dyn: THREE.Group; terrain: THREE.Group; trucks: { obj: THREE.Object3D; route: THREE.Vector3[]; d: any }[]; key: string; heightAt: (x: number, z: number) => number } | null>(null);
   const [info, setInfo] = useState("");
-  const scenarioId: string = sim.data?.active?.id ?? "kodagu_flood";
-  const hazardKind: string = sim.data?.active?.hazard ?? "flood";
+  const scenarioId: string = state.data?.scenario?.id ?? sim.data?.active?.id ?? "kodagu_flood";
+  const hazardKind: string = state.data?.scenario?.disaster ?? sim.data?.active?.hazard ?? "flood";
+  setView(state.data?.scenario, zones.data);
 
   // renderer, camera, controls, loop: once
   useEffect(() => {
@@ -109,8 +123,9 @@ export default function Twin3D() {
   // terrain: rebuilt per scenario (different seed, hillier for landslides)
   useEffect(() => {
     const T = three.current;
-    if (!T || T.key === scenarioId) return;
-    T.key = scenarioId;
+    const key = `${scenarioId}:${(zones.data ?? []).map((z) => z.code).join(",")}`;
+    if (!T || T.key === key) return;
+    T.key = key;
     T.terrain.clear();
     const r = rng(hash(scenarioId));
     const bumps = Array.from({ length: 26 }, () => ({ x: (r() - 0.5) * 56, z: (r() - 0.5) * 46, h: 1.5 + r() * (hazardKind === "landslide" ? 6 : 3.5), s: 4 + r() * 6 }));
@@ -138,12 +153,14 @@ export default function Twin3D() {
     const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 0.95 }));
     mesh.receiveShadow = true;
     T.terrain.add(mesh);
-    const river = new THREE.CatmullRomCurve3(RIVER.map(([a, b]) => { const v = xz(a, b); v.y = heightAt(v.x, v.z) + 0.15; return v; }));
-    T.terrain.add(new THREE.Mesh(new THREE.TubeGeometry(river, 120, 0.45, 6), new THREE.MeshStandardMaterial({ color: 0x3d7bff, emissive: 0x1e3a8a, emissiveIntensity: 0.3 })));
+    if (RIVER.length >= 2) {
+      const river = new THREE.CatmullRomCurve3(RIVER.map(([a, b]) => { const v = xz(a, b); v.y = heightAt(v.x, v.z) + 0.15; return v; }));
+      T.terrain.add(new THREE.Mesh(new THREE.TubeGeometry(river, 120, 0.45, 6), new THREE.MeshStandardMaterial({ color: 0x3d7bff, emissive: 0x1e3a8a, emissiveIntensity: 0.3 })));
+    }
     const base = new THREE.Mesh(new THREE.BoxGeometry(64, 2, 54), new THREE.MeshStandardMaterial({ color: 0x150a2e }));
     base.position.y = -1.4;
     T.terrain.add(base);
-  }, [scenarioId, hazardKind, sim.data]);
+  }, [scenarioId, hazardKind, sim.data, zones.data]);
 
   // dynamic layer: rebuilt whenever the live state changes
   useEffect(() => {
@@ -221,7 +238,7 @@ export default function Twin3D() {
       Object.assign(pin.userData, { pin: true, baseY: y, phase: n });
       T.dyn.add(pin);
     });
-    for (const d of (dispatches.data ?? []).filter((x) => ["dispatched", "in_transit", "delivered"].includes(x.status))) {
+    for (const d of (dispatches.data ?? []).filter((x) => ["dispatched", "delivered"].includes(x.status))) {
       const route = d.route.map(([la, ln]: number[]) => xz(la, ln));
       const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(route.map((v: THREE.Vector3) => new THREE.Vector3(v.x, H(v.x, v.z) + 0.4, v.z))), new THREE.LineBasicMaterial({ color: 0x7c3aed }));
       T.dyn.add(line);
@@ -245,7 +262,7 @@ export default function Twin3D() {
         <div ref={host} className="absolute inset-0" />
         <div className="pointer-events-none absolute bottom-3 left-3 rounded-2xl border-2 border-ink bg-white/95 p-2.5 text-[11px] font-bold shadow-hard-sm">
           <p>{hazardKind === "landslide" ? "🟫 landslide debris" : "🟦 flood water"} · 🏠 lit = reporting, dark + red beam = silent · ▣ shelters (green open, red inaccessible) · ◆ depots · ▼ incidents by priority · 🟩 trucks</p>
-          <p className="text-ink/50">drag to orbit · scroll to zoom · switch scenario in Scenario control and the twin rebuilds</p>
+          <p className="text-ink/50">drag to orbit · scroll to zoom · launch any scenario in the Scenario Lab and the twin re-centres and rebuilds{state.data?.scenario?.world && state.data.scenario.world !== "kodagu" ? " · river channel schematic" : ""}</p>
         </div>
       </div>
     </div>

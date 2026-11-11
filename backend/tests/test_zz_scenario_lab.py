@@ -16,7 +16,7 @@ ALL_STATES_AND_UTS = {
 def test_coverage_all_states_disasters_and_levels(client):
     d = client.get("/api/lab/scenarios").json()
     assert d["coverage"]["total_with_kodagu"] == 50
-    assert set(d["coverage"]["states_and_uts"]) | {"Karnataka"} == ALL_STATES_AND_UTS
+    assert set(d["coverage"]["states_and_uts"]) == ALL_STATES_AND_UTS
     assert len(d["coverage"]["by_disaster"]) == 9 and set(d["coverage"]["by_difficulty"]) == {"beginner", "intermediate", "advanced"}
     for s in d["scenarios"]:
         assert s["objectives"] and s["expected"] and s["description"]

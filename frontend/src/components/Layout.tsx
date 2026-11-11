@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Activity, AlertTriangle, BarChart3, Box, ClipboardCheck, Database, EyeOff, FlaskConical, Home, Inbox, Map as MapIcon, Menu,
-  Package, PhoneCall, RadioTower, ScrollText, ShieldAlert, Smartphone, Sparkles, Truck, X,
+  Megaphone, Package, PhoneCall, RadioTower, ScrollText, ShieldAlert, Smartphone, Sparkles, TestTubes, Truck, X,
 } from "lucide-react";
 import { setUiLang, UI_LANGS } from "../i18n";
 import { useHealth } from "../hooks/useHealth";
@@ -32,10 +32,12 @@ export const NAV = [
     { to: "/resources", key: "resources", icon: Package, chip: "bg-sun-400" },
     { to: "/shelters", key: "shelters", icon: Home, chip: "bg-cobalt-300" },
     { to: "/alerts", key: "alerts", icon: AlertTriangle, chip: "bg-pink-300" },
+    { to: "/comms", key: "comms", icon: Megaphone, chip: "bg-tangerine-300" },
     { to: "/blackout", key: "blackout", icon: EyeOff, chip: "bg-ink text-white" },
     { to: "/phone", key: "phone", icon: PhoneCall, chip: "bg-lime-300" },
     { to: "/radio", key: "radio", icon: RadioTower, chip: "bg-tangerine-300" },
-    { to: "/scenario", key: "scenario", icon: FlaskConical, chip: "bg-brand-300" },
+    { to: "/lab", key: "lab", icon: TestTubes, chip: "bg-brand-300" },
+    { to: "/scenario", key: "scenario", icon: FlaskConical, chip: "bg-brand-200" },
   ] },
   { group: "prove", tint: "bg-cobalt-400", items: [
     { to: "/metrics", key: "metrics", icon: BarChart3, chip: "bg-mint-300" },
@@ -123,7 +125,7 @@ export default function Layout() {
         </div>
       ))}
       <p className="mt-auto rounded-xl border-2 border-dashed border-ink/40 p-2.5 text-[11px] leading-snug text-ink/60">
-        <span className="serif-i text-[14px] text-ink">Synthetic scenario.</span> Kodagu is real; every report, person and stock count here is invented.
+        <span className="serif-i text-[14px] text-ink">Synthetic scenario.</span> Places are real; every report, person and stock count here is invented.
       </p>
     </nav>
   );

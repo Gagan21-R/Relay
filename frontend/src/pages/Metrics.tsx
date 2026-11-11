@@ -52,16 +52,67 @@ function SetBlock({ s, label, tone }: { s: any; label: string; tone: string }) {
   );
 }
 
+function Probes({ p }: { p: any }) {
+  const rows = Object.entries(p.per_language).map(([l, v]: any) => ({ lang: l, n: v.n, support: v.support, detect: v.lang.accuracy, need: v.need.accuracy, people: v.people.accuracy }));
+  return (
+    <Panel title={`Multilingual probe set · ${p.overall.n} messages · ${rows.length} languages`} tone="bg-cobalt-300" section="metrics.page">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <Stat i={1} label="language detected" value={pct(p.overall.lang.accuracy)} />
+        <Stat i={2} label="need extracted" value={pct(p.overall.need.accuracy)} />
+        <Stat i={3} label="people count" value={pct(p.overall.people.accuracy)} />
+        <Stat i={4} label={`disaster type (n=${p.overall.disaster.n})`} value={pct(p.overall.disaster.accuracy)} />
+      </div>
+      <div className="mt-3 grid gap-4 xl:grid-cols-2">
+        <table className="w-full text-xs"><thead><tr className="text-left"><th>Language</th><th>support</th><th>n</th><th>detected</th><th>need</th><th>people</th></tr></thead>
+          <tbody>{rows.map((r) => <tr key={r.lang} className="border-t border-ink/10"><td className="font-bold">{LANG_NAMES[r.lang] ?? r.lang}</td><td>{r.support}</td><td>{r.n}</td><td>{pct(r.detect)}</td><td>{pct(r.need)}</td><td>{pct(r.people)}</td></tr>)}</tbody></table>
+        <div>
+          <table className="w-full text-xs"><thead><tr className="text-left"><th>Input type</th><th>n</th><th>detected</th><th>need</th><th>people</th></tr></thead>
+            <tbody>{Object.entries(p.per_input_type).map(([k, v]: any) => <tr key={k} className="border-t border-ink/10"><td className="font-bold">{k}</td><td>{v.n}</td><td>{pct(v.lang.accuracy)}</td><td>{pct(v.need.accuracy)}</td><td>{pct(v.people.accuracy)}</td></tr>)}</tbody></table>
+          <p className="mt-2 text-[11px] font-bold">Misses ({p.errors.length}):</p>
+          <ul className="text-[11px]">{p.errors.map((e: any, i: number) => <li key={i}>{e.lang}/{e.type}: “{e.text}” → {e.got.language}, {e.got.needs.join(",")}</li>)}</ul>
+          <p className="mt-1 text-[11px] text-ink/60">Not evaluated: {p.not_evaluated.join(", ")}. {p.note}</p>
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
+function Policy({ a, r, s }: { a: any; r: any; s: any }) {
+  return (
+    <div className="grid gap-4 xl:grid-cols-3">
+      <Panel title="Verified-only vs all reports" tone="bg-pink-300">
+        <table className="w-full text-xs"><thead><tr className="text-left"><th /><th>verified-only (RELAY)</th><th>all reports</th></tr></thead>
+          <tbody>{["incident_lines", "lines_to_real_incidents", "lines_to_false_incidents", "kit_units_to_false", "unmet_lines"].map((k) =>
+            <tr key={k} className="border-t border-ink/10"><td className="font-bold">{k.replace(/_/g, " ")}</td><td>{a.verified_only[k]}</td><td>{a.all_reports[k]}</td></tr>)}</tbody></table>
+        <p className="mt-2 text-[11px] text-ink/60">{a.note}</p>
+      </Panel>
+      <Panel title="Routes under simulated closures" tone="bg-sun-300">
+        <ul className="space-y-0.5 text-xs">{Object.entries(r).filter(([k]) => k !== "note").map(([k, v]: any) => <li key={k}><b>{k.replace(/_/g, " ")}:</b> {v}</li>)}</ul>
+        <p className="mt-2 text-[11px] text-ink/60">{r.note}</p>
+      </Panel>
+      <Panel title={`All scenarios replayed (${s.ran})`} tone="bg-mint-300">
+        <ul className="space-y-0.5 text-xs">
+          <li><b>errors:</b> {s.errors.length}</li><li><b>rumour-led incident ever planned:</b> {s.rumour_ever_planned}</li>
+          <li><b>incidents mixing rumour and real reports:</b> {s.incidents_mixing_rumour_and_real ?? "—"}</li>
+          <li><b>reports per incident:</b> {s.mean_reports_per_incident}</li>
+          {s.lab_incidents_vs_situations && <li><b>lab incidents vs designed situations:</b> {s.lab_incidents_vs_situations.mean_incidents} vs {s.lab_incidents_vs_situations.mean_designed_situations} ({s.lab_incidents_vs_situations.note})</li>}
+        </ul>
+        <p className="mt-2 text-[11px] text-ink/60">{s.note}</p>
+      </Panel>
+    </div>
+  );
+}
+
 export default function Metrics() {
   const { t } = useTranslation();
   const { data, reload } = useApi<any>("/api/metrics");
   const [started, setStarted] = useState(false);
-  const rerun = async () => { await api("/api/metrics/run", { method: "POST" }); setStarted(true); setTimeout(reload, 60000); };
+  const rerun = async () => { await api("/api/metrics/run", { method: "POST" }); setStarted(true); setTimeout(reload, 300000); };
   const o = data?.operations;
   return (
     <div className="space-y-4">
       <PageHeader title={t("nav.metrics")} sub={t("pages.metrics")} kicker="synthetic data" tone="bg-mint-400" section="metrics.page">
-        <button className="btn-ghost" onClick={rerun} disabled={data?.running || started}><RefreshCw size={15} aria-hidden />{data?.running || started ? "Running (≈1 min)…" : "Re-run evaluation"}</button>
+        <button className="btn-ghost" onClick={rerun} disabled={data?.running || started}><RefreshCw size={15} aria-hidden />{data?.running || started ? "Running (≈5 min)…" : "Re-run evaluation"}</button>
       </PageHeader>
       <div className="flex items-center gap-2 rounded-2xl border-2 border-ink bg-sun-300 p-3 text-sm font-extrabold shadow-hard-sm"><FlaskConical size={18} aria-hidden />Evaluated on synthetic data; real-world validation pending. The held-out set was written after the rules were tuned and never used to tune them — trust it over the development set.</div>
       {!data?.available ? <Empty>No results yet. Run <code>make eval</code> (python -m eval.run_eval) or press Re-run.</Empty> : (
@@ -74,6 +125,8 @@ export default function Metrics() {
           </div>
           <p className="text-xs font-medium text-ink/60">{o.delivery_verification.note}.</p>
           <SetBlock s={data.held_out} label="Held-out set (honest)" tone="bg-lime-400" />
+          {data.multilingual_probes && <Probes p={data.multilingual_probes} />}
+          {data.allocation_policy && <Policy a={data.allocation_policy} r={data.routes} s={data.scenarios} />}
           <SetBlock s={data.development} label="Development set (rules built on it — optimistic)" tone="bg-white" />
           <p className="text-xs font-medium text-ink/50">{data.mode} · generated in {data.generated_in_seconds} s · {data.notes.join(" · ")}</p>
         </>

@@ -95,11 +95,19 @@ def is_claim(r: Report) -> bool:
     return bool(r.rumour_signals)
 
 
+def _sensational(r: Report) -> bool:
+    return any(x.get("signal") == "sensational_claim" for x in (r.rumour_signals or []))
+
+
 def needs_compatible(a: Report, b: Report) -> tuple[bool, str]:
     if is_claim(a) and is_claim(b):
         return True, "both are spreading claims"
     if is_claim(a) != is_claim(b) and not (core_needs(a) and core_needs(b)):
         return False, "a spreading claim and a first-hand report"
+    if _sensational(a) != _sensational(b) and raw_similarity(a, b) < S.CLUSTER["forward_similarity"]:
+        # a sensational forwarded claim ("tankers poisoned", "dam burst") never joins a first-hand report: it would
+        # borrow that report's credibility. A plain "please RT" of a real report still merges.
+        return False, "a sensational claim and a first-hand report"
     shared = core_needs(a) & core_needs(b)
     if shared:
         return True, f"shared need: {', '.join(sorted(shared))}"

@@ -5,7 +5,7 @@ import { api } from "../services/api";
 import { useApi } from "../hooks/useApi";
 
 export type DisasterProfile = {
-  code: string; name: string; gdacs: string | null; overlay: { label: string; colour: string; fill: string };
+  code: string; name: string; gdacs: string | null; overlay: { label: string; colour: string; fill: number };
   life_threat: Record<string, number>; per_person_day: Record<string, number>; fleet: string[]; recommendations: string[];
   indicators_sample: string[];
 };
@@ -53,7 +53,7 @@ export function DisasterProfilePanel({ compact = false }: { compact?: boolean })
   return (
     <div className="space-y-2 text-sm">
       <p className="font-bold"><span className="mr-1 text-lg">{DISASTER_ICON[d.code]}</span>{d.name} profile · overlay “{d.overlay.label}”
-        <span className="ml-2 inline-block h-3 w-6 rounded border-2 border-ink align-middle" style={{ background: d.overlay.fill }} /></p>
+        <span className="ml-2 inline-block h-3 w-6 rounded border-2 border-ink align-middle" style={{ background: d.overlay.colour, opacity: 0.4 + d.overlay.fill }} /></p>
       <div className="flex flex-wrap gap-1">{top.map(([k, v]) => <span key={k} className="badge bg-white">{k} threat {v.toFixed(2)}</span>)}</div>
       {!compact && <p className="text-xs font-semibold text-ink/70">Per person per day: {Object.entries(d.per_person_day).map(([k, v]) => `${k.replace(/_/g, " ")} ${v}`).join(" · ")}</p>}
       {!compact && <p className="text-xs font-semibold text-ink/70">Fleet: {d.fleet.join(", ")}</p>}

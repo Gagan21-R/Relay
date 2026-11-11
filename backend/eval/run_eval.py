@@ -33,6 +33,7 @@ from app.sim import kodagu_reports as KR  # noqa: E402
 from app.sim.seed import load_world  # noqa: E402
 from app.core.roles import Actor  # noqa: E402
 from app.ws.manager import mute  # noqa: E402
+from eval import extended as X  # noqa: E402
 from eval import heldout  # noqa: E402
 
 OUT = Path(__file__).with_name("results.json")
@@ -91,10 +92,11 @@ def run_set(db, reports: list, label: str) -> dict:
             "translated": r.original_language == "en" or r.translation_confidence >= 0.7,
         })
 
-    def acc(field, sub=None):
-        vals = [x[field] for x in rows if x[field] is not None and (sub is None or x["lang"] == sub)]
+    def acc(field, sub=None, script=None):
+        vals = [x[field] for x in rows if x[field] is not None and (sub is None or x["lang"] == sub) and (script is None or x["script"] == script)]
         return {"accuracy": round(sum(vals) / len(vals), 3) if vals else None, "n": len(vals)}
     extraction = {"overall": {f: acc(f) for f in ("zone", "need", "people")},
+                  "per_input_type": {t: {f: acc(f, script=t) for f in ("zone", "need", "people")} for t in ("native", "romanized", "mixed")},
                   "per_language": {l: {f: acc(f, l) for f in ("zone", "need", "people", "translated")} for l in langs}}
     coverage = {l: acc("translated", l) for l in langs}
 
@@ -176,15 +178,24 @@ def main() -> dict:
     with SessionLocal() as db:
         load_world(db)
         db.commit()
-        dev = run_set(db, [r[:5] for r in KR.REPORTS], "development")
+        from eval.ground_truth import KODAGU
+        dev = run_set(db, [(r[0], r[1], r[2], r[3], KODAGU[(r[0], r[3])]) for r in KR.REPORTS], "development")
         db.commit()
         held = run_set(db, heldout.REPORTS, "held-out")
         db.commit()
         ops = ops_metrics(db)
         db.commit()
+        alloc = X.allocation_comparison(db)
+        db.commit()
+        routes = X.route_eval(db)
+        db.commit()
+        suite = X.scenario_suite(db)
+        db.commit()
+    probes = X.probe_eval()
     res = {"disclaimer": "Evaluated on synthetic data; real-world validation pending.",
            "generated_in_seconds": round(time.perf_counter() - t0, 1), "mode": "mock (rule-based extraction, local embeddings)",
            "development": dev, "held_out": held, "operations": ops,
+           "multilingual_probes": probes, "allocation_policy": alloc, "routes": routes, "scenarios": suite,
            "notes": ["development = the seed reports the rules were built against; held-out = written after tuning, never used to tune",
                      "duplicate metrics are pairwise over report pairs; per-language counts pairs involving that language",
                      "fake/true is incident-level: positive class = fake/rumour"]}

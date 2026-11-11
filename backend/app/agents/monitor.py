@@ -25,6 +25,14 @@ def collect(db: Session, st: dict) -> list[dict]:
     triggers += blackout.shelter_and_road_triggers(db)
     # delivery progress, overdue, failures, reroutes (time-based)
     triggers += coordination.track(db)
+    # a plan still waiting for approval whose routes now cross a closed road is out of date: propose a new version
+    from app.models import Road
+    closed = {r.code: r for r in db.scalars(select(Road).where(Road.status != "open"))}
+    for p in db.scalars(select(Plan).where(Plan.status == "pending_approval")):
+        hit = sorted({c for a in p.assignments for c in a.get("route_roads", []) if c in closed})
+        if hit:
+            triggers.append({"key": f"stale_plan:{p.id}:{','.join(hit)}",
+                             "why": f"plan v{p.version} routes through {', '.join(closed[c].name + ' (' + closed[c].status + ')' for c in hit)}"})
     # new shortages
     for a in db.scalars(select(Alert).where(Alert.type == "shortage", Alert.resolved.is_(False))):
         triggers.append({"key": a.key, "why": a.message})

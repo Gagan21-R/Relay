@@ -17,6 +17,8 @@ import Alerts from "./pages/Alerts";
 import PublicCorrections from "./pages/PublicCorrections";
 import Audit from "./pages/Audit";
 import ScenarioControl from "./pages/ScenarioControl";
+import ScenarioLab from "./pages/ScenarioLab";
+import Communications from "./pages/Communications";
 
 // heavy pages (three.js, charts) load on demand
 const Resources = lazy(() => import("./pages/Resources"));
@@ -45,6 +47,8 @@ export default function App() {
         <Route path="alerts" element={<Alerts />} />
         <Route path="audit" element={<Audit />} />
         <Route path="scenario" element={<ScenarioControl />} />
+        <Route path="lab" element={<ScenarioLab />} />
+        <Route path="comms" element={<Communications />} />
         <Route path="twin3d" element={wait(<Twin3D />)} />
         <Route path="metrics" element={wait(<Metrics />)} />
         <Route path="*" element={<Navigate to="/" replace />} />

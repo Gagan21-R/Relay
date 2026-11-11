@@ -71,6 +71,8 @@ function FlyTo({ target }: { target: [number, number] | null }) {
   return null;
 }
 
+const TABS = [["priorities", "Priorities"], ["arriving", "Arriving"], ["disaster", "Disaster"], ["volunteers", "Volunteers"], ["agents", "Agents"]] as const;
+
 type Pulse = { id: number; lat: number; lng: number; lang?: string; channel: string; born: number };
 
 export default function CommandMap() {
@@ -90,11 +92,15 @@ export default function CommandMap() {
   const hospitals = useApi<any[]>("/api/hospitals", ["sim"], 800);
   const gdacs = useGdacs();
   const dis = useActiveDisaster();
-  const ov = dis?.overlay ?? { label: "flood extent", colour: "#2E5BFF", fill: "#5B7BFF" };
+  const ov = dis?.overlay ?? { label: "flood extent", colour: "#2E5BFF", fill: 0.35 };
   const [sel, setSel] = useState<Sel>(null);
   const [fly, setFly] = useState<[number, number] | null>(null);
   const [pulses, setPulses] = useState<Pulse[]>([]);
   const [feed, setFeed] = useState<any[]>([]);
+  const [tab, setTab] = useState<string>("priorities");
+  const [agentLog, setAgentLog] = useState<any[]>([]);
+  useLiveEvents(useCallback((e: LiveEvent) => setAgentLog((l) => [e.data, ...l].slice(0, 12)), []), ["audit"]);
+  const vols = useApi<any[]>("/api/volunteers", ["dispatch", "refresh"], 800);
   const onReport = useCallback((e: LiveEvent) => {
     const r = e.data;
     setFeed((f) => [r, ...f.filter((x) => x.id !== r.id)].slice(0, 6));
@@ -104,7 +110,7 @@ export default function CommandMap() {
   const [, tick] = useState(0);
   useEffect(() => { const i = window.setInterval(() => tick((n) => n + 1), 1500); return () => window.clearInterval(i); }, []);
   const clock = sim.data?.clock ?? 0;
-  const active = (dispatches.data ?? []).filter((d) => ["dispatched", "in_transit", "delivered"].includes(d.status));
+  const active = (dispatches.data ?? []).filter((d) => ["dispatched", "delivered"].includes(d.status));
   const silent = (zones.data ?? []).filter((z) => z.blackout_flag);
   const counts = useMemo(() => {
     const inc = incidents.data ?? [];
@@ -114,7 +120,7 @@ export default function CommandMap() {
 
   return (
     <div className="space-y-4">
-      <PageHeader title={t("map.title")} sub={t("map.sub")} kicker={`T+${clock.toFixed(1)} h · live`} tone="bg-cobalt-300" section="map.page">
+      <PageHeader title={t("map.title")} sub={sim.data?.scenario?.world && sim.data.scenario.world !== "kodagu" ? `${sim.data.scenario.name} · ${sim.data.scenario.state}. Real OpenStreetMap basemap; every report, shelter, hospital and stock count is synthetic.` : t("map.sub")} kicker={`T+${clock.toFixed(1)} h · live`} tone="bg-cobalt-300" section="map.page">
         <span className="sticker bg-sun-300">{t("common.synthetic")}</span>
       </PageHeader>
       <div className="flex flex-wrap items-center gap-1.5">
@@ -140,7 +146,7 @@ export default function CommandMap() {
             <FlyTo target={fly} />
             <ScenarioView center={sim.data?.scenario?.center} zoom={sim.data?.scenario?.zoom} />
             {on.flood && (sim.data?.flood_extent ?? []).map((p, i) => (
-              <Polygon key={`f${i}`} positions={p as [number, number][]} pathOptions={{ color: ov.colour, weight: 1.5, fillColor: ov.fill, fillOpacity: 0.35, className: "flood-poly" }}>
+              <Polygon key={`f${i}`} positions={p as [number, number][]} pathOptions={{ color: ov.colour, weight: 1.5, fillColor: ov.colour, fillOpacity: ov.fill, className: "flood-poly" }}>
                 <Tooltip sticky>{dis?.name ?? "Hazard"} · {ov.label} v{sim.data?.flood_version} (simulated satellite-style product)</Tooltip>
               </Polygon>
             ))}
@@ -230,8 +236,12 @@ export default function CommandMap() {
                   </Panel>); })()}
               </motion.div>
             ) : (
-              <motion.div key="feed" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                <Panel title="Arriving now" section="feed.page" tone="bg-pink-400">
+              <motion.div key="tabs" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <div className="mb-2 flex flex-wrap gap-1" role="tablist" aria-label="Side panel">
+                  {TABS.map(([k, label]) => <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
+                    className={`rounded-full border-2 border-ink px-2.5 py-0.5 text-xs font-extrabold ${tab === k ? "bg-ink text-white" : "bg-white"}`}>{label}</button>)}
+                </div>
+                {tab === "arriving" && <Panel title="Arriving now" section="feed.page" tone="bg-pink-400">
                   {!feed.length ? <p className="text-sm font-medium text-ink/60">Reports pulse on the map as they arrive. Send one from the phone simulator, or click any marker for its evidence.</p> : (
                     <ul className="space-y-1.5">{feed.map((r) => (
                       <li key={r.id} className="rounded-xl border-2 border-ink/20 bg-paper p-2 text-xs">
@@ -239,19 +249,32 @@ export default function CommandMap() {
                         <p className="mt-0.5 text-sm font-semibold" lang={r.original_language}>{r.raw_text}</p>
                       </li>))}</ul>
                   )}
-                </Panel>
-                <Panel title={`Disaster profile · GDACS ${gdacs.data?.status ?? ""}`} className="mt-4" section="map.disaster" tone="bg-cobalt-300">
-                  <DisasterProfilePanel compact />
-                  {gdacs.data && <p className="mt-2 text-xs font-bold"><span className={`badge ${DATA_BADGE[gdacs.data.status]}`}>{gdacs.data.status}</span> {gdacs.data.items.length} GDACS item(s){gdacs.data.reason ? ` · ${gdacs.data.reason}` : ""}</p>}
-                </Panel>
-                <Panel title="Top priorities" className="mt-4" section="incidents.priority" tone="bg-lime-400">
+                </Panel>}
+                {tab === "priorities" && <Panel title="Top priorities" section="incidents.priority" tone="bg-lime-400">
                   <ul className="space-y-1.5">
-                    {(incidents.data ?? []).slice(0, 6).map((i) => { const p = PRIORITY_STYLE(i.priority_score); return (
+                    {(incidents.data ?? []).slice(0, 8).map((i) => { const p = PRIORITY_STYLE(i.priority_score); return (
                       <li key={i.id}><button className="flex w-full items-center gap-2 rounded-xl border-2 border-ink/15 bg-white px-2 py-1.5 text-left text-sm hover:border-ink" onClick={() => i.lat && pick({ kind: "incident", id: i.id }, [i.lat, i.lng!])}>
                         <span className={`badge ${p.cls}`}>{p.label}</span><span className="min-w-0 flex-1 truncate font-bold">{i.title}</span><ConfidenceBadge level={i.confidence_level} />
                       </button></li>); })}
                   </ul>
-                </Panel>
+                </Panel>}
+                {tab === "disaster" && <Panel title={`Disaster profile · GDACS ${gdacs.data?.status ?? ""}`} section="map.disaster" tone="bg-cobalt-300">
+                  <DisasterProfilePanel />
+                  {gdacs.data && <p className="mt-2 text-xs font-bold"><span className={`badge ${DATA_BADGE[gdacs.data.status]}`}>{gdacs.data.status}</span> {gdacs.data.items.length} GDACS item(s){gdacs.data.reason ? ` · ${gdacs.data.reason}` : ""}</p>}
+                </Panel>}
+                {tab === "volunteers" && <Panel title={`Volunteers (${vols.data?.length ?? 0})`} section="dispatch.page" tone="bg-mint-400">
+                  <ul className="space-y-1 text-xs">{(vols.data ?? []).map((v) => (
+                    <li key={v.code} className="flex flex-wrap items-center gap-1.5 rounded-lg bg-paper px-2 py-1">
+                      <b className="font-mono">{v.code}</b><span className="font-bold">{v.name}</span>
+                      <span className={`badge ${v.busy ? "bg-sun-300" : v.available ? "bg-mint-300" : "bg-white"}`}>{v.busy ? "on a task" : v.available ? "free" : "unavailable"}</span>
+                      <span className="badge bg-white" title={v.reliability_formula}>reliability {v.reliability.toFixed(2)}</span>
+                      <span className="text-ink/60">{v.skills.join(", ")} · {v.vehicle ?? "no vehicle"}</span></li>))}</ul>
+                  <p className="mt-2 text-[11px] text-ink/60">Reliability = (on-time confirmations + 1) / (assigned tasks + 2). Separate from reporter reliability and approval precedents.</p>
+                </Panel>}
+                {tab === "agents" && <Panel title="Agent activity" section="audit.page" tone="bg-sun-400">
+                  {!agentLog.length ? <p className="text-sm text-ink/60">Agent actions appear here as they happen.</p> :
+                    <ul className="space-y-1 text-[11px]">{agentLog.map((a, i) => <li key={i} className="rounded-lg bg-paper px-2 py-1"><span className={`badge mr-1 ${a.actor_type === "human" ? "bg-pink-300" : "bg-cobalt-200"}`}>{a.actor}</span>{a.summary}</li>)}</ul>}
+                </Panel>}
               </motion.div>
             )}
           </AnimatePresence>
