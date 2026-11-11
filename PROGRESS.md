@@ -61,3 +61,24 @@ Read this file and the master prompt first after any context reset, then continu
   (localStorage, GPS or zone pick, idempotent sync, simulate-no-signal), Radio Console.
 - Checks (browser): Kannada SMS on the dashboard in 171 ms with translation and a Kannada auto-reply; with
   Kushalnagar DOWN a web report is blocked while SMS/radio arrive. 38 pytest + 3 vitest pass.
+
+## Phase 5 — Trust & Evidence agent (done)
+- `app/agents/trust.py`: clustering = similarity ≥ threshold AND distance ≤ 2.5 km AND Δt ≤ 8 h AND compatible needs
+  (shared core need, or both spreading claims). Mock-mode embeddings run on a language-neutral form (EN translation +
+  place + needs); with Gemini, multilingual embeddings on raw text. Forwards/copies (raw-text similarity ≥ 0.85, or
+  forward-chain phrases) count as one source. Corrections ("dam is safe", "bus stand is dry", "camp is open") attach
+  to the claim they correct. Resolution updates ("all 12 safe") look back 24 h.
+- Confidence: 7 weighted components + penalties (contradiction, forward chain, sensational claim, old EXIF), stored in
+  `confidence_breakdown` with a `why` per component; levels verified/likely/unverified/disputed/false; Fast Verify for
+  life-safety + unverified/disputed; human confirm/refute updates each source's reliability (Beta-style prior by tier).
+- All thresholds/weights in `app/services/scoring.py`. Seed probe: pairwise precision 0.95, recall 1.00; three rumours
+  auto-score false; dialysis + labour reports sit in Fast Verify.
+- API: `/api/incidents/{id}` evidence trail, `/api/fast-verify`, `/api/incidents/{id}/verify`, `/api/trust/compare`
+  (same-report analyser, savepoint-rolled-back, nothing stored).
+- Checks: 46 tests pass.
+
+## User request (mid-build): maximalist, motion-driven UI
+- "bold creative agency portfolio landing page with maximalism elements, motion-driven animations, case study
+  previews, team showcase, and contact form" → applied as RELAY's whole design system; the agency sections become a
+  RELAY landing at `/about` (hero, case studies = demo stories, team = agents/modules/people, contact form = files a
+  real web report). Command Map stays home.

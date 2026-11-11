@@ -112,7 +112,7 @@ def rule_extract(text: str) -> tuple[dict, dict]:
     n, n_ev = people_count(text)
     if n_ev:
         ev["people"] = n_ev
-    life = _find(low, L.LIFE_SAFETY)
+    life = [] if _find(low, L.RESOLVED) else _find(low, L.LIFE_SAFETY)
     if life and not missing:
         ev["life_safety"] = life[:3]
     urgency = "medium"

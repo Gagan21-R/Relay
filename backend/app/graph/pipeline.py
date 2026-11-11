@@ -74,8 +74,9 @@ def build_graph():
     g.add_node("resource", _agent_node("resource", resource))
     g.add_node("monitor", _agent_node("monitor", monitor))
     g.add_node("coordination", _agent_node("coordination", coordination))
-    g.set_conditional_entry_point(lambda st: "intake" if st.get("report_ids") else "resource",
-                                  {"intake": "intake", "resource": "resource"})
+    g.set_conditional_entry_point(
+        lambda st: "intake" if st.get("report_ids") else "triage" if st.get("incident_ids") else "resource",
+        {"intake": "intake", "triage": "triage", "resource": "resource"})
     g.add_conditional_edges("intake", lambda st: END if st.get("blocked") else "trust", {END: END, "trust": "trust"})
     g.add_edge("trust", "triage")
     g.add_edge("triage", "resource")
