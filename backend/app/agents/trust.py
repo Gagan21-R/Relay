@@ -299,7 +299,7 @@ def score(db: Session, inc: Incident) -> Incident:
     inc.life_safety = any(r.life_safety for r in supporting)
     place = inc.area_name or (z.name if z else "location unknown")
     label = "Missing contact" if cat == "missing_contact" else cat.capitalize()
-    inc.title = f"{label} · {place}" + (f" · {inc.people_affected} people" if inc.people_affected else "")
+    inc.title = f"{label} · {place}" + (f" · {inc.people_affected} {'person' if inc.people_affected == 1 else 'people'}" if inc.people_affected else "")
     inc.fast_verify = inc.life_safety and level in ("unverified", "disputed") and inc.official_status is None
     inc.updated_at = inc.updated_at
     db.flush()

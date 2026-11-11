@@ -196,3 +196,34 @@ def summary(db: Session = Depends(get_db)):
         "zones_down": [z.name for z in db.scalars(select(Zone).where(Zone.internet_down))],
         "blackout_zones": [z.name for z in db.scalars(select(Zone).where(Zone.blackout_flag))],
     }
+
+
+class CheckIn(BaseModel):
+    occupancy: int | None = Field(None, ge=0)
+    status: str | None = Field(None, pattern="^(open|full|closed)$")
+    note: str | None = None
+    who: str = "Shelter manager"
+
+
+@router.post("/shelters/{sid}/checkin")
+def checkin(sid: int, body: CheckIn, db: Session = Depends(get_db)):
+    """Shelter manager check-in: confirms the shelter is reachable and staffed; resets the staleness clock."""
+    s = get_or_404(db, Shelter, sid)
+    s.last_confirmed_at = state.now(db)
+    if body.occupancy is not None:
+        s.occupancy = body.occupancy
+    if body.status:
+        s.status = body.status
+    elif s.status == "unconfirmed":
+        s.status = "open"
+    if s.capacity and s.occupancy >= s.capacity and s.status == "open":
+        s.status = "full"
+    state.audit(db, body.who, "shelter_checkin", f"{s.name}: {s.occupancy}/{s.capacity}, {s.status}. {body.note or ''}",
+                actor_type="human", object_type="shelter", object_id=s.id, inputs=body.model_dump())
+    from app.agents import coordination
+    confirmed = coordination.confirm_by_checkin(db, s) if hasattr(coordination, "confirm_by_checkin") else []
+    from app.graph import pipeline
+    pipeline.run(db, "shelter_checkin")
+    db.commit()
+    emit("shelter", row(s))
+    return {**row(s), "confirmed_dispatches": confirmed}

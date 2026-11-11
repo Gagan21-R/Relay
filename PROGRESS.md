@@ -89,7 +89,7 @@ Read this file and the master prompt first after any context reset, then continu
   restyled UI kit (`Breakdown` component for every score), `/about` landing (hero, live numbers, 5 case studies,
   team = 5 agents + 4 modules + people, research grounding, contact form → real web report).
 
-## Phase 6 — Triage + Resource agents (backend done)
+## Phase 6 — Triage + Resource agents (done)
 - Triage (`agents/triage.py`): priority /100 = life threat 30 + people 20 (log) + vulnerable 15 + waiting 10 +
   confidence 15 (unverified life-safety keeps 0.6) + access difficulty 10 (roads closed, flood extent, towers);
   false/resolved = 0. Breakdown with `why` per component.
@@ -101,3 +101,7 @@ Read this file and the master prompt first after any context reset, then continu
   auto-resolved (`services/alerts.py`). `/api/resources/overview` with 48 h projection series.
 - Seed result: "Water litres at Napoklu Govt High School camp runs out in ~18 h" + transfer from Madikeri depot
   (13.9 km); boats shortage; NGO store stale. 52 tests pass.
+- UI: Incidents (ranked list, priority + confidence `Breakdown`, evidence trail with cluster tests, confirm/refute,
+  same-report analyser), Fast Verify (callback numbers masked, in reporter's language), Resources (Recharts 48 h
+  burn-rate lines, demand vs supply bars, transfers, depot stock with stale recount), Shelters (occupancy, access,
+  burn, check-in endpoint `POST /api/shelters/{id}/checkin`).
