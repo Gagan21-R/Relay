@@ -33,27 +33,27 @@ function MockPhone({ phone, samples }: { phone: string; samples: Samples["messag
         <div className="flex items-center justify-between rounded-t-[1.6rem] bg-brand-700 px-4 py-2 text-xs text-white">
           <span>RELAY helpline · SMS</span><span className="font-mono">{phone.slice(0, 6)}…{phone.slice(-3)}</span>
         </div>
-        <div className="h-[380px] space-y-2 overflow-y-auto bg-slate-100 p-3" aria-live="polite">
-          {!thread.data?.length && <p className="pt-10 text-center text-xs text-slate-500">No messages yet. Type in any language, or tap a sample.</p>}
+        <div className="h-[380px] space-y-2 overflow-y-auto bg-paper p-3" aria-live="polite">
+          {!thread.data?.length && <p className="pt-10 text-center text-xs text-ink/60">No messages yet. Type in any language, or tap a sample.</p>}
           {thread.data?.map((m) => (
             <div key={m.id} className={`flex ${m.direction === "in" ? "justify-end" : "justify-start"}`}>
               <div className={`max-w-[85%] rounded-2xl px-3 py-1.5 text-sm ${m.direction === "in" ? "rounded-br-sm bg-brand-600 text-white" : "rounded-bl-sm bg-white text-ink shadow"}`} lang={m.language}>
                 {m.body}
-                <p className={`mt-0.5 text-[10px] ${m.direction === "in" ? "text-brand-100" : "text-slate-400"}`}>{m.kind}{m.language ? ` · ${LANG_NAMES[m.language] ?? m.language}` : ""}</p>
+                <p className={`mt-0.5 text-[10px] ${m.direction === "in" ? "text-brand-100" : "text-ink/50"}`}>{m.kind}{m.language ? ` · ${LANG_NAMES[m.language] ?? m.language}` : ""}</p>
               </div>
             </div>
           ))}
           <div ref={end} />
         </div>
         <form className="flex gap-1.5 rounded-b-[1.6rem] bg-white p-2" onSubmit={(e) => { e.preventDefault(); send(text); }}>
-          <input className="min-w-0 flex-1 rounded-full border border-slate-300 px-3 py-1.5 text-sm" value={text} onChange={(e) => setText(e.target.value)} placeholder="Type an SMS in any language" aria-label="SMS text" maxLength={480} />
+          <input className="min-w-0 flex-1 rounded-full border-2 border-ink px-3 py-1.5 text-sm" value={text} onChange={(e) => setText(e.target.value)} placeholder="Type an SMS in any language" aria-label="SMS text" maxLength={480} />
           <button className="btn-primary !rounded-full !px-2.5" disabled={busy || !text.trim()} aria-label="Send SMS"><Send size={15} /></button>
         </form>
       </div>
-      {err && <p className="mt-2 text-xs text-red-600">{err}</p>}
+      {err && <p className="mt-2 text-xs text-pink-500">{err}</p>}
       <div className="mt-3 flex flex-wrap gap-1.5">
         {samples.map((s) => (
-          <button key={s.label} onClick={() => send(s.text)} disabled={busy} className="rounded-full border border-brand-200 bg-brand-50 px-2.5 py-1 text-xs text-brand-800 hover:bg-brand-100" title={s.text}>{s.label}</button>
+          <button key={s.label} onClick={() => send(s.text)} disabled={busy} className="rounded-full border border-ink bg-lime-300 px-2.5 py-1 text-xs font-bold text-ink shadow-hard-sm transition-transform hover:-translate-y-0.5" title={s.text}>{s.label}</button>
         ))}
       </div>
     </div>
@@ -100,19 +100,19 @@ function VoiceCall({ phone }: { phone: string }) {
   };
   return (
     <div className="space-y-2 text-sm">
-      <p className="text-xs text-slate-500">IVR flow: language menu → record → transcribe → same pipeline as SMS. With a Gemini key the audio itself is transcribed; in mock mode the browser's speech recognition (or your typed transcript) is used.</p>
+      <p className="text-xs text-ink/60">IVR flow: language menu → record → transcribe → same pipeline as SMS. With a Gemini key the audio itself is transcribed; in mock mode the browser's speech recognition (or your typed transcript) is used.</p>
       <div className="flex flex-wrap items-center gap-2">
-        <select className="rounded-lg border border-slate-300 px-2 py-1" value={lang} onChange={(e) => setLang(e.target.value)} aria-label="Caller language">
+        <select className="input !w-auto !py-1" value={lang} onChange={(e) => setLang(e.target.value)} aria-label="Caller language">
           {Object.entries(LANG_NAMES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>
         {!rec ? <button className="btn-ghost" onClick={start}><Mic size={14} aria-hidden />Record</button>
-          : <button className="btn-primary !bg-red-600" onClick={stop}><Square size={14} aria-hidden />Stop</button>}
+          : <button className="btn-primary !bg-pink-500" onClick={stop}><Square size={14} aria-hidden />Stop</button>}
         <label className="btn-ghost cursor-pointer"><Upload size={14} aria-hidden />Upload clip<input type="file" accept="audio/*" className="hidden" onChange={(e) => setBlob(e.target.files?.[0] ?? null)} /></label>
         {blob && <audio controls src={URL.createObjectURL(blob)} className="h-8" />}
       </div>
-      <textarea className="w-full rounded-lg border border-slate-300 p-2" rows={2} value={transcript} onChange={(e) => setTranscript(e.target.value)} placeholder="Transcript (filled by speech recognition, or type it)" lang={lang} />
+      <textarea className="input" rows={2} value={transcript} onChange={(e) => setTranscript(e.target.value)} placeholder="Transcript (filled by speech recognition, or type it)" lang={lang} />
       <button className="btn-primary" onClick={submit} disabled={!transcript.trim() && !blob}>Send call to RELAY</button>
-      {status && <p className="text-xs text-slate-600">{status}</p>}
+      {status && <p className="text-xs text-ink/70">{status}</p>}
     </div>
   );
 }
@@ -132,9 +132,9 @@ export default function PhoneSimulator() {
         <div className="space-y-3">
           <div className="flex flex-wrap gap-1.5">
             {samples.data?.phones.map((p) => (
-              <button key={p.phone} onClick={() => setPhone(p.phone)} className={`rounded-lg border px-2 py-1 text-xs ${phone === p.phone ? "border-brand-500 bg-brand-50 font-semibold text-brand-800" : "border-slate-200 bg-white text-slate-600"}`}>{p.label}</button>
+              <button key={p.phone} onClick={() => setPhone(p.phone)} className={`rounded-xl border-2 px-2 py-1 text-xs font-bold ${phone === p.phone ? "border-ink bg-brand-500 font-bold text-white shadow-hard-sm" : "border-ink bg-white text-ink/70"}`}>{p.label}</button>
             ))}
-            <input className="w-36 rounded-lg border border-slate-300 px-2 py-1 text-xs" placeholder="+91 other number" value={custom} onChange={(e) => setCustom(e.target.value)} onBlur={() => custom.match(/^\+?\d{10,13}$/) && setPhone(custom.startsWith("+") ? custom : `+91${custom.slice(-10)}`)} aria-label="Other phone number" />
+            <input className="w-36 input !w-auto !py-1 text-xs" placeholder="+91 other number" value={custom} onChange={(e) => setCustom(e.target.value)} onBlur={() => custom.match(/^\+?\d{10,13}$/) && setPhone(custom.startsWith("+") ? custom : `+91${custom.slice(-10)}`)} aria-label="Other phone number" />
           </div>
           <MockPhone phone={phone} samples={samples.data?.messages ?? []} />
         </div>

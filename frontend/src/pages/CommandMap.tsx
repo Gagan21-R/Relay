@@ -17,7 +17,7 @@ export default function CommandMap() {
   return (
     <div className="space-y-4">
       <PageHeader title={t("map.title")} sub={t("map.sub")}>
-        <span className="badge bg-amber-100 text-amber-800">{t("common.synthetic")}</span>
+        <span className="badge bg-sun-300 text-ink">{t("common.synthetic")}</span>
       </PageHeader>
       <div className="grid gap-4 xl:grid-cols-[1fr_300px]">
         <div className="card h-[70vh] min-h-[420px] overflow-hidden">
@@ -30,11 +30,11 @@ export default function CommandMap() {
           </MapContainer>
         </div>
         <section className="card p-3" aria-label="Live events">
-          <h2 className="mb-2 text-sm font-semibold text-slate-700">Live events</h2>
-          {!events.length && <p className="text-sm text-slate-500">Waiting for events on /ws/live…</p>}
+          <h2 className="mb-2 text-sm font-semibold text-ink/80">Live events</h2>
+          {!events.length && <p className="text-sm text-ink/60">Waiting for events on /ws/live…</p>}
           <ul className="space-y-1.5 text-xs">
             {events.map((e, i) => (
-              <li key={i} className="rounded-lg bg-slate-50 px-2 py-1.5"><span className="font-semibold text-brand-700">{e.type}</span> · {e.at}</li>
+              <li key={i} className="rounded-lg bg-paper px-2 py-1.5"><span className="font-semibold text-brand-700">{e.type}</span> · {e.at}</li>
             ))}
           </ul>
         </section>

@@ -13,13 +13,13 @@ export default function NetworkPanel({ explain }: { explain?: React.ReactNode })
   };
   return (
     <Panel title="Network status" explain={explain}>
-      <p className="mb-2 text-xs text-slate-500">Cut the internet in a zone. Reports needing internet from inside it stop arriving; SMS, voice calls and radio still get through.</p>
+      <p className="mb-2 text-xs text-ink/60">Cut the internet in a zone. Reports needing internet from inside it stop arriving; SMS, voice calls and radio still get through.</p>
       <div className="grid grid-cols-2 gap-1.5">
         {(data ?? []).map((z) => (
           <button key={z.code} onClick={() => toggle(z)} aria-pressed={z.internet_down}
-            className={`flex items-center justify-between rounded-lg border px-2.5 py-1.5 text-left text-xs font-medium transition-colors ${z.internet_down ? "border-red-300 bg-red-50 text-red-800" : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"}`}>
-            <span>{z.name}{z.tower_status !== "up" && <span className="ml-1 text-[10px] text-red-600">· towers {z.tower_status}</span>}</span>
-            {z.internet_down ? <span className="flex items-center gap-1"><WifiOff size={13} aria-hidden />DOWN</span> : <Wifi size={13} className="text-emerald-600" aria-label="internet up" />}
+            className={`flex items-center justify-between rounded-xl border-2 border-ink px-2.5 py-1.5 text-left text-xs font-bold transition-all ${z.internet_down ? "-rotate-1 bg-pink-500 text-white shadow-hard-sm" : "bg-white text-ink hover:-translate-y-0.5 hover:bg-lime-300"}`}>
+            <span>{z.name}{z.tower_status !== "up" && <span className="ml-1 text-[10px] opacity-80">· towers {z.tower_status}</span>}</span>
+            {z.internet_down ? <span className="flex items-center gap-1"><WifiOff size={13} aria-hidden />DOWN</span> : <Wifi size={13} className="text-ink" aria-label="internet up" />}
           </button>
         ))}
       </div>

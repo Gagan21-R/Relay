@@ -24,7 +24,8 @@
     "audit": "Audit log",
     "field": "Field app",
     "radio": "Radio console",
-    "blackout": "Blackout & recon"
+    "blackout": "Blackout & recon",
+    "about": "About RELAY"
   },
   "status": {
     "live": "Live",
@@ -60,6 +61,7 @@
     "audit": "Every agent action and human decision, with inputs and outputs.",
     "field": "Mobile field reporting that works offline and syncs later.",
     "radio": "Enter reports received by HAM radio, police wireless, forest/railway radio or satellite phone.",
-    "blackout": "Silent zones ranked by risk: hazard, population, silence, infrastructure loss and missing-contact reports."
+    "blackout": "Silent zones ranked by risk: hazard, population, silence, infrastructure loss and missing-contact reports.",
+    "about": "The story: what RELAY does, who does what, and the evidence behind it."
   }
 }

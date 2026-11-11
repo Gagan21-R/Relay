@@ -168,3 +168,31 @@ def audit(actor_type: str | None = None, action: str | None = None, limit: int =
     if action:
         q = q.where(AuditLog.action == action)
     return rows(db.scalars(q))
+
+
+@router.get("/summary")
+def summary(db: Session = Depends(get_db)):
+    """Headline numbers for the ticker and the landing page."""
+    from sqlalchemy import func
+    from app.models import Dispatch, Plan
+    reports = db.scalars(select(Report)).all()
+    incs = db.scalars(select(Incident)).all()
+    levels: dict[str, int] = {}
+    for i in incs:
+        levels[i.confidence_level] = levels.get(i.confidence_level, 0) + 1
+    return {
+        "clock": state.now(db),
+        "reports": len(reports),
+        "languages": len({r.original_language for r in reports if r.original_language}),
+        "offline_channel_reports": sum(1 for r in reports if r.channel in ("sms", "voice", "radio_entry")),
+        "blocked_reports": sum(1 for r in reports if r.status == "blocked"),
+        "incidents": len(incs),
+        "levels": levels,
+        "fast_verify": sum(1 for i in incs if i.fast_verify),
+        "people_affected": sum(i.people_affected for i in incs if i.confidence_level not in ("false",)),
+        "alerts_open": db.scalar(select(func.count()).select_from(Alert).where(Alert.resolved.is_(False))),
+        "plans_pending": db.scalar(select(func.count()).select_from(Plan).where(Plan.status == "pending_approval")),
+        "dispatches_active": db.scalar(select(func.count()).select_from(Dispatch).where(Dispatch.status.in_(["dispatched", "in_transit", "delivered"]))),
+        "zones_down": [z.name for z in db.scalars(select(Zone).where(Zone.internet_down))],
+        "blackout_zones": [z.name for z in db.scalars(select(Zone).where(Zone.blackout_flag))],
+    }

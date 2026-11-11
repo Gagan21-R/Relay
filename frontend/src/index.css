@@ -2,14 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .card { @apply rounded-2xl border border-slate-200 bg-white shadow-sm; }
-  .btn { @apply inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50; }
-  .btn-primary { @apply btn bg-brand-600 text-white hover:bg-brand-700; }
-  .btn-ghost { @apply btn border border-slate-300 bg-white text-ink hover:bg-slate-100; }
-  .badge { @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold; }
+/* RELAY maximalist design system: paper + ink outlines + hard shadows + loud accents + pattern fills + motion. */
+@layer base {
+  html { background: #FFF7EC; }
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+    background-image: radial-gradient(rgba(21, 10, 46, 0.07) 1px, transparent 1.2px);
+    background-size: 18px 18px;
+  }
+  h1, h2, h3 { @apply font-display tracking-tight; }
+  ::selection { background: #C8FF2E; color: #150A2E; }
 }
 
-:focus-visible { outline: 2px solid #7c3aed; outline-offset: 2px; }
-.leaflet-container { font: inherit; }
-@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+@layer components {
+  .card { @apply rounded-2xl border-2 border-ink bg-white shadow-hard; }
+  .card-flat { @apply rounded-2xl border-2 border-ink bg-white; }
+  .btn { @apply inline-flex select-none items-center gap-1.5 rounded-xl border-2 border-ink px-3 py-1.5 text-sm font-bold transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none; }
+  .btn:not(:disabled):hover { transform: translate(-2px, -2px); }
+  .btn:not(:disabled):active { transform: translate(2px, 2px); box-shadow: none; }
+  .btn-primary { @apply btn bg-brand-500 text-white shadow-hard hover:shadow-hard-lg; }
+  .btn-ghost { @apply btn bg-white text-ink shadow-hard-sm hover:shadow-hard; }
+  .btn-pop { @apply btn bg-lime-400 text-ink shadow-hard hover:shadow-hard-lg; }
+  .btn-danger { @apply btn bg-pink-500 text-white shadow-hard; }
+  .badge { @apply inline-flex items-center gap-1 rounded-full border-[1.5px] border-ink/80 px-2 py-0.5 text-[11px] font-bold leading-4; }
+  .sticker { @apply inline-flex items-center gap-1.5 rounded-full border-2 border-ink px-3 py-1 text-xs font-extrabold uppercase tracking-wider shadow-hard-sm; }
+  .input { @apply w-full rounded-xl border-2 border-ink bg-white px-3 py-2 text-sm font-medium outline-none transition-shadow focus:shadow-hard-violet; }
+  .mega { @apply font-display font-extrabold leading-[0.88] tracking-[-0.03em]; }
+  .serif-i { @apply font-serif italic font-normal tracking-normal; }
+  .label { @apply text-[11px] font-extrabold uppercase tracking-[0.14em] text-ink/60; }
+}
+
+/* pattern fills */
+.pat-dots { background-image: radial-gradient(#150A2E 1.3px, transparent 1.5px); background-size: 12px 12px; }
+.pat-grid { background-image: linear-gradient(#150A2E22 1px, transparent 1px), linear-gradient(90deg, #150A2E22 1px, transparent 1px); background-size: 22px 22px; }
+.pat-stripes { background-image: repeating-linear-gradient(-45deg, #150A2E 0 2px, transparent 2px 10px); }
+.pat-zigzag { background: linear-gradient(135deg, #150A2E 25%, transparent 25%) -8px 0/16px 16px, linear-gradient(225deg, #150A2E 25%, transparent 25%) -8px 0/16px 16px; }
+.pat-checker { background-image: conic-gradient(#150A2E 25%, transparent 0 50%, #150A2E 0 75%, transparent 0); background-size: 14px 14px; }
+.hatch-red { background-image: repeating-linear-gradient(45deg, rgba(225, 29, 72, .55) 0 3px, transparent 3px 9px); }
+
+.marquee-mask { mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.text-stroke { -webkit-text-stroke: 2px #150A2E; color: transparent; }
+.grain::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .18; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.6'/></svg>"); }
+
+:focus-visible { outline: 3px solid #FF2E86; outline-offset: 2px; }
+.leaflet-container { font: inherit; background: #E9F1F7; }
+.relay-pin { background: transparent; border: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}

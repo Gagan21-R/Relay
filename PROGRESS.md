@@ -82,3 +82,9 @@ Read this file and the master prompt first after any context reset, then continu
   previews, team showcase, and contact form" → applied as RELAY's whole design system; the agency sections become a
   RELAY landing at `/about` (hero, case studies = demo stories, team = agents/modules/people, contact form = files a
   real web report). Command Map stays home.
+- Done: maximalist design system (`tailwind.config.js` tokens: paper/ink/brand purple + pink/lime/tangerine/cobalt/
+  sun/mint, hard offset shadows, patterns, Bricolage Grotesque + Instrument Serif + Noto Indic fonts), framer-motion
+  primitives (`components/motion.tsx`: Reveal, Stagger, Marquee, Blob, CountUp, Tilt, Rotator; reduced-motion
+  respected via MotionConfig), new shell (live marquee ticker from `/api/summary`, colour-chip nav, page transitions),
+  restyled UI kit (`Breakdown` component for every score), `/about` landing (hero, live numbers, 5 case studies,
+  team = 5 agents + 4 modules + people, research grounding, contact form → real web report).

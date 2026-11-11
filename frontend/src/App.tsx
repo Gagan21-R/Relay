@@ -6,6 +6,7 @@ import LiveFeed from "./pages/LiveFeed";
 import PhoneSimulator from "./pages/PhoneSimulator";
 import FieldApp from "./pages/FieldApp";
 import RadioConsole from "./pages/RadioConsole";
+import About from "./pages/About";
 
 // [path, nav key, page key, phase that fills it]
 const PLANNED: [string, string, string, number][] = [
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="phone" element={<PhoneSimulator />} />
         <Route path="field" element={<FieldApp />} />
         <Route path="radio" element={<RadioConsole />} />
+        <Route path="about" element={<About />} />
         {PLANNED.map(([path, nav, page, phase]) => (
           <Route key={path} path={path} element={<Planned navKey={nav} pageKey={page} phase={phase} />} />
         ))}

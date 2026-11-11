@@ -59,22 +59,22 @@ export default function FieldApp() {
   return (
     <div className="mx-auto max-w-xl space-y-4">
       <PageHeader title={t("nav.field")} sub={t("pages.field")} />
-      <div className={`flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium ${connected ? "bg-emerald-50 text-emerald-800" : "bg-amber-50 text-amber-900"}`} role="status">
+      <div className={`flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium ${connected ? "bg-mint-300 text-ink" : "bg-sun-300 text-ink"}`} role="status">
         {connected ? <Wifi size={16} aria-hidden /> : <WifiOff size={16} aria-hidden />}
         {connected ? "Online — reports send immediately" : "No signal — reports are saved on this device"}
         <label className="ml-auto flex items-center gap-1.5 text-xs"><input type="checkbox" checked={noSignal} onChange={(e) => setNoSignal(e.target.checked)} />simulate no signal</label>
       </div>
       <Panel title="New field report">
-        <input className="mb-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" value={team} onChange={(e) => setTeam(e.target.value)} aria-label="Team name" />
-        <textarea className="w-full rounded-lg border border-slate-300 p-3 text-[15px]" rows={4} value={text} onChange={(e) => setText(e.target.value)} placeholder="What do you see? Any language. e.g. Napoklu camp: 240 people, water for 1 day" />
+        <input className="mb-2 w-full input text-sm" value={team} onChange={(e) => setTeam(e.target.value)} aria-label="Team name" />
+        <textarea className="input !p-3 text-[15px]" rows={4} value={text} onChange={(e) => setText(e.target.value)} placeholder="What do you see? Any language. e.g. Napoklu camp: 240 people, water for 1 day" />
         <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
           <button className="btn-ghost" onClick={gps}><LocateFixed size={14} aria-hidden />Use GPS</button>
-          <select className="rounded-lg border border-slate-300 px-2 py-1.5" aria-label="Or pick a zone"
+          <select className="input !w-auto !py-1.5" aria-label="Or pick a zone"
             onChange={(e) => { const z = zones.data?.find((x) => x.code === e.target.value); if (z) setWhere({ lat: z.lat, lng: z.lng, label: `${z.name} (zone centre)` }); }}>
             <option value="">or pick a zone…</option>
             {zones.data?.map((z) => <option key={z.code} value={z.code}>{z.name}</option>)}
           </select>
-          <span className="text-xs text-slate-500">{where.label}</span>
+          <span className="text-xs text-ink/60">{where.label}</span>
         </div>
         <button className="btn-primary mt-3 w-full justify-center py-2.5 text-base" disabled={text.trim().length < 3} onClick={save}>
           {connected ? <CloudUpload size={18} aria-hidden /> : <CloudOff size={18} aria-hidden />}{connected ? "Send report" : "Save offline"}
@@ -82,9 +82,9 @@ export default function FieldApp() {
       </Panel>
       <Panel title={`Waiting to sync (${queue.length})`} actions={<button className="btn-ghost" disabled={!connected || !queue.length} onClick={sync}>Sync now</button>}>
         {!queue.length ? <Empty>Nothing waiting.</Empty> : (
-          <ul className="space-y-1.5 text-sm">{queue.map((q) => <li key={q.client_id} className="rounded-lg bg-amber-50 px-3 py-2">{q.text}<p className="text-[11px] text-slate-500">captured {new Date(q.captured_at).toLocaleTimeString()} · {q.lat ? "with location" : "no location"}</p></li>)}</ul>
+          <ul className="space-y-1.5 text-sm">{queue.map((q) => <li key={q.client_id} className="rounded-lg bg-sun-300 px-3 py-2">{q.text}<p className="text-[11px] text-ink/60">captured {new Date(q.captured_at).toLocaleTimeString()} · {q.lat ? "with location" : "no location"}</p></li>)}</ul>
         )}
-        {!!log.length && <ul className="mt-2 space-y-0.5 text-xs text-emerald-700">{log.map((l, i) => <li key={i}>✓ {l}</li>)}</ul>}
+        {!!log.length && <ul className="mt-2 space-y-0.5 text-xs text-ink">{log.map((l, i) => <li key={i}>✓ {l}</li>)}</ul>}
       </Panel>
     </div>
   );

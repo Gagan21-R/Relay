@@ -10,6 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "framer-motion": "^11.11.17",
     "i18next": "24.0.5",
     "leaflet": "1.9.4",
     "lucide-react": "0.460.0",

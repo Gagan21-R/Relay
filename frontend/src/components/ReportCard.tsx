@@ -8,36 +8,36 @@ import { ChannelBadge, LangBadge, Meter, simTime } from "./ui";
 export default function ReportCard({ r, compact = false }: { r: Report; compact?: boolean }) {
   const blocked = r.status === "blocked";
   return (
-    <article className={`rounded-xl border bg-white p-3 transition-shadow hover:shadow-md ${blocked ? "border-dashed border-slate-300 opacity-60" : r.life_safety ? "border-red-200" : "border-slate-200"}`}>
+    <article className={`rounded-2xl border-2 bg-white p-3 transition-all hover:-translate-y-0.5 hover:shadow-hard ${blocked ? "border-dashed border-ink/40 opacity-60" : r.life_safety ? "border-ink shadow-hard-pink" : "border-ink shadow-hard-sm"}`}>
       <div className="flex flex-wrap items-center gap-1.5 text-xs">
-        <span className="font-mono font-semibold text-slate-700">{r.ref}</span>
+        <span className="font-mono font-bold text-ink">{r.ref}</span>
         <ChannelBadge channel={r.channel} />
         <LangBadge lang={r.original_language} script={r.script} conf={r.language_confidence} />
-        {r.life_safety && <span className="badge bg-red-100 text-red-700"><LifeBuoy size={12} aria-hidden />life-safety</span>}
-        {r.missing_contact && <span className="badge bg-fuchsia-100 text-fuchsia-800">missing contact</span>}
-        {r.rumour_signals?.length > 0 && <span className="badge bg-orange-100 text-orange-800" title={r.rumour_signals.map((s) => s.detail || s.phrases?.join(", ")).join("; ")}><AlertTriangle size={12} aria-hidden />rumour signals</span>}
-        {r.status === "clarifying" && <span className="badge bg-amber-100 text-amber-800"><HelpCircle size={12} aria-hidden />asked for {r.needs_clarification.join(", ")}</span>}
-        {blocked && <span className="badge bg-slate-200 text-slate-700"><WifiOff size={12} aria-hidden />did not get out: zone internet down</span>}
-        <span className="ml-auto text-slate-400">{simTime(r.received_at)}</span>
+        {r.life_safety && <span className="badge bg-pink-400"><LifeBuoy size={12} aria-hidden />life-safety</span>}
+        {r.missing_contact && <span className="badge bg-brand-300">missing contact</span>}
+        {r.rumour_signals?.length > 0 && <span className="badge bg-tangerine-300" title={r.rumour_signals.map((s) => s.detail || s.phrases?.join(", ")).join("; ")}><AlertTriangle size={12} aria-hidden />rumour signals</span>}
+        {r.status === "clarifying" && <span className="badge bg-sun-300"><HelpCircle size={12} aria-hidden />asked for {r.needs_clarification.join(", ")}</span>}
+        {blocked && <span className="badge bg-white"><WifiOff size={12} aria-hidden />did not get out: zone internet down</span>}
+        <span className="ml-auto font-mono text-ink/50">{simTime(r.received_at)}</span>
       </div>
-      <p className="mt-2 text-[15px] leading-snug text-ink" lang={r.original_language}>{r.raw_text}</p>
+      <p className="mt-2 text-[15px] font-medium leading-snug text-ink" lang={r.original_language}>{r.raw_text}</p>
       {r.original_language !== "en" && r.translated_text_en && (
-        <div className="mt-1.5 rounded-lg bg-slate-50 px-2.5 py-1.5">
-          <p className="text-sm text-slate-700"><span className="font-semibold text-slate-500">EN · </span>{r.translated_text_en}</p>
-          <div className="mt-1 flex items-center gap-2 text-[10px] text-slate-500">
+        <div className="mt-1.5 rounded-xl border-[1.5px] border-ink/20 bg-paper px-2.5 py-1.5">
+          <p className="text-sm text-ink/80"><span className="font-extrabold text-brand-600">EN · </span>{r.translated_text_en}</p>
+          <div className="mt-1 flex items-center gap-2 text-[10px] font-bold text-ink/50">
             <span>{r.translation_method}</span><Meter value={r.translation_confidence} label="translation confidence" tone={r.translation_confidence > 0.7 ? "green" : "amber"} />
           </div>
         </div>
       )}
       {!compact && (
-        <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-slate-600">
-          {r.need_types?.map((n) => <span key={n} className="badge bg-slate-100 text-slate-700">{n.replace("_", " ")}</span>)}
-          {r.people_count != null && <span className="badge bg-slate-100 text-slate-700"><Users size={12} aria-hidden />{r.people_count}</span>}
-          {r.vulnerable_groups?.map((v) => <span key={v} className="badge bg-violet-100 text-violet-800">{v}</span>)}
-          <span className="badge bg-slate-100 text-slate-700"><MapPin size={12} aria-hidden />{r.location_text ?? "no location"}{r.location_text ? ` · ${Math.round(r.geocode_confidence * 100)}%` : ""}</span>
-          {r.incident_id && <Link to={`/incidents?focus=${r.incident_id}`} className="badge bg-brand-100 text-brand-800 hover:bg-brand-200">incident #{r.incident_id}</Link>}
-          {r.source && <span className="text-slate-400">· {r.source.name}{r.source.phone_masked ? ` (${r.source.phone_masked})` : ""}</span>}
-          <span className="text-slate-400">· {r.extraction_method}</span>
+        <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-ink/70">
+          {r.need_types?.map((n) => <span key={n} className="badge bg-white">{n.replace("_", " ")}</span>)}
+          {r.people_count != null && <span className="badge bg-white"><Users size={12} aria-hidden />{r.people_count}</span>}
+          {r.vulnerable_groups?.map((v) => <span key={v} className="badge bg-brand-200">{v}</span>)}
+          <span className="badge bg-white"><MapPin size={12} aria-hidden />{r.location_text ?? "no location"}{r.location_text ? ` · ${Math.round(r.geocode_confidence * 100)}%` : ""}</span>
+          {r.incident_id && <Link to={`/incidents?focus=${r.incident_id}`} className="badge bg-lime-400 hover:bg-lime-300">incident #{r.incident_id}</Link>}
+          {r.source && <span className="text-ink/50">· {r.source.name}{r.source.phone_masked ? ` (${r.source.phone_masked})` : ""}</span>}
+          <span className="text-ink/50">· {r.extraction_method}</span>
         </div>
       )}
     </article>

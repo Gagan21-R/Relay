@@ -34,20 +34,20 @@ export default function RadioConsole() {
         <Panel title="Log a radio / sat-phone message">
           <div className="grid gap-2 text-sm">
             <div className="grid grid-cols-2 gap-2">
-              <select className="rounded-lg border border-slate-300 px-2 py-2" value={f.kind} onChange={(e) => setF({ ...f, kind: e.target.value })} aria-label="Channel">
+              <select className="input" value={f.kind} onChange={(e) => setF({ ...f, kind: e.target.value })} aria-label="Channel">
                 {KINDS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
               </select>
-              <input className="rounded-lg border border-slate-300 px-2 py-2" value={f.callsign} onChange={(e) => setF({ ...f, callsign: e.target.value })} placeholder="Callsign / team" aria-label="Callsign or team" />
+              <input className="input" value={f.callsign} onChange={(e) => setF({ ...f, callsign: e.target.value })} placeholder="Callsign / team" aria-label="Callsign or team" />
             </div>
-            <select className="rounded-lg border border-slate-300 px-2 py-2" value={f.zone_code} onChange={(e) => setF({ ...f, zone_code: e.target.value })} aria-label="Zone">
+            <select className="input" value={f.zone_code} onChange={(e) => setF({ ...f, zone_code: e.target.value })} aria-label="Zone">
               <option value="">Zone (if the message does not name a place)</option>
               {zones.data?.map((z) => <option key={z.code} value={z.code}>{z.name}</option>)}
             </select>
-            <textarea className="rounded-lg border border-slate-300 p-2" rows={5} value={f.message} onChange={(e) => setF({ ...f, message: e.target.value })} placeholder="Message as received, in any language" />
-            <input className="rounded-lg border border-slate-300 px-2 py-2" value={f.operator} onChange={(e) => setF({ ...f, operator: e.target.value })} aria-label="Operator name" />
+            <textarea className="input" rows={5} value={f.message} onChange={(e) => setF({ ...f, message: e.target.value })} placeholder="Message as received, in any language" />
+            <input className="input" value={f.operator} onChange={(e) => setF({ ...f, operator: e.target.value })} aria-label="Operator name" />
             <button className="btn-primary justify-center py-2" disabled={f.message.trim().length < 3 || !f.callsign} onClick={submit}><Radio size={15} aria-hidden />Log message</button>
-            {err && <p className="text-xs text-red-600">{err}</p>}
-            <p className="text-xs text-slate-500">Radio and satellite phones keep working when towers and power are down. A team report from a silent zone resolves its blackout alert and turns into normal incidents.</p>
+            {err && <p className="text-xs text-pink-500">{err}</p>}
+            <p className="text-xs text-ink/60">Radio and satellite phones keep working when towers and power are down. A team report from a silent zone resolves its blackout alert and turns into normal incidents.</p>
           </div>
         </Panel>
         <Panel title="Recent radio entries">
