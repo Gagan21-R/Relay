@@ -1,8 +1,8 @@
 // The RELAY landing page, built as a bold creative-agency portfolio in a BRUTALIST style with motion: raw grid, giant
 // uppercase type, thick black borders, hard shadows, light warm fills only. Headlines rise word by word, sections slide
 // in as they scroll into view, case studies show a live-looking preview, team cards flip, the process line fills as you
-// scroll. Sections: hero · languages · manifesto · case studies · capabilities · team · process · research · contact
-// (files a real report) · footer.
+// scroll. Sections: hero · languages · manifesto · case studies · capabilities · team · process · research · builders
+// (the people of Team Tech Architects, light green) · contact (files a real report) · footer.
 import { ReactNode, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
@@ -81,6 +81,41 @@ const RESEARCH: [number, string, string, string, string][] = [
   [3, "1–", "%", "of tweets are geotagged", "Imran et al. 2020"],
   [75, ">", "%", "of US emergency agencies won't act on social media without a trusted second source", "Mehta et al. 2017"],
 ];
+
+// The people who built RELAY. Names are taken from their GitHub handles; avatars come from GitHub.
+const BUILDERS = [
+  { name: "Gagan R", gh: "Gagan21-R", avatar: "https://avatars.githubusercontent.com/u/228348284?v=4" },
+  { name: "Chiranjeevi Sathya", gh: "chiranjeevisathya78-design", avatar: "https://avatars.githubusercontent.com/u/272247768?v=4" },
+  { name: "Pranav Angadi", gh: "pranavangadi77-dot", avatar: "https://avatars.githubusercontent.com/u/276653253?v=4" },
+  { name: "Amogh Ravi", gh: "amogh-ravi1979", avatar: "https://avatars.githubusercontent.com/u/226490141?v=4" },
+];
+
+function BuilderCard({ b, i }: { b: (typeof BUILDERS)[number]; i: number }) {
+  const [broken, setBroken] = useState(false);
+  return (
+    <Item>
+      <motion.a href={`https://github.com/${b.gh}`} target="_blank" rel="noreferrer" whileHover={{ x: -6, y: -6 }}
+        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+        className="group block border-2 border-ink bg-mint-200 shadow-hard transition-shadow duration-150 hover:shadow-hard-lg">
+        <div className="flex items-end justify-between border-b-2 border-ink bg-mint-300 p-4">
+          {broken ? (
+            <span className="grid h-24 w-24 place-items-center border-2 border-ink bg-mint-200 font-display text-[56px] leading-none">{b.name[0]}</span>
+          ) : (
+            <img src={b.avatar} alt={`${b.name}'s GitHub avatar`} onError={() => setBroken(true)} loading="lazy"
+              className="h-24 w-24 border-2 border-ink bg-mint-200 object-cover grayscale transition duration-300 group-hover:grayscale-0" />
+          )}
+          <span className="font-mono text-[12px] font-extrabold">{String(i + 1).padStart(2, "0")}</span>
+        </div>
+        <div className="p-4">
+          <p className="font-mono text-[10px] font-extrabold uppercase tracking-[0.16em] text-ink/60">Team Tech Architects</p>
+          <p className="mt-1 font-display text-[22px] uppercase leading-tight">{b.name}</p>
+          <p className="mt-3 inline-flex items-center gap-1 border-2 border-ink bg-white px-2 py-0.5 font-mono text-[10.5px] font-extrabold">
+            @{b.gh}<ArrowUpRight size={12} aria-hidden className="transition-transform group-hover:rotate-45" /></p>
+        </div>
+      </motion.a>
+    </Item>
+  );
+}
 
 type Summary = { reports: number; languages: number; incidents: number; offline_channel_reports: number; fast_verify: number; people_affected: number; scenario_name?: string };
 
@@ -374,10 +409,19 @@ export default function About() {
         </Stagger>
       </section>
 
+      {/* BUILDERS */}
+      <section className="border-b-2 border-ink bg-mint-200/60">
+        <SectionHead n="008" label="The builders" title={<>Built by <span className="bg-mint-300 px-2">four people</span>.</>}
+          note="Team Tech Architects · AgentX Hackathon 2026. Click a card to open their GitHub." />
+        <Stagger className="grid gap-5 p-5 sm:grid-cols-2 sm:p-10 xl:grid-cols-4">
+          {BUILDERS.map((b, i) => <BuilderCard key={b.gh} b={b} i={i} />)}
+        </Stagger>
+      </section>
+
       {/* CONTACT */}
       <section className="grid border-b-2 border-ink lg:grid-cols-[1fr_1.2fr]">
         <div className="border-b-2 border-ink p-5 sm:p-10 lg:border-b-0 lg:border-r-2">
-          <p className="label">008 — Contact the control room</p>
+          <p className="label">009 — Contact the control room</p>
           <Reveal><h2 className="mega mt-4 text-[40px] sm:text-[56px] xl:text-[62px]">Say it in <span className="bg-blue px-2">your</span> language.</h2></Reveal>
           <p className="mt-6 max-w-md border-l-4 border-ink pl-4 text-[15px]">This form files a real report: language detection, extraction, geocoding, the duplicate check and an evidence score. Leave out where you are and RELAY will ask.</p>
         </div>
