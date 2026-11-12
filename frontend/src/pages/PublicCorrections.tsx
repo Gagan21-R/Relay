@@ -6,11 +6,11 @@ import { Corrections } from "./Alerts";
 export default function PublicCorrections() {
   return (
     <div className="min-h-screen bg-paper">
-      <header className="relative overflow-hidden border-b-2 border-ink bg-brand-500 px-5 py-10 text-white">
+      <header className="relative overflow-hidden border-b-2 border-ink bg-sand px-5 py-10 text-ink">
         <div className="relative mx-auto max-w-4xl">
           <span className="sticker bg-bone text-ink"><Megaphone size={13} aria-hidden />Official corrections · Kodagu (synthetic scenario)</span>
           <h1 className="mega mt-4 text-[48px] sm:text-[72px]">Is it true?</h1>
-          <p className="mt-2 max-w-xl text-lg font-medium text-brand-50">Messages checked by the district control room and found false. Please do not forward them.</p>
+          <p className="mt-2 max-w-xl text-lg font-medium text-ink/70">Messages checked by the district control room and found false. Please do not forward them.</p>
         </div>
       </header>
       <main className="mx-auto max-w-4xl p-5"><Corrections /></main>

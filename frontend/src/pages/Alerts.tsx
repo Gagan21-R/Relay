@@ -9,12 +9,12 @@ import { useApi } from "../hooks/useApi";
 import { api } from "../services/api";
 
 const TYPE: Record<string, { label: string; tone: string }> = {
-  shortage: { label: "shortage", tone: "bg-sun-400" }, blackout: { label: "blackout", tone: "bg-ink text-white" },
+  shortage: { label: "shortage", tone: "bg-sun-400" }, blackout: { label: "blackout", tone: "bg-sand text-ink" },
   shelter_inaccessible: { label: "shelter", tone: "bg-pink-400" }, rumour: { label: "rumour correction", tone: "bg-brand-300" },
-  delivery_overdue: { label: "delivery", tone: "bg-tangerine-400" }, escalation: { label: "escalation", tone: "bg-pink-500 text-white" },
+  delivery_overdue: { label: "delivery", tone: "bg-tangerine-400" }, escalation: { label: "escalation", tone: "bg-pink-500 text-ink" },
   stale_stock: { label: "stale stock", tone: "bg-white" },
 };
-const SEV: Record<string, string> = { critical: "bg-pink-500 text-white", high: "bg-tangerine-400", medium: "bg-sun-300", low: "bg-white" };
+const SEV: Record<string, string> = { critical: "bg-pink-500 text-ink", high: "bg-tangerine-400", medium: "bg-sun-300", low: "bg-white" };
 
 export function Corrections({ compact = false }: { compact?: boolean }) {
   const { data } = useApi<any[]>("/api/public/corrections", ["alert"], 500);
@@ -54,7 +54,7 @@ export default function Alerts() {
     <div className="space-y-4">
       <PageHeader title={t("nav.alerts")} sub={t("pages.alerts")} kicker={`${(data ?? []).filter((a) => !a.resolved).length} open`} tone="bg-pink-400" section="alerts.page">
         <div className="flex rounded-xl border-2 border-ink bg-white p-0.5">
-          {(["open", "all"] as const).map((k) => <button key={k} onClick={() => setShow(k)} className={`rounded-lg px-3 py-1 text-xs font-extrabold ${show === k ? "bg-ink text-white" : ""}`}>{k}</button>)}
+          {(["open", "all"] as const).map((k) => <button key={k} onClick={() => setShow(k)} className={`rounded-lg px-3 py-1 text-xs font-extrabold ${show === k ? "bg-sand text-ink" : ""}`}>{k}</button>)}
         </div>
       </PageHeader>
       {msg && <p className="sticker w-fit bg-lime-400">{msg}</p>}

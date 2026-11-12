@@ -2,10 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* RELAY design system v5 — BRUTALISM.
-   Raw structure on show: cream paper with a hard grid, pure black 3 px borders on everything, heavy offset shadows,
-   flat blocks of red, blue and green, uppercase Archivo Black headings, monospace labels, hover = shove + invert.
-   Approve / confirm = green, reject / refute / fail = red. No yellow anywhere. No entrance animations. */
+/* RELAY design system v6 — brutalism in a light, warm palette.
+   Cream paper on a hard grid, thick black borders, hard shadows, uppercase Archivo Black, monospace labels — and only
+   light fills that belong to the background (sand, beige, taupe, stone, pale clay, pale sage). No bright red, blue,
+   green or yellow. Approve / confirm = pale sage, reject / refute / fail = pale clay, both with black text and icons.
+   No entrance animations. */
 @layer base {
   html { background: #F4EEE2; }
   body {
@@ -16,7 +17,7 @@
     background-size: 40px 40px;
   }
   h1, h2, h3 { @apply font-display uppercase tracking-tight; }
-  ::selection { background: #1F3BFF; color: #FFFFFF; }
+  ::selection { background: #D6C7AE; color: #141210; }
 }
 
 @layer components {
@@ -25,13 +26,13 @@
   .btn { @apply inline-flex select-none items-center gap-1.5 border-2 border-ink px-3 py-1.5 font-mono text-[12px] font-extrabold uppercase tracking-[0.04em] transition-transform duration-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none; }
   .btn:not(:disabled):hover { transform: translate(-3px, -3px); }
   .btn:not(:disabled):active { transform: translate(4px, 4px); box-shadow: none; }
-  .btn-primary { @apply btn bg-ink text-white shadow-hard-pink; }
-  .btn-ghost { @apply btn bg-white text-ink shadow-hard-sm hover:bg-ink hover:text-white; }
-  .btn-pop { @apply btn bg-blue text-white shadow-hard; }
-  .btn-danger { @apply btn bg-stop text-white shadow-hard-sm; }
+  .btn-primary { @apply btn bg-sand text-ink shadow-hard; }
+  .btn-ghost { @apply btn bg-white text-ink shadow-hard-sm hover:bg-sand; }
+  .btn-pop { @apply btn bg-taupe text-ink shadow-hard; }
+  .btn-danger { @apply btn bg-stop text-ink shadow-hard-sm; }
   /* decisions: approve / confirm = green, reject / refute / fail = red — everywhere */
-  .btn-approve { @apply btn bg-go text-white shadow-hard; }
-  .btn-reject { @apply btn bg-stop text-white shadow-hard; }
+  .btn-approve { @apply btn bg-go text-ink shadow-hard; }
+  .btn-reject { @apply btn bg-stop text-ink shadow-hard; }
   .badge { @apply inline-flex items-center gap-1 border-2 border-ink px-1.5 py-[1px] font-mono text-[10.5px] font-extrabold uppercase leading-4; }
   .sticker { @apply inline-flex items-center gap-1.5 border-2 border-ink px-2.5 py-1 font-mono text-[11px] font-extrabold uppercase tracking-[0.1em] shadow-hard-sm; }
   .input { @apply w-full border-2 border-ink bg-white px-3 py-2 text-sm font-medium outline-none focus:shadow-hard-violet; }
@@ -46,22 +47,22 @@
 .text-stroke { -webkit-text-stroke: 2px #000; color: transparent; }
 
 /* brutalist pattern fills (kept for old call sites, toned down) */
-.pat-dots { background-image: radial-gradient(#000000 1px, transparent 1.2px); background-size: 14px 14px; }
-.pat-grid { background-image: linear-gradient(#00000014 1px, transparent 1px), linear-gradient(90deg, #00000014 1px, transparent 1px); background-size: 24px 24px; }
-.pat-stripes { background-image: repeating-linear-gradient(-45deg, #000000 0 1px, transparent 1px 9px); }
-.pat-zigzag { background-image: repeating-linear-gradient(90deg, #000000 0 1px, transparent 1px 12px); }
-.pat-checker { background-image: conic-gradient(#000000 25%, transparent 0 50%, #000000 0 75%, transparent 0); background-size: 12px 12px; }
-.hatch-red { background-image: repeating-linear-gradient(45deg, rgba(255, 61, 31, .55) 0 3px, transparent 3px 9px); }
+.pat-dots { background-image: radial-gradient(#141210 1px, transparent 1.2px); background-size: 14px 14px; }
+.pat-grid { background-image: linear-gradient(#14121014 1px, transparent 1px), linear-gradient(90deg, #14121014 1px, transparent 1px); background-size: 24px 24px; }
+.pat-stripes { background-image: repeating-linear-gradient(-45deg, #141210 0 1px, transparent 1px 9px); }
+.pat-zigzag { background-image: repeating-linear-gradient(90deg, #141210 0 1px, transparent 1px 12px); }
+.pat-checker { background-image: conic-gradient(#141210 25%, transparent 0 50%, #141210 0 75%, transparent 0); background-size: 12px 12px; }
+.hatch-red { background-image: repeating-linear-gradient(45deg, rgba(185, 119, 93, .45) 0 3px, transparent 3px 9px); }
 
 .marquee-mask { mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
 .grain::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .16; mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.6'/></svg>"); }
 
-:focus-visible { outline: 4px solid #1F3BFF; outline-offset: 2px; }
+:focus-visible { outline: 4px solid #8C7A62; outline-offset: 2px; }
 .leaflet-container { font: inherit; background: #AAD3DF; }
-.leaflet-container a.leaflet-popup-close-button { color: #000000; }
-.leaflet-popup-content-wrapper, .leaflet-popup-tip { border-radius: 0 !important; border: 2px solid #000000; box-shadow: 5px 5px 0 #000000 !important; background: #FFFFFF; }
-.leaflet-tooltip { border-radius: 0 !important; border: 1.5px solid #000000 !important; box-shadow: 3px 3px 0 #000000 !important; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.leaflet-container a.leaflet-popup-close-button { color: #141210; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { border-radius: 0 !important; border: 2px solid #141210; box-shadow: 5px 5px 0 #141210 !important; background: #FBF8F2; }
+.leaflet-tooltip { border-radius: 0 !important; border: 1.5px solid #141210 !important; box-shadow: 3px 3px 0 #141210 !important; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
 .leaflet-bar a { border-radius: 0 !important; }
 .relay-pin { background: transparent; border: 0; }
 

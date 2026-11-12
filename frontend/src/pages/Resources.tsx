@@ -7,7 +7,7 @@ import { Empty, Panel, Stat } from "../components/ui";
 import { useApi } from "../hooks/useApi";
 import { api } from "../services/api";
 
-const LINE_COLORS = ["#000000", "#FF2D00", "#1F3BFF", "#E25B00", "#00A33A", "#E6D8BC"];
+const LINE_COLORS = ["#141210", "#E6A994", "#B9AE9C", "#D9A27A", "#A9C29A", "#E6D8BC"];
 const nice = (s: string) => s.replace(/_/g, " ");
 
 export default function Resources() {
@@ -49,12 +49,12 @@ export default function Resources() {
           <div className="h-72">
             <ResponsiveContainer>
               <LineChart data={chart.rows} margin={{ left: 0, right: 12, top: 8 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#00000022" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#14121022" />
                 <XAxis dataKey="t" fontSize={11} interval={3} />
                 <YAxis fontSize={11} />
-                <Tooltip contentStyle={{ border: "2px solid #000000", borderRadius: 12 }} />
+                <Tooltip contentStyle={{ border: "2px solid #141210", borderRadius: 12 }} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
-                <ReferenceLine y={0} stroke="#FF2D00" strokeWidth={2} />
+                <ReferenceLine y={0} stroke="#E6A994" strokeWidth={2} />
                 {chart.keys.map((k: string, i: number) => <Line key={k} dataKey={k} stroke={LINE_COLORS[i % LINE_COLORS.length]} strokeWidth={k.startsWith("Napoklu") ? 4 : 2} dot={false} />)}
               </LineChart>
             </ResponsiveContainer>
@@ -68,7 +68,7 @@ export default function Resources() {
               <p className="text-xs font-medium text-ink/60">{Math.round(t.quantity)} {t.unit} left · using {Math.round(t.rate_per_h)}/h · {t.needed_for_48h} {t.unit} needed for 48 h</p>
               {t.proposal ? (
                 <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-sm font-bold"><span className="badge bg-lime-400">proposed</span>{t.proposal.depot}<ArrowRight size={14} aria-hidden />{t.shelter.split(" ")[0]} · {t.proposal.km} km · ETA {t.proposal.eta_h} h</p>
-              ) : <p className="mt-1.5 flex items-center gap-1.5 text-sm font-bold text-pink-500"><AlertTriangle size={14} aria-hidden />no reachable fresh stock: escalated</p>}
+              ) : <p className="mt-1.5 flex items-center gap-1.5 text-sm font-bold text-brand-600"><AlertTriangle size={14} aria-hidden />no reachable fresh stock: escalated</p>}
               <p className="mt-1 text-[11px] text-ink/60">{t.why}. The Coordination agent turns this into a plan for approval.</p>
             </div>
           ))}
@@ -82,11 +82,11 @@ export default function Resources() {
           <div className="h-64">
             <ResponsiveContainer>
               <BarChart data={dvs}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#00000022" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#14121022" />
                 <XAxis dataKey="resource" fontSize={11} /><YAxis fontSize={11} />
-                <Tooltip contentStyle={{ border: "2px solid #000000", borderRadius: 12 }} /><Legend wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="demand" fill="#FF2D00" stroke="#000000" strokeWidth={1.5} radius={[6, 6, 0, 0]} />
-                <Bar dataKey="supply" fill="#FFFFFF" stroke="#000000" strokeWidth={1.5} radius={[6, 6, 0, 0]} />
+                <Tooltip contentStyle={{ border: "2px solid #141210", borderRadius: 12 }} /><Legend wrapperStyle={{ fontSize: 11 }} />
+                <Bar dataKey="demand" fill="#E6A994" stroke="#141210" strokeWidth={1.5} radius={[6, 6, 0, 0]} />
+                <Bar dataKey="supply" fill="#FBF8F2" stroke="#141210" strokeWidth={1.5} radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

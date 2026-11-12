@@ -29,14 +29,14 @@ export default function Blackout() {
   const others = (data ?? []).filter((z) => !z.blackout_flag);
   return (
     <div className="space-y-4">
-      <PageHeader title={t("nav.blackout")} sub={t("pages.blackout")} kicker="silence is a signal" tone="bg-ink text-white" section="blackout.page" />
+      <PageHeader title={t("nav.blackout")} sub={t("pages.blackout")} kicker="silence is a signal" tone="bg-sand text-ink" section="blackout.page" />
       {!data ? null : !silent.length ? <Empty>No zone is silent right now. Every populated zone inside the hazard footprint has reported recently.</Empty> : silent.map((z, n) => (
         <motion.section key={z.id} animate={{ opacity: 1, y: 0 }} className="card overflow-hidden p-0 shadow-hard-pink">
-          <div className="hatch-red flex flex-wrap items-center gap-3 border-b-2 border-ink bg-ink px-4 py-3 text-white">
-            <span className="mega text-4xl text-pink-400">#{n + 1}</span>
+          <div className="hatch-red flex flex-wrap items-center gap-3 border-b-2 border-ink bg-sand px-4 py-3 text-ink">
+            <span className="mega text-4xl text-brand-600">#{n + 1}</span>
             <EyeOff size={22} aria-hidden />
             <h2 className="mega text-[34px]">{z.name}</h2>
-            <span className="sticker bg-pink-500 text-white">risk {Math.round(z.risk.score * 100)}%</span>
+            <span className="sticker bg-pink-500 text-ink">risk {Math.round(z.risk.score * 100)}%</span>
             <span className="sticker bg-white text-ink"><Users size={13} aria-hidden />{z.population.toLocaleString()}</span>
             <span className="sticker bg-sun-400 text-ink">silent {z.risk.hours_silent} h</span>
           </div>

@@ -22,7 +22,7 @@ SLIDE_ZONES = [
 
 SCENARIOS = {
     "kodagu_flood": {
-        "name": "Kodagu monsoon flood", "hazard": "flood", "colour": "#2E5BFF",
+        "name": "Kodagu monsoon flood", "hazard": "flood", "colour": "#9FB7BC",
         "description": "Cauvery overflows at Bhagamandala, Napoklu, Siddapura and Kushalnagar over 12 hours; Hattihole goes silent. The full demo story.",
         "signals": KW.SIGNALS, "zones": None, "world": "kodagu", "disaster": "flood", "difficulty": "advanced",
         "region": ["hilly", "rural", "south"], "state": "Karnataka",
@@ -30,7 +30,7 @@ SCENARIOS = {
         "expected": ["Rooftop rescue planned within 2 h of first report", "No shelter runs dry", "Recon team proposed for Hattihole", "Correction published in 8 languages"],
     },
     "harangi_release": {
-        "name": "Harangi dam release", "hazard": "flood", "colour": "#14C48A",
+        "name": "Harangi dam release", "hazard": "flood", "colour": "#C2D4B1",
         "description": "Heavy controlled releases from Harangi flood Kushalnagar and Siddapura first; rumours say the dam burst.",
         "signals": [
             (0.0, "rainfall", "kushalnagar", {"mm_24h": 170, "category": "very heavy"}, "IMD (mock)"),
@@ -47,7 +47,7 @@ SCENARIOS = {
         "expected": ["Plan proposed for Kushalnagar/Siddapura", "Dam-burst reports marked disputed/false"],
     },
     "madikeri_landslides": {
-        "name": "Madikeri hill landslides", "hazard": "landslide", "colour": "#FF6A00",
+        "name": "Madikeri hill landslides", "hazard": "landslide", "colour": "#D2A98A",
         "description": "Extreme rain triggers landslides around Madikeri, the Jodupala ghat and Makkandur; roads cut, a small quake shakes the hills.",
         "signals": [
             (0.0, "rainfall", "madikeri", {"mm_24h": 260, "category": "extremely heavy"}, "IMD (mock)"),

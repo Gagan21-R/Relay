@@ -129,7 +129,7 @@ export default function Incidents() {
       <PageHeader title={t("nav.incidents")} sub={t("pages.incidents")} kicker="ranked by danger" tone="bg-pink-400" section="incidents.page" />
       <div className="flex flex-wrap gap-1.5">
         {["", "verified", "likely", "unverified", "disputed", "false"].map((l) => (
-          <button key={l} onClick={() => setLevel(l)} className={`badge !px-3 !py-1 text-xs ${level === l ? "bg-ink text-white" : "bg-white hover:bg-lime-300"}`}>{l || "all"} {l ? `(${(data ?? []).filter((i) => i.confidence_level === l).length})` : `(${data?.length ?? 0})`}</button>
+          <button key={l} onClick={() => setLevel(l)} className={`badge !px-3 !py-1 text-xs ${level === l ? "bg-sand text-ink" : "bg-white hover:bg-lime-300"}`}>{l || "all"} {l ? `(${(data ?? []).filter((i) => i.confidence_level === l).length})` : `(${data?.length ?? 0})`}</button>
         ))}
       </div>
       <div className="grid gap-4 xl:grid-cols-[minmax(320px,420px)_1fr]">

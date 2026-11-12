@@ -29,17 +29,17 @@ function MockPhone({ phone, samples }: { phone: string; samples: Samples["messag
   };
   return (
     <div className="mx-auto w-full max-w-[340px]">
-      <div className="rounded-[2.2rem] border-[10px] border-ink bg-ink shadow-2xl">
-        <div className="flex items-center justify-between rounded-t-[1.6rem] bg-brand-700 px-4 py-2 text-xs text-white">
+      <div className="rounded-[2.2rem] border-[10px] border-ink bg-sand shadow-2xl">
+        <div className="flex items-center justify-between rounded-t-[1.6rem] bg-brand-700 px-4 py-2 text-xs text-ink">
           <span>RELAY helpline · SMS</span><span className="font-mono">{phone.slice(0, 6)}…{phone.slice(-3)}</span>
         </div>
         <div className="h-[380px] space-y-2 overflow-y-auto bg-paper p-3" aria-live="polite">
           {!thread.data?.length && <p className="pt-10 text-center text-xs text-ink/60">No messages yet. Type in any language, or tap a sample.</p>}
           {thread.data?.map((m) => (
             <div key={m.id} className={`flex ${m.direction === "in" ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[85%] rounded-2xl px-3 py-1.5 text-sm ${m.direction === "in" ? "rounded-br-sm bg-brand-600 text-white" : "rounded-bl-sm bg-white text-ink shadow"}`} lang={m.language}>
+              <div className={`max-w-[85%] rounded-2xl px-3 py-1.5 text-sm ${m.direction === "in" ? "rounded-br-sm bg-brand-600 text-ink" : "rounded-bl-sm bg-white text-ink shadow"}`} lang={m.language}>
                 {m.body}
-                <p className={`mt-0.5 text-[10px] ${m.direction === "in" ? "text-brand-100" : "text-ink/50"}`}>{m.kind}{m.language ? ` · ${LANG_NAMES[m.language] ?? m.language}` : ""}</p>
+                <p className={`mt-0.5 text-[10px] ${m.direction === "in" ? "text-ink/60" : "text-ink/50"}`}>{m.kind}{m.language ? ` · ${LANG_NAMES[m.language] ?? m.language}` : ""}</p>
               </div>
             </div>
           ))}
@@ -50,7 +50,7 @@ function MockPhone({ phone, samples }: { phone: string; samples: Samples["messag
           <button className="btn-primary !rounded-full !px-2.5" disabled={busy || !text.trim()} aria-label="Send SMS"><Send size={15} /></button>
         </form>
       </div>
-      {err && <p className="mt-2 text-xs text-pink-500">{err}</p>}
+      {err && <p className="mt-2 text-xs text-brand-600">{err}</p>}
       <div className="mt-3 flex flex-wrap gap-1.5">
         {samples.map((s) => (
           <button key={s.label} onClick={() => send(s.text)} disabled={busy} className="border border-ink bg-bone px-2.5 py-1 text-xs font-bold text-ink shadow-hard-sm transition-transform hover:-translate-y-0.5" title={s.text}>{s.label}</button>
@@ -132,7 +132,7 @@ export default function PhoneSimulator() {
         <div className="space-y-3">
           <div className="flex flex-wrap gap-1.5">
             {samples.data?.phones.map((p) => (
-              <button key={p.phone} onClick={() => setPhone(p.phone)} className={`rounded-xl border-2 px-2 py-1 text-xs font-bold ${phone === p.phone ? "border-ink bg-brand-500 font-bold text-white shadow-hard-sm" : "border-ink bg-white text-ink/70"}`}>{p.label}</button>
+              <button key={p.phone} onClick={() => setPhone(p.phone)} className={`rounded-xl border-2 px-2 py-1 text-xs font-bold ${phone === p.phone ? "border-ink bg-sand font-bold text-ink shadow-hard-sm" : "border-ink bg-white text-ink/70"}`}>{p.label}</button>
             ))}
             <input className="w-36 input !w-auto !py-1 text-xs" placeholder="+91 other number" value={custom} onChange={(e) => setCustom(e.target.value)} onBlur={() => custom.match(/^\+?\d{10,13}$/) && setPhone(custom.startsWith("+") ? custom : `+91${custom.slice(-10)}`)} aria-label="Other phone number" />
           </div>

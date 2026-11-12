@@ -298,3 +298,9 @@ and red reject buttons everywhere, no animations when a page/section opens, natu
 - Shell: red RELAY block; colour-blocked nav groups; black panel title bars; colour-blocked stat tiles; page headers with
   a giant number block in the section colour; landing page re-coloured in blocks.
 - Video recording was cancelled by the user before it started (nothing recorded).
+
+# Round 7 — light warm palette (done)
+- Removed bright red, blue and green everywhere (UI, buttons, map markers, charts, agent graph, disaster overlays).
+- All fills are light tones matching the cream background (sand, beige, taupe, stone, pale clay, pale sage); black is
+  used only for text, borders and shadows. Approve = pale sage, reject = pale clay, both with black text.
+- Verified: tsc, build, 5 vitest, 104 backend tests; pages checked in the browser.

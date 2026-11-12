@@ -19,7 +19,7 @@ const COLS = [
   { k: "confirmed", label: "Confirmed by Duty Officer", tone: "bg-mint-300" },
   { k: "failed", label: "Failed / cancelled", tone: "bg-pink-300" },
 ];
-const ROUTE_COLOR: Record<string, string> = { assigned: "#E6D8BC", dispatched: "#1F3BFF", delivered: "#E25B00", confirmed: "#00A33A", failed: "#FF2D00" };
+const ROUTE_COLOR: Record<string, string> = { assigned: "#E6D8BC", dispatched: "#B9AE9C", delivered: "#D9A27A", confirmed: "#A9C29A", failed: "#E6A994" };
 
 export function SafetyBadge({ label }: { label?: string }) {
   if (!label) return null;
@@ -37,7 +37,7 @@ function TaskCard({ d, act }: { d: any; act: (path: string, body?: any) => void 
     <motion.article layout animate={{ opacity: 1, scale: 1 }}
       className={`rounded-xl border-2 border-ink bg-white p-2.5 text-xs ${d.overdue ? "shadow-hard-pink ring-2 ring-pink-500" : "shadow-hard-sm"}`}>
       <div className="flex flex-wrap items-center gap-1.5"><Truck size={13} aria-hidden /><b className="font-mono">D-{d.id}</b>
-        <span className="badge bg-white">{d.vehicle ?? "vehicle?"}</span>{d.overdue && <span className="badge bg-pink-500 text-white">overdue</span>}
+        <span className="badge bg-white">{d.vehicle ?? "vehicle?"}</span>{d.overdue && <span className="badge bg-pink-500 text-ink">overdue</span>}
         {mine && <span className="badge bg-lime-300">your task</span>}</div>
       <p className="mt-1 font-extrabold leading-tight">{d.to_name}</p>
       <p className="font-medium text-ink/60">{d.resource_lines.map((l: any) => `${l.quantity} ${l.resource_type.replace(/_/g, " ")}`).join(" · ")}</p>

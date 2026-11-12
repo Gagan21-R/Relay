@@ -89,14 +89,14 @@ export default function GuideOverlay() {
   return (
     <motion.aside initial={{ y: 200, opacity: 0 }} animate={{ y: 0, opacity: 1 }} role="region" aria-label="Guided run"
       className="fixed bottom-4 left-4 z-[1200] w-[min(500px,calc(100vw-2rem))] overflow-hidden rounded-3xl border-2 border-ink bg-white shadow-hard-lg lg:left-72">
-      <div className="flex items-center gap-2 border-b-2 border-ink bg-ink px-4 py-2 text-white">
-        <span className="mega text-lg text-lime-400">Guided run</span>
+      <div className="flex items-center gap-2 border-b-2 border-ink bg-sand px-4 py-2 text-ink">
+        <span className="mega text-lg text-brand-600">Guided run</span>
         <span className="min-w-0 flex-1 truncate font-mono text-[11px]">{s.scenario ?? ""} · step {Math.min(s.step, total)}/{total}</span>
-        <button className="rounded-lg border-2 border-white/50 p-1" onClick={() => setS((x) => ({ ...x, running: !x.running }))} aria-label={s.running ? "Pause" : "Play"}>{s.running ? <Pause size={14} /> : <Play size={14} />}</button>
-        {o?.status === "done" && !s.finished && <button className="rounded-lg border-2 border-white/50 p-1" disabled={s.busy} onClick={() => run(s.step + 1)} aria-label="Next step"><ChevronRight size={14} /></button>}
-        <button className="rounded-lg border-2 border-white/50 p-1" onClick={() => startGuide()} aria-label="Restart this scenario"><RotateCcw size={14} /></button>
-        <button className="rounded-lg border-2 border-white/50 p-1" onClick={() => setS((x) => ({ ...x, collapsed: !x.collapsed }))} aria-label={s.collapsed ? "Expand" : "Collapse"}>{s.collapsed ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</button>
-        <button className="rounded-lg border-2 border-white/50 p-1" onClick={() => setS((x) => ({ ...x, open: false, running: false }))} aria-label="Close guided run"><X size={14} /></button>
+        <button className="rounded-lg border-2 border-ink/40 p-1" onClick={() => setS((x) => ({ ...x, running: !x.running }))} aria-label={s.running ? "Pause" : "Play"}>{s.running ? <Pause size={14} /> : <Play size={14} />}</button>
+        {o?.status === "done" && !s.finished && <button className="rounded-lg border-2 border-ink/40 p-1" disabled={s.busy} onClick={() => run(s.step + 1)} aria-label="Next step"><ChevronRight size={14} /></button>}
+        <button className="rounded-lg border-2 border-ink/40 p-1" onClick={() => startGuide()} aria-label="Restart this scenario"><RotateCcw size={14} /></button>
+        <button className="rounded-lg border-2 border-ink/40 p-1" onClick={() => setS((x) => ({ ...x, collapsed: !x.collapsed }))} aria-label={s.collapsed ? "Expand" : "Collapse"}>{s.collapsed ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</button>
+        <button className="rounded-lg border-2 border-ink/40 p-1" onClick={() => setS((x) => ({ ...x, open: false, running: false }))} aria-label="Close guided run"><X size={14} /></button>
       </div>
       <div className="flex gap-1 px-4 pt-3" aria-hidden>
         {Array.from({ length: total }, (_, i) => <span key={i} className={`h-2 flex-1 border border-ink ${i + 1 < s.step || (i + 1 === s.step && o?.status === "done") ? "bg-lime-400" : i + 1 === s.step ? (o?.status === "waiting" ? "bg-pink-400" : "animate-pulse bg-sun-400") : "bg-paper"}`} />)}
@@ -125,7 +125,7 @@ export default function GuideOverlay() {
               </div>
             ) : <p className="flex items-center gap-2 text-sm font-bold"><Loader2 size={15} className="animate-spin" aria-hidden />Starting the scenario at T+0…</p>}
             {s.finished && <p className="mt-3 sticker bg-lime-400">Done — the whole scenario ran on the live system. Open Scenario Lab → Final report for the debrief.</p>}
-            {s.error && <p className="mt-2 text-sm font-bold text-pink-500">{s.error}</p>}
+            {s.error && <p className="mt-2 text-sm font-bold text-brand-600">{s.error}</p>}
           </div>
         </div>
       )}

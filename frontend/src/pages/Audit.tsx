@@ -22,7 +22,7 @@ export default function Audit() {
       <PageHeader title={t("nav.audit")} sub={t("pages.audit")} kicker={`${data?.length ?? 0} entries`} tone="bg-sun-400" section="audit.page" />
       <div className="card flex flex-wrap items-center gap-2 p-3">
         <div className="flex rounded-xl border-2 border-ink bg-white p-0.5">
-          {["", "agent", "human", "system"].map((k) => <button key={k} onClick={() => setType(k)} className={`rounded-lg px-3 py-1 text-xs font-extrabold ${type === k ? "bg-ink text-white" : ""}`}>{k || "all"}</button>)}
+          {["", "agent", "human", "system"].map((k) => <button key={k} onClick={() => setType(k)} className={`rounded-lg px-3 py-1 text-xs font-extrabold ${type === k ? "bg-sand text-ink" : ""}`}>{k || "all"}</button>)}
         </div>
         <select className="input !w-auto !py-1" value={action} onChange={(e) => setAction(e.target.value)} aria-label="Action">
           <option value="">every action</option>{actions.map((a) => <option key={a} value={a}>{a.replace(/_/g, " ")}</option>)}
@@ -45,7 +45,7 @@ export default function Audit() {
                   <span className="min-w-0 flex-1 text-ink/80">{a.summary}</span>
                 </button>
                 {open === a.id && (
-                  <pre className="mx-3 mt-1 max-h-72 overflow-auto rounded-xl border-2 border-ink bg-ink p-3 text-[11px] text-lime-300">{JSON.stringify({ object: `${a.object_type ?? "-"} ${a.object_id ?? ""}`, inputs: a.inputs, outputs: a.outputs, at: a.created_at }, null, 2)}</pre>
+                  <pre className="mx-3 mt-1 max-h-72 overflow-auto rounded-xl border-2 border-ink bg-sand p-3 text-[11px] text-brand-600">{JSON.stringify({ object: `${a.object_type ?? "-"} ${a.object_id ?? ""}`, inputs: a.inputs, outputs: a.outputs, at: a.created_at }, null, 2)}</pre>
                 )}
               </li>
             );

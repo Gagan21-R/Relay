@@ -17,7 +17,7 @@ export default function NetworkPanel({ explain }: { explain?: React.ReactNode })
       <div className="grid grid-cols-2 gap-1.5">
         {(data ?? []).map((z) => (
           <button key={z.code} onClick={() => toggle(z)} aria-pressed={z.internet_down}
-            className={`flex items-center justify-between rounded-xl border-2 border-ink px-2.5 py-1.5 text-left text-xs font-bold transition-all ${z.internet_down ? "-rotate-1 bg-pink-500 text-white shadow-hard-sm" : "bg-white text-ink hover:-translate-y-0.5 hover:bg-lime-300"}`}>
+            className={`flex items-center justify-between rounded-xl border-2 border-ink px-2.5 py-1.5 text-left text-xs font-bold transition-all ${z.internet_down ? "-rotate-1 bg-pink-500 text-ink shadow-hard-sm" : "bg-white text-ink hover:-translate-y-0.5 hover:bg-lime-300"}`}>
             <span>{z.name}{z.tower_status !== "up" && <span className="ml-1 text-[10px] opacity-80">· towers {z.tower_status}</span>}</span>
             {z.internet_down ? <span className="flex items-center gap-1"><WifiOff size={13} aria-hidden />DOWN</span> : <Wifi size={13} className="text-ink" aria-label="internet up" />}
           </button>

@@ -7,7 +7,7 @@ import { Empty, Meter, simTime } from "../components/ui";
 import { useApi } from "../hooks/useApi";
 import { api } from "../services/api";
 
-const STATUS: Record<string, string> = { open: "bg-mint-400", full: "bg-sun-400", inaccessible: "bg-pink-500 text-white", unconfirmed: "bg-tangerine-300", closed: "bg-ink text-white" };
+const STATUS: Record<string, string> = { open: "bg-mint-400", full: "bg-sun-400", inaccessible: "bg-pink-500 text-ink", unconfirmed: "bg-tangerine-300", closed: "bg-sand text-ink" };
 
 export default function Shelters() {
   const { t } = useTranslation();
@@ -39,8 +39,8 @@ export default function Shelters() {
               <div className="p-4">
                 <h2 className="text-xl font-extrabold leading-tight">{s.name}</h2>
                 <Meter value={s.occupancy / Math.max(1, s.capacity)} label="occupancy" tone={s.occupancy >= s.capacity ? "red" : "brand"} />
-                <p className={`mt-2 flex items-center gap-1.5 text-xs font-bold ${s.access.accessible ? "" : "text-pink-500"}`}><Route size={13} aria-hidden />{s.access.why}</p>
-                {r?.status_reason && <p className="text-xs font-bold text-pink-500">{r.status_reason}</p>}
+                <p className={`mt-2 flex items-center gap-1.5 text-xs font-bold ${s.access.accessible ? "" : "text-brand-600"}`}><Route size={13} aria-hidden />{s.access.why}</p>
+                {r?.status_reason && <p className="text-xs font-bold text-brand-600">{r.status_reason}</p>}
                 <div className="mt-2 grid grid-cols-2 gap-1.5">
                   {s.burn.filter((b: any) => b.rate_per_h > 0).map((b: any) => (
                     <div key={b.resource_type} className={`rounded-xl border-2 border-ink p-1.5 text-xs ${b.hours_left != null && b.hours_left < 24 ? "bg-pink-300" : "bg-paper"}`}>
@@ -49,7 +49,7 @@ export default function Shelters() {
                     </div>
                   ))}
                 </div>
-                <p className={`mt-2 text-xs font-bold ${since > 6 ? "text-pink-500" : "text-ink/60"}`}>last confirmed {simTime(r?.last_confirmed_at)} ({since.toFixed(1)} h ago{since > 6 ? " — stale" : ""})</p>
+                <p className={`mt-2 text-xs font-bold ${since > 6 ? "text-brand-600" : "text-ink/60"}`}>last confirmed {simTime(r?.last_confirmed_at)} ({since.toFixed(1)} h ago{since > 6 ? " — stale" : ""})</p>
                 <div className="mt-2 flex gap-1.5">
                   <input className="input !py-1" placeholder="occupancy now" value={occ[s.id] ?? ""} onChange={(e) => setOcc({ ...occ, [s.id]: e.target.value })} aria-label="Occupancy" />
                   <button className="btn-pop shrink-0" onClick={() => checkin(s.id)}><CheckCircle2 size={14} aria-hidden />Check in</button>

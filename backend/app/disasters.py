@@ -4,7 +4,7 @@ requirements, map overlay style, and response recommendations. Agents read the a
 
 DISASTERS: dict[str, dict] = {
     "flood": {
-        "name": "Flood", "gdacs": "FL", "overlay": {"label": "Flood extent", "colour": "#2E5BFF", "fill": 0.35},
+        "name": "Flood", "gdacs": "FL", "overlay": {"label": "Flood extent", "colour": "#9FB7BC", "fill": 0.35},
         "indicators": ["flood", "flooded", "water entered", "submerged", "inundated", "overflow", "बाढ़", "पानी भर", "ನೆರೆ", "ಪ್ರವಾಹ", "ನೀರು ನುಗ್ಗಿ",
                        "வெள்ளம்", "వరద", "വെള്ളപ്പൊക്ക", "പ്രളയ", "पूर", "বন্যা", "বান", "ପ୍ରଳୟ", "ବନ୍ୟା", "પૂર", "ਹੜ੍ਹ", "बाढी", "neeru bandide", "olage neeru", "ನೀರು ಬಂದಿದೆ", "ಒಳಗೆ ನೀರು", "full water", "water inside", "flood water", "baadh", "pani bhar", "tuilian", "um shaniah"],
         "life_threat": {"rescue": 1.0, "medical": 0.9, "water": 0.6, "food": 0.45, "shelter": 0.45, "infrastructure": 0.3},
@@ -14,7 +14,7 @@ DISASTERS: dict[str, dict] = {
                             "Chlorinate drinking water; watch for water-borne disease", "Avoid flooded roads: 30 cm of moving water can sweep a car"],
     },
     "cyclone": {
-        "name": "Cyclone / severe storm", "gdacs": "TC", "overlay": {"label": "Storm impact zone", "colour": "#6FA8DC", "fill": 0.25},
+        "name": "Cyclone / severe storm", "gdacs": "TC", "overlay": {"label": "Storm impact zone", "colour": "#B8B2C4", "fill": 0.25},
         "indicators": ["cyclone", "storm", "strong wind", "gale", "storm surge", "roof blown", "चक्रवात", "तूफान", "ಚಂಡಮಾರುತ", "புயல்", "తుఫాను",
                        "ചുഴലിക്കാറ്റ്", "চক্রবাত", "ঘূর্ণিঝড়", "ବାତ୍ୟା", "ଘୂର୍ଣ୍ଣିଝଡ", "વાવાઝોડું", "ਤੂਫ਼ਾਨ", "toofan", "tufan"],
         "life_threat": {"rescue": 1.0, "medical": 0.9, "shelter": 0.65, "water": 0.55, "food": 0.45, "infrastructure": 0.45},
@@ -24,7 +24,7 @@ DISASTERS: dict[str, dict] = {
                             "Clear fallen trees from access roads first", "Restore power and telecom to hospitals first"],
     },
     "earthquake": {
-        "name": "Earthquake", "gdacs": "EQ", "overlay": {"label": "Shaking intensity zone", "colour": "#D08A4E", "fill": 0.3},
+        "name": "Earthquake", "gdacs": "EQ", "overlay": {"label": "Shaking intensity zone", "colour": "#D2A98A", "fill": 0.3},
         "indicators": ["earthquake", "tremor", "quake", "collapsed", "building fell", "rubble", "भूकंप", "मलबा", "ಭೂಕಂಪ", "நிலநடுக்கம்", "భూకంపం",
                        "ഭൂകമ്പ", "ভূমিকম্প", "ଭୂମିକମ୍ପ", "ભૂકંપ", "ਭੂਚਾਲ", "भूकम्प", "bhukamp", "malba", "khawpui nghing"],
         "life_threat": {"rescue": 1.0, "medical": 0.95, "shelter": 0.6, "water": 0.5, "food": 0.4, "infrastructure": 0.5},
@@ -34,7 +34,7 @@ DISASTERS: dict[str, dict] = {
                             "Field hospitals for crush injuries", "Expect aftershocks: keep people in open shelters"],
     },
     "landslide": {
-        "name": "Landslide", "gdacs": None, "overlay": {"label": "Slide / debris zone", "colour": "#8A5A2B", "fill": 0.45},
+        "name": "Landslide", "gdacs": None, "overlay": {"label": "Slide / debris zone", "colour": "#B59A7C", "fill": 0.45},
         "indicators": ["landslide", "mudslide", "hill collapsed", "debris", "rocks fell", "भूस्खलन", "पहाड़ खिसका", "ಭೂಕುಸಿತ", "ಗುಡ್ಡ ಕುಸಿ",
                        "நிலச்சரிவு", "కొండచరియలు", "ഉരുൾപൊട്ട", "മണ്ണിടിച്ചിൽ", "ভূমিধস", "ଭୂସ୍ଖଳନ", "ભૂસ્ખલન", "ਢਿੱਗਾਂ", "पहिरो", "guddi kusidide", "pahad khiska", "lei min"],
         "life_threat": {"rescue": 1.0, "medical": 0.9, "infrastructure": 0.55, "shelter": 0.5, "food": 0.45, "water": 0.45},
@@ -44,7 +44,7 @@ DISASTERS: dict[str, dict] = {
                             "Airlift or foot teams for cut-off hamlets", "Watch for river blockage forming a dam"],
     },
     "wildfire": {
-        "name": "Wildfire", "gdacs": "WF", "overlay": {"label": "Fire perimeter", "colour": "#FF5A1F", "fill": 0.4},
+        "name": "Wildfire", "gdacs": "WF", "overlay": {"label": "Fire perimeter", "colour": "#E0A48A", "fill": 0.4},
         "indicators": ["forest fire", "wildfire", "fire", "smoke", "burning", "जंगल में आग", "आग", "धुआं", "ಕಾಡ್ಗಿಚ್ಚು", "ಬೆಂಕಿ", "காட்டுத்தீ",
                        "അഗ്നി", "കാട്ടുതീ", "দাবানল", "আগুন", "ଜଙ୍ଗଲ ନିଆଁ", "જંગલની આગ", "ਅੱਗ", "आगलागी", "jungle mein aag", "kaadu benki"],
         "life_threat": {"rescue": 1.0, "medical": 0.95, "shelter": 0.55, "water": 0.5, "food": 0.35, "infrastructure": 0.4},
@@ -54,7 +54,7 @@ DISASTERS: dict[str, dict] = {
                             "Fire lines and water tankers for the forest department", "Close roads crossing the fire perimeter"],
     },
     "drought": {
-        "name": "Drought", "gdacs": "DR", "overlay": {"label": "Drought-affected area", "colour": "#B5835A", "fill": 0.25},
+        "name": "Drought", "gdacs": "DR", "overlay": {"label": "Drought-affected area", "colour": "#CDB892", "fill": 0.25},
         "indicators": ["drought", "no water", "wells dried", "crop failed", "fodder", "tanker", "सूखा", "कुएं सूख", "ಬರ", "ಬರಗಾಲ", "வறட்சி",
                        "కరువు", "വരൾച്ച", "খরা", "ମରୁଡ଼ି", "દુષ્કાળ", "ਸੋਕਾ", "खडेरी", "sukha", "bara", "paani nahi"],
         "life_threat": {"water": 0.85, "food": 0.65, "medical": 0.7, "rescue": 0.5, "shelter": 0.3, "infrastructure": 0.3},
@@ -64,7 +64,7 @@ DISASTERS: dict[str, dict] = {
                             "Prioritise villages with dried wells and no piped supply"],
     },
     "heatwave": {
-        "name": "Heatwave", "gdacs": None, "overlay": {"label": "Extreme-heat area", "colour": "#E11D48", "fill": 0.2},
+        "name": "Heatwave", "gdacs": None, "overlay": {"label": "Extreme-heat area", "colour": "#E5B5A1", "fill": 0.2},
         "indicators": ["heatwave", "heat stroke", "heatstroke", "extreme heat", "fainted", "dehydration", "लू", "गर्मी", "बेहोश", "ಬಿಸಿಗಾಳಿ", "ಬಿಸಿಲು",
                        "வெப்ப அலை", "వడగాలి", "వడదెబ్బ", "ഉഷ്ണതരംഗ", "তাপপ্রবাহ", "ଗ୍ରୀଷ୍ମ ଲହରୀ", "લૂ", "ਲੂ", "गर्मी लहर", "loo lagi", "garmi"],
         "life_threat": {"medical": 1.0, "water": 0.8, "rescue": 0.6, "shelter": 0.55, "food": 0.3, "infrastructure": 0.25},
@@ -74,7 +74,7 @@ DISASTERS: dict[str, dict] = {
                             "Shift outdoor work away from midday"],
     },
     "tsunami": {
-        "name": "Tsunami", "gdacs": None, "overlay": {"label": "Inundation zone", "colour": "#0E7490", "fill": 0.4},
+        "name": "Tsunami", "gdacs": None, "overlay": {"label": "Inundation zone", "colour": "#93AFAE", "fill": 0.4},
         "indicators": ["tsunami", "sea water entered", "huge waves", "sea came in", "सुनामी", "समुद्र", "ಸುನಾಮಿ", "சுனாமி", "கடல் நீர்",
                        "సునామీ", "സുനാമി", "সুনামি", "ସୁନାମି", "ત્સુનામી", "ਸੁਨਾਮੀ", "sunami", "samudra ka paani"],
         "life_threat": {"rescue": 1.0, "medical": 0.95, "shelter": 0.6, "water": 0.6, "food": 0.45, "infrastructure": 0.4},
@@ -84,7 +84,7 @@ DISASTERS: dict[str, dict] = {
                             "Salt-contaminated wells: supply drinking water", "Keep people out of the inundation zone until cleared"],
     },
     "industrial": {
-        "name": "Industrial / chemical incident", "gdacs": None, "overlay": {"label": "Plume / exclusion zone", "colour": "#9333EA", "fill": 0.3},
+        "name": "Industrial / chemical incident", "gdacs": None, "overlay": {"label": "Plume / exclusion zone", "colour": "#BBA8B8", "fill": 0.3},
         "indicators": ["gas leak", "eyes burning", "fainting", "plume", "chemical", "explosion", "toxic", "factory fire", "smell", "breathing", "गैस रिसाव", "रसायन", "विस्फोट",
                        "ಅನಿಲ ಸೋರಿಕೆ", "ರಾಸಾಯನಿಕ", "வாயு கசிவு", "గ్యాస్ లీక్", "വാതക ചോർച്ച", "গ্যাস লিক", "ଗ୍ୟାସ ଲିକ", "ગેસ લીક", "ਗੈਸ ਲੀਕ", "gas leak hua"],
         "life_threat": {"medical": 1.0, "rescue": 0.95, "shelter": 0.55, "water": 0.45, "food": 0.3, "infrastructure": 0.4},

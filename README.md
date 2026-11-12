@@ -323,14 +323,15 @@ blackout & recon, phone simulator, **Scenario Lab**, scenario control, metrics, 
 radio console were removed; recon teams still report by satellite phone on the Blackout page.) Every page and panel has **Explain me**. The UI chrome
 switches between English, ಕನ್ನಡ and हिंदी.
 
-### Design: brutalism
+### Design: brutalism in a light, warm palette
 
-The UI is fully brutalist (`frontend/tailwind.config.js`, `src/index.css`): cream paper on a hard grid, pure black
-3 px borders on everything, heavy offset shadows, square corners, flat red / blue / green / black colour blocks
-(navigation groups: SEE red, DECIDE blue, ACT green, PROVE black), uppercase Archivo Black headings and monospace labels.
-**Approve / confirm buttons are green and reject / refute / fail buttons are red** everywhere. There is **no yellow**
-anywhere (beige / cream / white instead). Maps keep their natural OpenStreetMap colours. No entrance animations; the
-live status ticker is the only moving part.
+The UI is brutalist in structure (`frontend/tailwind.config.js`, `src/index.css`): cream paper on a hard grid, thick
+black borders, hard offset shadows, square corners, uppercase Archivo Black headings and monospace labels. Every fill is
+a **light tone that belongs to the background** — sand, beige, taupe, stone, pale clay and pale sage — with black text
+on top. There is no bright red, blue, green or yellow anywhere (navigation groups: SEE clay, DECIDE stone, ACT sage,
+PROVE sand). Approve / confirm buttons are pale sage and reject / refute / fail buttons are pale clay, so they stay
+distinguishable without loud colour. Map markers and disaster overlays use the same soft tones on the natural
+OpenStreetMap basemap. No entrance animations; the live status ticker is the only moving part.
 
 ## Human in the loop, explainability, privacy
 

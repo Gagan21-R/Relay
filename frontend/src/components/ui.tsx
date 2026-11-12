@@ -47,12 +47,12 @@ export function ConfidenceBadge({ level, score }: { level: string; score?: numbe
 }
 
 export const PRIORITY_STYLE = (score: number) =>
-  score >= 70 ? { label: "P1", cls: "bg-p1 text-white" } : score >= 50 ? { label: "P2", cls: "bg-p2 text-white" }
-    : score >= 30 ? { label: "P3", cls: "bg-p3 text-ink" } : { label: "P4", cls: "bg-p4 text-white" };
+  score >= 70 ? { label: "P1", cls: "bg-p1 text-ink" } : score >= 50 ? { label: "P2", cls: "bg-p2 text-ink" }
+    : score >= 30 ? { label: "P3", cls: "bg-p3 text-ink" } : { label: "P4", cls: "bg-p4 text-ink" };
 
 export function Meter({ value, label, tone = "brand" }: { value: number; label?: string; tone?: "brand" | "amber" | "red" | "green" }) {
   const pct = Math.max(0, Math.min(100, Math.round(value * 100)));
-  const bar = { brand: "bg-brand-500", amber: "bg-sun-400", red: "bg-pink-500", green: "bg-mint-500" }[tone];
+  const bar = { brand: "bg-sand", amber: "bg-sun-400", red: "bg-pink-500", green: "bg-mint-500" }[tone];
   return (
     <div className="min-w-[90px]" title={label}>
       <div className="h-2 w-full overflow-hidden border-[1.5px] border-ink bg-bone" role="meter" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={label}>
@@ -67,9 +67,9 @@ export function Panel({ title, actions, children, className = "", explain, tone,
   return (
     <section className={`card relative overflow-hidden ${className}`}>
       {(title || actions || explain || section) && (
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-ink bg-ink px-4 py-2 text-white">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-ink bg-sand px-4 py-2 text-ink">
           <div className="flex min-w-0 items-center gap-2">
-            {tone && <span className={`h-4 w-4 shrink-0 border-2 border-white ${tone}`} aria-hidden />}
+            {tone && <span className={`h-4 w-4 shrink-0 border-2 border-ink ${tone}`} aria-hidden />}
             {title && <h2 className="font-display text-[17px] uppercase leading-tight">{title}</h2>}
             {section && <Explain id={section} />}{explain}
           </div>
@@ -92,7 +92,7 @@ export function Empty({ children }: { children: ReactNode }) {
 
 export const simTime = (t?: number | null) => (t == null ? "—" : `T+${t.toFixed(1)} h`);
 
-const STAT_BG = ["bg-signal text-white", "bg-blue text-white", "bg-go text-white", "bg-ink text-white", "bg-white", "bg-cream"];
+const STAT_BG = ["bg-signal text-ink", "bg-blue text-ink", "bg-go text-ink", "bg-sand text-ink", "bg-white", "bg-cream"];
 export function Stat({ label, value, tone, i = 0, pattern }: { label: string; value: ReactNode; tone?: string; i?: number; pattern?: string }) {
   return (
     <div className={`relative overflow-hidden border-2 border-ink p-3 shadow-hard ${tone ?? STAT_BG[i % STAT_BG.length]}`}>
@@ -109,7 +109,7 @@ export function Breakdown({ components, penalties = [], total, unit = "" }: {
   components: Record<string, { value?: number; weight?: number; points: number; why?: string }>; penalties?: { name: string; value: number; why: string }[];
   total?: number; unit?: string;
 }) {
-  const COLORS = ["bg-ink", "bg-blue", "bg-signal", "bg-go", "bg-tangerine-400", "bg-cobalt-300", "bg-cream"];
+  const COLORS = ["bg-sand", "bg-blue", "bg-signal", "bg-go", "bg-tangerine-400", "bg-cobalt-300", "bg-cream"];
   const entries = Object.entries(components);
   const max = Math.max(1e-9, entries.reduce((a, [, c]) => a + Math.max(0, c.points), 0), total ?? 0);
   return (

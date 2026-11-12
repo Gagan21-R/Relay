@@ -58,7 +58,7 @@ export function ScenarioPicker({ disaster, name, onClose, onProfileOnly }: { dis
   const list = (data?.scenarios ?? []).filter((s: any) => s.disaster === disaster);
   const go = (id: string) => { onClose(); startGuide(id); };
   return (
-    <div className="fixed inset-0 z-[1300] grid place-items-center bg-ink/50 p-4" role="dialog" aria-modal="true" aria-label={`Run a ${name} scenario`} onClick={onClose}>
+    <div className="fixed inset-0 z-[1300] grid place-items-center bg-sand/50 p-4" role="dialog" aria-modal="true" aria-label={`Run a ${name} scenario`} onClick={onClose}>
       <div className="max-h-[80vh] w-[min(640px,100%)] overflow-y-auto rounded-3xl border-2 border-ink bg-white p-5 shadow-hard-lg" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center gap-2"><span className="text-2xl">{DISASTER_ICON[disaster]}</span>
           <h2 className="mega text-2xl">Run a {name.toLowerCase()} scenario</h2>

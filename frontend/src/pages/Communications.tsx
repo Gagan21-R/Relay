@@ -47,7 +47,7 @@ export default function Communications() {
               <p className="rounded-lg bg-paper p-2 text-xs"><b>English source:</b> {t?.english}</p>
               <fieldset className="text-xs"><legend className="font-bold">Languages (empty = the area's languages)</legend>
                 <div className="mt-1 flex flex-wrap gap-1">{(tpl.data?.languages ?? []).map((l: any) => (
-                  <label key={l.code} className={`badge cursor-pointer ${langs.includes(l.code) ? "bg-ink text-white" : "bg-white"}`}>
+                  <label key={l.code} className={`badge cursor-pointer ${langs.includes(l.code) ? "bg-sand text-ink" : "bg-white"}`}>
                     <input type="checkbox" className="sr-only" checked={langs.includes(l.code)} onChange={() => setLangs(langs.includes(l.code) ? langs.filter((x) => x !== l.code) : [...langs, l.code])} />{l.name}</label>))}</div></fieldset>
               <button className="btn-pop" onClick={draft}>Draft in each language</button>
             </div>
@@ -66,7 +66,7 @@ export default function Communications() {
                 <div className="flex flex-wrap items-center gap-1.5 text-xs"><b className="font-mono">#{c.id}</b><span className="badge bg-white">{c.language_name}</span>
                   <span className={`badge ${TS[c.translation_status] ?? "bg-white"}`}>{c.translation_status}</span><span className="badge bg-paper">{c.template_id.replace(/_/g, " ")} · {c.zone}</span>
                   <span className={`badge ${c.fact_check.ok ? "bg-mint-300" : "bg-pink-400"}`}>facts {c.fact_check.ok ? "preserved" : `MISSING ${[...c.fact_check.missing_fields, ...c.fact_check.missing_numbers].join(", ")}`}</span>
-                  <span className="badge bg-ink text-white">{c.status}{c.status === "sent" ? ` · ${c.recipients} phone(s), mock SMS` : ""}</span></div>
+                  <span className="badge bg-sand text-ink">{c.status}{c.status === "sent" ? ` · ${c.recipients} phone(s), mock SMS` : ""}</span></div>
                 <p className="mt-2 text-[15px] font-medium" lang={c.language}>{c.text}</p>
                 {c.language !== "en" && c.translation_status !== "english-fallback" && <p className="mt-1 text-xs text-ink/60">EN: {c.english_text}</p>}
                 <div className="mt-2 flex gap-1.5">
