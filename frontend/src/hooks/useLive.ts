@@ -16,7 +16,9 @@ function setStatus(s: LiveStatus) { status = s; statusListeners.forEach((f) => f
 export function connectLive() {
   if (socket && socket.readyState <= 1) return;
   const proto = location.protocol === "https:" ? "wss" : "ws";
-  socket = new WebSocket(`${proto}://${location.host}/ws/live`);
+  // VITE_WS_URL points straight at the backend when the host cannot proxy WebSockets (e.g. Netlify → Render).
+  const url = import.meta.env.VITE_WS_URL || `${proto}://${location.host}/ws/live`;
+  socket = new WebSocket(url);
   setStatus("connecting");
   socket.onopen = () => { retry = 1000; setStatus("live"); };
   socket.onmessage = (m) => {

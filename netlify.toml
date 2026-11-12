@@ -1,0 +1,21 @@
+# Netlify hosts the frontend only. API calls are proxied to the backend on Render; the live WebSocket connects to
+# Render directly through VITE_WS_URL (set in the Netlify UI), because Netlify cannot proxy WebSockets.
+[build]
+  base = "frontend"
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://relay-backend-giw2.onrender.com/api/:splat"
+  status = 200
+  force = true
+
+# single-page app: every other path serves index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
