@@ -1,5 +1,7 @@
 // Shared UI pieces in the brutalist system: badges, channel icons, meters, panels, stats, empty states.
+// Panels slide up as they scroll into view; stats count up and shove on hover.
 import { ReactNode } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { Building2, Globe, MessageSquare, Mic, Newspaper, Radio, Rss, Smartphone } from "lucide-react";
 import { CountUp } from "./motion";
 import { Explain } from "./Assistant";
@@ -64,8 +66,10 @@ export function Meter({ value, label, tone = "brand" }: { value: number; label?:
 }
 
 export function Panel({ title, actions, children, className = "", explain, tone, section }: { title?: ReactNode; actions?: ReactNode; children: ReactNode; className?: string; explain?: ReactNode; tone?: string; section?: string }) {
+  const reduce = useReducedMotion();
   return (
-    <section className={`card relative overflow-hidden ${className}`}>
+    <motion.section className={`card relative overflow-hidden ${className}`} initial={reduce ? false : { opacity: 0, y: 26 }} whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.02 }} transition={{ duration: 0.45, ease: [0.2, 0.9, 0.25, 1] }}>
       {(title || actions || explain || section) && (
         <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-ink bg-sand px-4 py-2 text-ink">
           <div className="flex min-w-0 items-center gap-2">
@@ -77,7 +81,7 @@ export function Panel({ title, actions, children, className = "", explain, tone,
         </div>
       )}
       <div className="p-4">{children}</div>
-    </section>
+    </motion.section>
   );
 }
 
@@ -95,12 +99,14 @@ export const simTime = (t?: number | null) => (t == null ? "—" : `T+${t.toFixe
 const STAT_BG = ["bg-signal text-ink", "bg-blue text-ink", "bg-go text-ink", "bg-sand text-ink", "bg-white", "bg-cream"];
 export function Stat({ label, value, tone, i = 0, pattern }: { label: string; value: ReactNode; tone?: string; i?: number; pattern?: string }) {
   return (
-    <div className={`relative overflow-hidden border-2 border-ink p-3 shadow-hard ${tone ?? STAT_BG[i % STAT_BG.length]}`}>
+    <motion.div className={`relative overflow-hidden border-2 border-ink p-3 shadow-hard transition-shadow hover:shadow-hard-lg ${tone ?? STAT_BG[i % STAT_BG.length]}`}
+      initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.35, delay: (i % 6) * 0.06 }}
+      whileHover={{ x: -4, y: -4 }}>
       {pattern && <div className={`absolute inset-0 opacity-[0.1] ${pattern}`} aria-hidden />}
       <p className="font-mono text-[11px] font-extrabold">{String(i + 1).padStart(2, "0")}</p>
       <p className="relative mt-1 font-display text-[40px] leading-none tabular-nums">{typeof value === "number" ? <CountUp value={value} /> : value}</p>
       <p className="relative mt-1 font-mono text-[11px] font-extrabold uppercase leading-tight">{label}</p>
-    </div>
+    </motion.div>
   );
 }
 

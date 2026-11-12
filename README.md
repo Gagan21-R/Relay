@@ -331,7 +331,14 @@ a **light tone that belongs to the background** — sand, beige, taupe, stone, p
 on top. There is no bright red, blue, green or yellow anywhere (navigation groups: SEE clay, DECIDE stone, ACT sage,
 PROVE sand). Approve / confirm buttons are pale sage and reject / refute / fail buttons are pale clay, so they stay
 distinguishable without loud colour. Map markers and disaster overlays use the same soft tones on the natural
-OpenStreetMap basemap. No entrance animations; the live status ticker is the only moving part.
+OpenStreetMap basemap.
+
+**Motion** (framer-motion, `src/components/motion.tsx`) is hard and snappy, never floaty: pages slide in on navigation,
+panels and stats slide up as they scroll into view, numbers count up, page titles rise word by word, the active nav
+marker glides between links, and cards shove toward the pointer on hover. The landing page (`/about`) is built like a
+creative-agency portfolio: an animated hero with a live index of tilting cards, language marquees, case-study previews
+that open the live page, a team of flip cards (seven agents plus the Duty Officer), a scroll-filled process line, and a
+contact form that files a real report. Everything respects `prefers-reduced-motion`.
 
 ## Human in the loop, explainability, privacy
 

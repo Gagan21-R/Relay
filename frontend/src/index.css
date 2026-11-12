@@ -6,7 +6,7 @@
    Cream paper on a hard grid, thick black borders, hard shadows, uppercase Archivo Black, monospace labels — and only
    light fills that belong to the background (sand, beige, taupe, stone, pale clay, pale sage). No bright red, blue,
    green or yellow. Approve / confirm = pale sage, reject / refute / fail = pale clay, both with black text and icons.
-   No entrance animations. */
+   Motion: hard and snappy — sections slide in once, lists stagger, cards shove toward the pointer on hover. */
 @layer base {
   html { background: #F4EEE2; }
   body {
@@ -22,6 +22,7 @@
 
 @layer components {
   .card { @apply border-2 border-ink bg-white shadow-hard; }
+  a.card, button.card { @apply transition-transform duration-150 hover:-translate-x-1 hover:-translate-y-1; }
   .card-flat { @apply border-2 border-ink bg-white; }
   .btn { @apply inline-flex select-none items-center gap-1.5 border-2 border-ink px-3 py-1.5 font-mono text-[12px] font-extrabold uppercase tracking-[0.04em] transition-transform duration-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none; }
   .btn:not(:disabled):hover { transform: translate(-3px, -3px); }
@@ -30,7 +31,7 @@
   .btn-ghost { @apply btn bg-white text-ink shadow-hard-sm hover:bg-sand; }
   .btn-pop { @apply btn bg-taupe text-ink shadow-hard; }
   .btn-danger { @apply btn bg-stop text-ink shadow-hard-sm; }
-  /* decisions: approve / confirm = green, reject / refute / fail = red — everywhere */
+  /* decisions: approve / confirm = pale sage, reject / refute / fail = pale clay — everywhere */
   .btn-approve { @apply btn bg-go text-ink shadow-hard; }
   .btn-reject { @apply btn bg-stop text-ink shadow-hard; }
   .badge { @apply inline-flex items-center gap-1 border-2 border-ink px-1.5 py-[1px] font-mono text-[10.5px] font-extrabold uppercase leading-4; }
@@ -82,5 +83,5 @@
 
 
 /* hover: underline that grows, brutalist link */
-.link-grow { background: linear-gradient(#FF2D00, #FF2D00) 0 100% / 0 2px no-repeat; transition: background-size .25s; }
+.link-grow { background: linear-gradient(#141210, #141210) 0 100% / 0 2px no-repeat; transition: background-size .25s; }
 .link-grow:hover { background-size: 100% 2px; }

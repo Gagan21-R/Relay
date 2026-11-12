@@ -1,6 +1,7 @@
 // App shell, BRUTALIST: colour-blocked navigation groups (clay / stone / sage / sand), thick black borders, a sand
 // ticker, square controls, and page headers with huge uppercase type next to a giant number block in the section's
-// colour. No entrance animations.
+// colour. Motion: pages slide in on navigation, the active nav marker glides between links, page titles rise word by
+// word and the number block drops in.
 import { ReactNode, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -10,7 +11,7 @@ import { setUiLang, UI_LANGS } from "../i18n";
 import { useHealth } from "../hooks/useHealth";
 import { useLiveStatus } from "../hooks/useLive";
 import { useApi } from "../hooks/useApi";
-import { Marquee } from "./motion";
+import { Marquee, RiseText } from "./motion";
 import AssistantDrawer, { Explain } from "./Assistant";
 import GuideOverlay from "./Guide";
 import { DisasterSelector } from "./Disaster";
@@ -109,7 +110,7 @@ export default function Layout() {
                     <>
                       <span className={`text-[10px] ${isActive ? "text-brand-600" : "text-ink/50"}`}>{num}</span>
                       <span className="truncate">{t(`nav.${it.key}`)}</span>
-                      {isActive && <span className="ml-auto h-3 w-3 self-center border-2 border-ink bg-signal" />}
+                      {isActive && <motion.span layoutId="nav-marker" transition={{ type: "spring", stiffness: 500, damping: 35 }} className="ml-auto h-3 w-3 self-center border-2 border-ink bg-signal" />}
                     </>
                   )}
                 </NavLink>
@@ -154,7 +155,9 @@ export default function Layout() {
           </div>
         </header>
         <main className="relative min-w-0 flex-1 overflow-x-clip p-4 sm:p-6">
-          <Outlet key={loc.pathname} />
+          <motion.div key={loc.pathname} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: [0.2, 0.9, 0.25, 1] }}>
+            <Outlet />
+          </motion.div>
         </main>
       </div>
       <AssistantDrawer />
@@ -179,16 +182,17 @@ export function PageHeader({ title, sub, children, kicker, explain, section }: {
             {section && <Explain id={section} />}
             {explain}
           </div>
-          <h1 className="mega mt-4 text-[40px] sm:text-[58px]">{title}</h1>
+          <h1 className="mega mt-4 text-[40px] sm:text-[58px]"><RiseText key={title} text={title} /></h1>
           {sub && <p className="mt-3 max-w-2xl border-2 border-ink bg-cream px-3 py-2 text-[14px] font-medium">{sub}</p>}
         </div>
         {children && <div className="relative flex flex-wrap gap-2">{children}</div>}
       </div>
-      <div className={`hidden flex-col justify-between border-l-2 border-ink p-4 text-ink sm:flex ${bg}`} aria-hidden>
+      <motion.div className={`hidden flex-col justify-between border-l-2 border-ink p-4 text-ink sm:flex ${bg}`} aria-hidden
+        initial={{ y: -40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 420, damping: 22, delay: 0.1 }}>
         <span className="font-mono text-[11px] font-extrabold uppercase tracking-[0.14em]">relay / {num}</span>
         <span className="font-display text-[110px] leading-none tracking-[-0.06em]">{num}</span>
         <span className="h-4 w-full border-2 border-ink bg-white" />
-      </div>
+      </motion.div>
     </div>
   );
 }

@@ -304,3 +304,10 @@ and red reject buttons everywhere, no animations when a page/section opens, natu
 - All fills are light tones matching the cream background (sand, beige, taupe, stone, pale clay, pale sage); black is
   used only for text, borders and shadows. Approve = pale sage, reject = pale clay, both with black text.
 - Verified: tsc, build, 5 vitest, 104 backend tests; pages checked in the browser.
+
+# Round 8 — creative-agency brutalism with motion (done)
+- Landing rebuilt as an agency portfolio: word-by-word hero, cycling "help" words, tilting live-index cards, language
+  marquees, case-study preview cards, flip-card team, scroll-filled process line, animated contact form, marquee footer.
+- Motion across every page: page transitions, panels/stats reveal on scroll, count-up numbers, rising page titles,
+  gliding nav marker, scroll progress bar on the landing. Light warm palette kept; reduced-motion respected.
+- Verified: tsc, build, 5 vitest; pages checked in the browser.
