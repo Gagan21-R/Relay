@@ -1,4 +1,4 @@
-// Shared UI pieces in the brutalist · minimal · surreal system: badges, channel icons, meters, panels, stats, empty states.
+// Shared UI pieces in the brutalist system: badges, channel icons, meters, panels, stats, empty states.
 import { ReactNode } from "react";
 import { Building2, Globe, MessageSquare, Mic, Newspaper, Radio, Rss, Smartphone } from "lucide-react";
 import { CountUp } from "./motion";
@@ -67,10 +67,10 @@ export function Panel({ title, actions, children, className = "", explain, tone,
   return (
     <section className={`card relative overflow-hidden ${className}`}>
       {(title || actions || explain || section) && (
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-ink px-4 py-2.5">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-ink bg-ink px-4 py-2 text-white">
           <div className="flex min-w-0 items-center gap-2">
-            {tone && <span className={`h-3 w-3 shrink-0 border-2 border-ink ${tone}`} aria-hidden />}
-            {title && <h2 className="font-display text-[17px] font-extrabold uppercase leading-tight tracking-tight">{title}</h2>}
+            {tone && <span className={`h-4 w-4 shrink-0 border-2 border-white ${tone}`} aria-hidden />}
+            {title && <h2 className="font-display text-[17px] uppercase leading-tight">{title}</h2>}
             {section && <Explain id={section} />}{explain}
           </div>
           {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
@@ -83,23 +83,23 @@ export function Panel({ title, actions, children, className = "", explain, tone,
 
 export function Empty({ children }: { children: ReactNode }) {
   return (
-    <div className="relative overflow-hidden border-2 border-dashed border-ink/40 bg-bone p-8 text-center">
-      <span className="mx-auto mb-3 block h-3 w-10 bg-ink" aria-hidden />
-      <p className="mx-auto max-w-md text-sm text-ink/60">{children}</p>
+    <div className="relative overflow-hidden border-2 border-dashed border-ink bg-white p-8 text-center">
+      <span className="mx-auto mb-3 block h-4 w-16 border-2 border-ink bg-signal" aria-hidden />
+      <p className="mx-auto max-w-md font-mono text-[12px] font-bold uppercase">{children}</p>
     </div>
   );
 }
 
 export const simTime = (t?: number | null) => (t == null ? "—" : `T+${t.toFixed(1)} h`);
 
+const STAT_BG = ["bg-signal text-white", "bg-blue text-white", "bg-go text-white", "bg-ink text-white", "bg-white", "bg-cream"];
 export function Stat({ label, value, tone, i = 0, pattern }: { label: string; value: ReactNode; tone?: string; i?: number; pattern?: string }) {
-  const accent = i % 4 === 0;
   return (
-    <div className={`group relative overflow-hidden border-2 border-ink p-3 transition-transform duration-200 hover:-translate-y-1 hover:shadow-hard ${tone ?? (accent ? "bg-ink text-bone" : "bg-bone")}`}>
-      {pattern && <div className={`absolute inset-0 opacity-[0.08] ${pattern}`} aria-hidden />}
-      <p className={`font-mono text-[10px] ${accent && !tone ? "text-signal" : "text-ink/40"}`}>{String(i + 1).padStart(2, "0")}</p>
-      <p className="mega relative mt-1 text-[40px] tabular-nums">{typeof value === "number" ? <CountUp value={value} /> : value}</p>
-      <p className="relative mt-1 font-mono text-[10.5px] uppercase leading-tight tracking-[0.12em] opacity-70">{label}</p>
+    <div className={`relative overflow-hidden border-2 border-ink p-3 shadow-hard ${tone ?? STAT_BG[i % STAT_BG.length]}`}>
+      {pattern && <div className={`absolute inset-0 opacity-[0.1] ${pattern}`} aria-hidden />}
+      <p className="font-mono text-[11px] font-extrabold">{String(i + 1).padStart(2, "0")}</p>
+      <p className="relative mt-1 font-display text-[40px] leading-none tabular-nums">{typeof value === "number" ? <CountUp value={value} /> : value}</p>
+      <p className="relative mt-1 font-mono text-[11px] font-extrabold uppercase leading-tight">{label}</p>
     </div>
   );
 }
@@ -109,7 +109,7 @@ export function Breakdown({ components, penalties = [], total, unit = "" }: {
   components: Record<string, { value?: number; weight?: number; points: number; why?: string }>; penalties?: { name: string; value: number; why: string }[];
   total?: number; unit?: string;
 }) {
-  const COLORS = ["bg-ink", "bg-cobalt-400", "bg-sun-400", "bg-mint-400", "bg-tangerine-400", "bg-cobalt-200", "bg-brand-300"];
+  const COLORS = ["bg-ink", "bg-blue", "bg-signal", "bg-go", "bg-tangerine-400", "bg-cobalt-300", "bg-cream"];
   const entries = Object.entries(components);
   const max = Math.max(1e-9, entries.reduce((a, [, c]) => a + Math.max(0, c.points), 0), total ?? 0);
   return (

@@ -87,7 +87,7 @@ export default function Workflow() {
                         <div className="flex flex-wrap items-center gap-2">
                           <span className={`grid h-8 w-8 place-items-center rounded-full border-2 border-ink text-sm font-black ${was ? "bg-lime-400" : on ? "bg-pink-400 text-white" : "bg-white"}`}>{was ? "✔" : st.id}</span>
                           <span className="font-extrabold">{st.gate ? "◆ " : ""}{st.title}</span>
-                          <span className="badge" style={{ background: m.colour, color: ["blackout", "duty_officer", "coordination"].includes(st.who) ? "#fff" : "#0B0B0C" }}>{m.label}</span>
+                          <span className="badge" style={{ background: m.colour, color: ["blackout", "duty_officer", "coordination"].includes(st.who) ? "#fff" : "#000000" }}>{m.label}</span>
                           {on && <span className="badge bg-pink-400 text-white">happening now</span>}
                           <span className="ml-auto font-mono text-[11px] text-ink/50">{st.page}</span>
                         </div>

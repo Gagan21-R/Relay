@@ -7,7 +7,7 @@ import { Empty, Panel, Stat } from "../components/ui";
 import { useApi } from "../hooks/useApi";
 import { api } from "../services/api";
 
-const LINE_COLORS = ["#0B0B0C", "#FF3D1F", "#5A4FD6", "#B85A27", "#5F8F64", "#C9A94C"];
+const LINE_COLORS = ["#000000", "#FF2D00", "#1F3BFF", "#E25B00", "#00A33A", "#E6D8BC"];
 const nice = (s: string) => s.replace(/_/g, " ");
 
 export default function Resources() {
@@ -49,12 +49,12 @@ export default function Resources() {
           <div className="h-72">
             <ResponsiveContainer>
               <LineChart data={chart.rows} margin={{ left: 0, right: 12, top: 8 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#0B0B0C22" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#00000022" />
                 <XAxis dataKey="t" fontSize={11} interval={3} />
                 <YAxis fontSize={11} />
-                <Tooltip contentStyle={{ border: "2px solid #0B0B0C", borderRadius: 12 }} />
+                <Tooltip contentStyle={{ border: "2px solid #000000", borderRadius: 12 }} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
-                <ReferenceLine y={0} stroke="#FF3D1F" strokeWidth={2} />
+                <ReferenceLine y={0} stroke="#FF2D00" strokeWidth={2} />
                 {chart.keys.map((k: string, i: number) => <Line key={k} dataKey={k} stroke={LINE_COLORS[i % LINE_COLORS.length]} strokeWidth={k.startsWith("Napoklu") ? 4 : 2} dot={false} />)}
               </LineChart>
             </ResponsiveContainer>
@@ -82,11 +82,11 @@ export default function Resources() {
           <div className="h-64">
             <ResponsiveContainer>
               <BarChart data={dvs}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#0B0B0C22" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#00000022" />
                 <XAxis dataKey="resource" fontSize={11} /><YAxis fontSize={11} />
-                <Tooltip contentStyle={{ border: "2px solid #0B0B0C", borderRadius: 12 }} /><Legend wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="demand" fill="#FF3D1F" stroke="#0B0B0C" strokeWidth={1.5} radius={[6, 6, 0, 0]} />
-                <Bar dataKey="supply" fill="#F6F4EF" stroke="#0B0B0C" strokeWidth={1.5} radius={[6, 6, 0, 0]} />
+                <Tooltip contentStyle={{ border: "2px solid #000000", borderRadius: 12 }} /><Legend wrapperStyle={{ fontSize: 11 }} />
+                <Bar dataKey="demand" fill="#FF2D00" stroke="#000000" strokeWidth={1.5} radius={[6, 6, 0, 0]} />
+                <Bar dataKey="supply" fill="#FFFFFF" stroke="#000000" strokeWidth={1.5} radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

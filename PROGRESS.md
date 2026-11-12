@@ -287,3 +287,14 @@ and red reject buttons everywhere, no animations when a page/section opens, natu
 - Map tiles back to natural OpenStreetMap colours (greyscale filter removed).
 - Page headers: grid + big type + a solid black index block with the page number; landing hero: black live-index block.
 - Checked in the browser (landing, map, plans); build clean; 5 vitest pass.
+
+---
+
+# Round 6 — full brutalism, no yellow (done)
+
+- Design tokens v5: cream / black / white, flat red #FF2D00, blue #1F3BFF, green #00A33A; 3 px borders everywhere
+  (borderWidth override), 6–12 px offset shadows, Archivo Black uppercase headings, monospace labels.
+- No yellow: the "sun" role, P3 priority, map/chart inline colours and the drought overlay (#C9A227 → tan #B5835A) changed.
+- Shell: red RELAY block; colour-blocked nav groups; black panel title bars; colour-blocked stat tiles; page headers with
+  a giant number block in the section colour; landing page re-coloured in blocks.
+- Video recording was cancelled by the user before it started (nothing recorded).

@@ -323,15 +323,14 @@ blackout & recon, phone simulator, **Scenario Lab**, scenario control, metrics, 
 radio console were removed; recon teams still report by satellite phone on the Blackout page.) Every page and panel has **Explain me**. The UI chrome
 switches between English, ಕನ್ನಡ and हिंदी.
 
-### Design: brutalist · minimal
+### Design: brutalism
 
-The UI follows one system (`frontend/tailwind.config.js`, `src/index.css`): **brutalist** — a visible grid, square
-corners, thick black rules, hard offset shadows, monospace index numbers and labels; **minimal** — bone paper, black
-ink and one signal colour, with colour only where it carries meaning: **approve / confirm buttons are green, reject /
-refute / fail buttons are red** everywhere, plus priority and status tones. Maps use their natural OpenStreetMap
-colours. Pages and sections appear without entrance animations; the live status ticker is the only moving part.
-The landing page (`/about`) is laid out like an agency portfolio: hero with a live index, manifesto, case studies,
-capabilities, team, process, research and a contact form that files a real report.
+The UI is fully brutalist (`frontend/tailwind.config.js`, `src/index.css`): cream paper on a hard grid, pure black
+3 px borders on everything, heavy offset shadows, square corners, flat red / blue / green / black colour blocks
+(navigation groups: SEE red, DECIDE blue, ACT green, PROVE black), uppercase Archivo Black headings and monospace labels.
+**Approve / confirm buttons are green and reject / refute / fail buttons are red** everywhere. There is **no yellow**
+anywhere (beige / cream / white instead). Maps keep their natural OpenStreetMap colours. No entrance animations; the
+live status ticker is the only moving part.
 
 ## Human in the loop, explainability, privacy
 

@@ -24,7 +24,7 @@ export function Explain({ id, context, label }: { id: string; context?: any; lab
   const { t } = useTranslation();
   return (
     <button type="button" onClick={(e) => { e.stopPropagation(); openAssistant(id, context); }}
-      className="group inline-flex shrink-0 items-center gap-1 border-[1.5px] border-ink bg-bone px-1.5 py-[1px] font-mono text-[10.5px] font-bold uppercase tracking-[0.06em] text-ink transition-all hover:-translate-y-0.5 hover:bg-ink hover:text-bone"
+      className="group inline-flex shrink-0 items-center gap-1 border-2 border-ink bg-white px-1.5 py-[1px] font-mono text-[10.5px] font-extrabold uppercase text-ink hover:bg-blue hover:text-white"
       aria-label={`${t("assistant.explain")}: ${id}`}>
       <Sparkles size={12} className="transition-transform group-hover:rotate-45" aria-hidden />{label ?? t("assistant.explain")}
     </button>
@@ -61,7 +61,7 @@ export default function AssistantDrawer() {
       {!open && (
         <motion.button whileHover={{ x: -3, y: -3 }}
           onClick={() => opener?.(pageSection)} aria-label={t("assistant.ask")}
-          className="fixed bottom-4 right-4 z-[1100] flex items-center gap-2 border-2 border-ink bg-ink px-4 py-3 font-mono text-[12px] font-bold uppercase tracking-[0.08em] text-bone shadow-hard-pink">
+          className="fixed bottom-4 right-4 z-[1100] flex items-center gap-2 border-2 border-ink bg-blue px-4 py-3 font-mono text-[13px] font-extrabold uppercase text-white shadow-hard">
           <MessageCircleQuestion size={18} aria-hidden />{t("assistant.ask")}
         </motion.button>
       )}

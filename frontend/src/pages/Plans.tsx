@@ -10,7 +10,7 @@ import { useApi } from "../hooks/useApi";
 import { api } from "../services/api";
 import { SafetyBadge } from "./Dispatch";
 
-const COLORS = ["#0B0B0C", "#FF3D1F", "#5A4FD6", "#B85A27", "#5F8F64", "#C9A94C", "#0B0B0C"];
+const COLORS = ["#000000", "#FF2D00", "#1F3BFF", "#E25B00", "#00A33A", "#E6D8BC", "#000000"];
 const STATUS: Record<string, string> = { pending_approval: "bg-sun-400", approved: "bg-mint-400", rejected: "bg-pink-400", superseded: "bg-white", draft: "bg-white" };
 
 export default function Plans() {

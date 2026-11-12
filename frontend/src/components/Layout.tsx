@@ -1,5 +1,6 @@
-// App shell, brutalist · minimal: a numbered index for navigation, one thin black ticker, square controls, and page
-// headers with big type, a hairline grid and a solid black index block. No entrance animations.
+// App shell, BRUTALIST: colour-blocked navigation groups (red / blue / green / black), thick black borders, a black
+// ticker, square controls, and page headers with huge uppercase type next to a giant number block in the section's
+// colour. No entrance animations.
 import { ReactNode, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -14,6 +15,9 @@ import AssistantDrawer, { Explain } from "./Assistant";
 import GuideOverlay from "./Guide";
 import { DisasterSelector } from "./Disaster";
 import { RoleSwitcher } from "./Role";
+
+/** Section colours (no yellow): SEE = red, DECIDE = blue, ACT = green, PROVE = black. */
+export const GROUP_BG: Record<string, string> = { see: "bg-signal", decide: "bg-blue", act: "bg-go", prove: "bg-ink" };
 
 export const NAV = [
   { group: "see", items: [
@@ -46,7 +50,7 @@ function Ticker() {
     `synthetic scenario — ${s.scenario_name ?? "Kodagu, Karnataka"}`, "ai interprets / rules enforce / people decide",
   ];
   return (
-    <div className="bg-ink py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-bone">
+    <div className="border-b-2 border-ink bg-ink py-1.5 font-mono text-[12px] font-extrabold uppercase tracking-[0.1em] text-white">
       <Marquee>{items.map((t, i) => <span key={i} className="flex items-center gap-10 whitespace-nowrap">{t}<span className="text-signal">■</span></span>)}</Marquee>
     </div>
   );
@@ -56,14 +60,14 @@ function StatusPills() {
   const { t } = useTranslation();
   const live = useLiveStatus();
   const { health, error } = useHealth();
-  const dot = live === "live" ? "bg-mint-500" : live === "connecting" ? "bg-sun-500" : "bg-signal";
+  const dot = live === "live" ? "bg-go" : live === "connecting" ? "bg-tangerine-400" : "bg-signal";
   return (
     <div className="flex flex-wrap items-center gap-1.5">
       <span className="badge bg-bone" role="status">
         <span className="relative flex h-2 w-2"><span className={`absolute inset-0 rounded-full ${dot} ${live === "live" ? "animate-pulsering" : ""}`} /><span className={`relative h-2 w-2 rounded-full ${dot}`} /></span>
         {t(`status.${live}`)}
       </span>
-      {health && <span className={`badge ${health.mock_mode ? "bg-sun-300" : "bg-mint-300"}`}>{health.mock_mode ? t("status.mock") : t("status.keys")}</span>}
+      {health && <span className={`badge ${health.mock_mode ? "bg-cream" : "bg-mint-300"}`}>{health.mock_mode ? t("status.mock") : t("status.keys")}</span>}
       {health && <span className={`badge ${health.database_ok ? "bg-bone" : "bg-pink-300"}`}><Database size={10} aria-hidden />{health.database.split(" ")[0]}</span>}
       {error && <span className="badge bg-pink-300">{error}</span>}
     </div>
@@ -72,9 +76,9 @@ function StatusPills() {
 
 function Logo() {
   return (
-    <Link to="/about" className="block border-2 border-ink bg-ink px-3 pb-2 pt-1.5 text-bone" aria-label="About RELAY">
-      <p className="whitespace-nowrap font-sans text-[54px] font-bold uppercase leading-none tracking-[-0.06em]">Relay<span className="text-signal">.</span></p>
-      <p className="mt-1 font-mono text-[9.5px] uppercase tracking-[0.22em] text-bone/70">reports in / relief out</p>
+    <Link to="/about" className="block border-2 border-ink bg-signal px-3 pb-2 pt-2 text-white shadow-hard" aria-label="About RELAY">
+      <p className="whitespace-nowrap font-display text-[44px] uppercase leading-none tracking-[-0.04em]">Relay<span className="text-ink">.</span></p>
+      <p className="mt-1 font-mono text-[10px] font-extrabold uppercase tracking-[0.14em] text-white">reports in / relief out</p>
     </Link>
   );
 }
@@ -85,27 +89,27 @@ export default function Layout() {
   const loc = useLocation();
   let n = 0;
   const nav = (
-    <nav aria-label="Main" className="flex h-full flex-col gap-5 overflow-y-auto p-3">
+    <nav aria-label="Main" className="flex h-full flex-col gap-4 overflow-y-auto p-3">
       <Logo />
       {NAV.map((g, gi) => (
         <div key={g.group}>
-          <div className="mb-1 flex items-baseline gap-2 border-b-2 border-ink pb-1">
-            <span className="index">0{gi + 1}</span>
-            <span className="font-display text-[15px] font-extrabold uppercase tracking-tight">{t(`nav.${g.group}`)}</span>
+          <div className={`flex items-baseline gap-2 border-2 border-ink px-2 py-1 text-white ${GROUP_BG[g.group]}`}>
+            <span className="font-mono text-[11px] font-extrabold">0{gi + 1}</span>
+            <span className="font-display text-[16px] uppercase">{t(`nav.${g.group}`)}</span>
           </div>
-          <div>
+          <div className="border-x-2 border-b-2 border-ink bg-white">
             {g.items.map((it) => {
               n += 1;
               const num = String(n).padStart(2, "0");
               return (
                 <NavLink key={it.to} to={it.to} end={"end" in it} onClick={() => setOpen(false)}
-                  className={({ isActive }) => `group relative flex items-baseline gap-2.5 border-b border-ink/15 px-1 py-[7px] text-[13.5px] font-medium transition-colors ${isActive
-                    ? "bg-ink text-bone" : "text-ink/80 hover:bg-bone hover:text-ink"}`}>
+                  className={({ isActive }) => `group relative flex items-baseline gap-2.5 border-b-2 border-ink px-2 py-[6px] font-mono text-[12px] font-extrabold uppercase last:border-b-0 ${isActive
+                    ? "bg-ink text-white" : "text-ink hover:bg-cream"}`}>
                   {({ isActive }) => (
                     <>
-                      <span className={`font-mono text-[10px] ${isActive ? "text-signal" : "text-ink/40"}`}>{num}</span>
-                      <span className="truncate transition-transform duration-200 group-hover:translate-x-1">{t(`nav.${it.key}`)}</span>
-                      {isActive && <span className="ml-auto h-2 w-2 self-center bg-signal" />}
+                      <span className={`text-[10px] ${isActive ? "text-signal" : "text-ink/50"}`}>{num}</span>
+                      <span className="truncate">{t(`nav.${it.key}`)}</span>
+                      {isActive && <span className="ml-auto h-3 w-3 self-center border-2 border-white bg-signal" />}
                     </>
                   )}
                 </NavLink>
@@ -114,14 +118,14 @@ export default function Layout() {
           </div>
         </div>
       ))}
-      <p className="mt-auto border-2 border-dashed border-ink/40 p-2.5 text-[11px] leading-snug text-ink/60">
-        <span className="serif-i text-[15px] text-ink">Synthetic.</span> Places are real; every report, person and stock count here is invented.
+      <p className="mt-auto border-2 border-ink bg-ink p-2.5 font-mono text-[10.5px] font-bold uppercase leading-snug text-white">
+        <span className="text-signal">Synthetic.</span> Places are real; every report, person and stock count here is invented.
       </p>
     </nav>
   );
   return (
     <div className="flex min-h-screen">
-      <aside className="sticky top-0 hidden h-screen w-60 shrink-0 border-r-2 border-ink bg-paper lg:block">{nav}</aside>
+      <aside className="sticky top-0 hidden h-screen w-60 shrink-0 border-r-2 border-ink bg-cream lg:block">{nav}</aside>
       <AnimatePresence>
         {open && (
           <motion.div className="fixed inset-0 z-[1200] lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -134,7 +138,7 @@ export default function Layout() {
         )}
       </AnimatePresence>
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-[1000] border-b-2 border-ink bg-paper/95 backdrop-blur">
+        <header className="sticky top-0 z-[1000] border-b-2 border-ink bg-white">
           <Ticker />
           <div className="flex flex-wrap items-center gap-2 px-4 py-2">
             <button className="btn-ghost !p-1.5 lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu"><Menu size={16} /></button>
@@ -144,7 +148,7 @@ export default function Layout() {
             <div className="ml-auto flex items-center border-2 border-ink bg-bone" role="group" aria-label={t("common.language")}>
               {UI_LANGS.map((l) => (
                 <button key={l.code} onClick={() => setUiLang(l.code)} aria-pressed={i18n.language === l.code}
-                  className={`border-r border-ink px-2.5 py-1 font-mono text-[11px] font-bold last:border-r-0 ${i18n.language === l.code ? "bg-ink text-bone" : "text-ink hover:bg-cream"}`}>{l.label}</button>
+                  className={`border-r-2 border-ink px-2.5 py-1 font-mono text-[12px] font-extrabold last:border-r-0 ${i18n.language === l.code ? "bg-blue text-white" : "text-ink hover:bg-cream"}`}>{l.label}</button>
               ))}
             </div>
           </div>
@@ -159,32 +163,31 @@ export default function Layout() {
   );
 }
 
-/** Page header: index number, big type, hairline grid, and a solid black index block on the right. */
+/** Page header: huge uppercase title on white, and a giant number block in the section's colour. */
 export function PageHeader({ title, sub, children, kicker, explain, section }: { title: string; sub?: string; children?: ReactNode; kicker?: string; tone?: string; explain?: ReactNode; section?: string }) {
   const loc = useLocation();
-  const idx = NAV.flatMap((g) => g.items as readonly { to: string }[]).findIndex((it) => it.to === loc.pathname);
+  const flat = NAV.flatMap((g) => (g.items as readonly { to: string }[]).map((it) => ({ to: it.to, group: g.group })));
+  const idx = flat.findIndex((it) => it.to === loc.pathname);
   const num = String(idx >= 0 ? idx + 1 : 0).padStart(2, "0");
+  const bg = GROUP_BG[idx >= 0 ? flat[idx].group : "prove"];
   return (
-    <div className="relative mb-6 grid border-2 border-ink bg-bone shadow-hard sm:grid-cols-[1fr_200px]">
-      <div className="relative">
-        <div className="pat-grid absolute inset-0" aria-hidden />
-        <div className="relative flex flex-wrap items-end justify-between gap-4 p-5 sm:p-7">
-          <div className="min-w-0 max-w-3xl">
-            <div className="flex flex-wrap items-center gap-2">
-              {kicker && <span className="sticker bg-bone">{kicker}</span>}
-              {section && <Explain id={section} />}
-              {explain}
-            </div>
-            <h1 className="mega mt-4 text-[42px] sm:text-[60px]">{title}<span className="text-signal">.</span></h1>
-            {sub && <p className="mt-3 max-w-2xl border-l-2 border-ink pl-3 text-[14.5px] text-ink/75">{sub}</p>}
+    <div className="relative mb-6 grid border-2 border-ink bg-white shadow-hard-lg sm:grid-cols-[1fr_220px]">
+      <div className="flex flex-wrap items-end justify-between gap-4 p-5 sm:p-7">
+        <div className="min-w-0 max-w-3xl">
+          <div className="flex flex-wrap items-center gap-2">
+            {kicker && <span className="sticker bg-ink text-white">{kicker}</span>}
+            {section && <Explain id={section} />}
+            {explain}
           </div>
-          {children && <div className="relative flex flex-wrap gap-2">{children}</div>}
+          <h1 className="mega mt-4 text-[40px] sm:text-[58px]">{title}</h1>
+          {sub && <p className="mt-3 max-w-2xl border-2 border-ink bg-cream px-3 py-2 text-[14px] font-medium">{sub}</p>}
         </div>
+        {children && <div className="relative flex flex-wrap gap-2">{children}</div>}
       </div>
-      <div className="hidden flex-col justify-between border-l-2 border-ink bg-ink p-4 text-bone sm:flex" aria-hidden>
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-bone/60">relay / index</span>
-        <span className="font-display text-[88px] font-extrabold leading-none tracking-[-0.05em]">{num}</span>
-        <span className="h-3 w-full bg-signal" />
+      <div className={`hidden flex-col justify-between border-l-2 border-ink p-4 text-white sm:flex ${bg}`} aria-hidden>
+        <span className="font-mono text-[11px] font-extrabold uppercase tracking-[0.14em]">relay / {num}</span>
+        <span className="font-display text-[110px] leading-none tracking-[-0.06em]">{num}</span>
+        <span className="h-4 w-full border-2 border-ink bg-white" />
       </div>
     </div>
   );

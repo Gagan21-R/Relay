@@ -1,72 +1,59 @@
 /** @type {import('tailwindcss').Config} */
-// RELAY design system v4 — brutalist · minimal.
-// Bone paper, black ink, ONE signal colour (vermilion), green for approve and red for reject, square corners, hard
-// offset shadows, a visible grid and monospace structure. The colour names from the earlier system are kept as ROLES so
-// every page restyles at once; each role maps to a restrained tone:
-//   brand → ink (primary actions)      pink → signal vermilion (danger, P1, alerts)
-//   lime → bone highlight / done       sun → sand (waiting, attention)      cobalt → dream lilac (info, maps)
-//   tangerine → rust (warning)         mint → sage (ok, confirmed)
+// RELAY design system v5 — BRUTALISM.
+// Raw and loud: cream paper, pure black, thick 3 px borders on everything, heavy offset shadows, square corners, flat
+// blocks of red / blue / green, uppercase Archivo Black headings, monospace labels, structure left visible. No yellow
+// anywhere (anything that was yellow is cream / beige / white). The colour names from earlier systems are kept as ROLES so
+// every page restyles at once:
+//   brand → black (primary)          pink → RED (danger, P1, alerts)          lime → cream (neutral highlight)
+//   cobalt → BLUE (info, channels)   mint → GREEN (ok, confirmed)             tangerine → ORANGE (warning)
+//   sun → beige (attention — replaces yellow)
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        paper: "#EFECE6",
-        cream: "#E7E3DB",
-        bone: "#F6F4EF",
-        white: "#F6F4EF",
-        ink: "#0B0B0C",
-        signal: "#FF3D1F",
-        go: "#15803D",
-        stop: "#DC2626",
-        dusk: { 1: "#C9C3FF", 2: "#F3C8D8", 3: "#FFD9B8" },
-        brand: { 50: "#F4F4F4", 100: "#E9E9E9", 200: "#D6D6D6", 300: "#BDBDBD", 400: "#4A4A4A", 500: "#0B0B0C", 600: "#FF3D1F", 700: "#1A1A1A", 800: "#111111", 900: "#000000" },
-        pink: { 200: "#FFD6CE", 300: "#FFB3A6", 400: "#FF6B52", 500: "#FF3D1F" },
-        lime: { 200: "#F6F4EF", 300: "#F2EFE8", 400: "#E2DED4", 500: "#CFC9BC" },
-        tangerine: { 300: "#E9B99A", 400: "#D9895B", 500: "#B85A27" },
-        cobalt: { 200: "#E3E0FF", 300: "#C9C3FF", 400: "#8F86F0", 500: "#5A4FD6" },
-        sun: { 200: "#F5EDDA", 300: "#EEE2C2", 400: "#E2CF98", 500: "#C9A94C" },
-        mint: { 200: "#E1EBE1", 300: "#C7DAC7", 400: "#9FBF9F", 500: "#5F8F64" },
-        p1: "#FF3D1F", p2: "#E07A3A", p3: "#C9A94C", p4: "#5A4FD6",
+        paper: "#F4EEE2",
+        cream: "#EDE4D3",
+        bone: "#FFFFFF",
+        white: "#FFFFFF",
+        ink: "#000000",
+        signal: "#FF2D00",
+        go: "#00A33A",
+        stop: "#E10600",
+        blue: "#1F3BFF",
+        brand: { 50: "#F2F2F2", 100: "#E6E6E6", 200: "#D0D0D0", 300: "#B5B5B5", 400: "#333333", 500: "#000000", 600: "#FF2D00", 700: "#111111", 800: "#0A0A0A", 900: "#000000" },
+        pink: { 200: "#FFD3C9", 300: "#FF9C85", 400: "#FF5A36", 500: "#FF2D00" },
+        lime: { 200: "#FFFFFF", 300: "#F8F3E9", 400: "#EDE4D3", 500: "#DCCFB6" },
+        tangerine: { 300: "#FFB27F", 400: "#FF7A1F", 500: "#E25B00" },
+        cobalt: { 200: "#DDE3FF", 300: "#A9B6FF", 400: "#5A72FF", 500: "#1F3BFF" },
+        sun: { 200: "#FBF7EF", 300: "#F1E8D6", 400: "#E6D8BC", 500: "#CDBB98" },
+        mint: { 200: "#D4F5DF", 300: "#8FE3AE", 400: "#34C46A", 500: "#00A33A" },
+        p1: "#FF2D00", p2: "#FF7A1F", p3: "#E6D8BC", p4: "#1F3BFF",
       },
       fontFamily: {
-        display: ["'Syne'", "'Noto Sans Kannada'", "'Noto Sans Devanagari'", "'Noto Sans Malayalam'", "system-ui", "sans-serif"],
+        display: ["'Archivo Black'", "'Noto Sans Kannada'", "'Noto Sans Devanagari'", "'Noto Sans Malayalam'", "Arial Black", "sans-serif"],
         sans: ["'Space Grotesk'", "'Noto Sans'", "'Noto Sans Kannada'", "'Noto Sans Devanagari'", "'Noto Sans Malayalam'", "'Noto Sans Tamil'", "'Noto Sans Telugu'", "'Noto Sans Bengali'", "system-ui", "sans-serif"],
-        serif: ["'Instrument Serif'", "Georgia", "serif"],
+        serif: ["'Archivo Black'", "Arial Black", "sans-serif"],
         mono: ["'JetBrains Mono'", "ui-monospace", "monospace"],
       },
-      // brutalism: square everything; only true circles (dots, the moon, the eye) stay round
-      borderRadius: { none: "0", sm: "0", DEFAULT: "0", md: "0", lg: "0", xl: "0", "2xl": "0", "3xl": "0", full: "9999px",
-        blob: "42% 58% 63% 37% / 41% 44% 56% 59%" },
+      borderWidth: { DEFAULT: "2px", 2: "3px", 4: "5px" },
+      borderRadius: { none: "0", sm: "0", DEFAULT: "0", md: "0", lg: "0", xl: "0", "2xl": "0", "3xl": "0", full: "9999px" },
       boxShadow: {
-        hard: "5px 5px 0 0 #0B0B0C",
-        "hard-sm": "3px 3px 0 0 #0B0B0C",
-        "hard-lg": "10px 10px 0 0 #0B0B0C",
-        "hard-pink": "5px 5px 0 0 #FF3D1F",
-        "hard-lime": "5px 5px 0 0 #0B0B0C",
-        "hard-violet": "4px 4px 0 0 #FF3D1F",
+        hard: "6px 6px 0 0 #000000",
+        "hard-sm": "4px 4px 0 0 #000000",
+        "hard-lg": "12px 12px 0 0 #000000",
+        "hard-pink": "6px 6px 0 0 #FF2D00",
+        "hard-lime": "6px 6px 0 0 #000000",
+        "hard-violet": "5px 5px 0 0 #1F3BFF",
       },
       keyframes: {
         marquee: { from: { transform: "translateX(0)" }, to: { transform: "translateX(-50%)" } },
-        floaty: { "0%,100%": { transform: "translateY(0) rotate(0deg)" }, "50%": { transform: "translateY(-16px) rotate(2deg)" } },
-        levitate: { "0%,100%": { transform: "translateY(0)" }, "50%": { transform: "translateY(-22px)" } },
-        wobble: { "0%,100%": { borderRadius: "42% 58% 63% 37% / 41% 44% 56% 59%" }, "50%": { borderRadius: "58% 42% 37% 63% / 56% 59% 41% 44%" } },
-        drip: { "0%,100%": { transform: "scaleY(1)" }, "50%": { transform: "scaleY(1.18)" } },
-        drift: { from: { transform: "translateX(-10%)" }, to: { transform: "translateX(110%)" } },
         pulsering: { "0%": { transform: "scale(.6)", opacity: ".9" }, "100%": { transform: "scale(2.4)", opacity: "0" } },
-        blink: { "0%,92%,100%": { transform: "scaleY(1)" }, "95%": { transform: "scaleY(0.08)" } },
       },
       animation: {
         marquee: "marquee 42s linear infinite",
         "marquee-fast": "marquee 20s linear infinite",
-        floaty: "floaty 8s ease-in-out infinite",
-        levitate: "levitate 6s ease-in-out infinite",
-        wobble: "wobble 11s ease-in-out infinite",
-        drip: "drip 5s ease-in-out infinite",
-        drift: "drift 60s linear infinite",
-        spinslow: "spin 40s linear infinite",
         pulsering: "pulsering 1.8s ease-out infinite",
-        blink: "blink 6s ease-in-out infinite",
       },
     },
   },

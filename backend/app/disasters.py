@@ -54,7 +54,7 @@ DISASTERS: dict[str, dict] = {
                             "Fire lines and water tankers for the forest department", "Close roads crossing the fire perimeter"],
     },
     "drought": {
-        "name": "Drought", "gdacs": "DR", "overlay": {"label": "Drought-affected area", "colour": "#C9A227", "fill": 0.25},
+        "name": "Drought", "gdacs": "DR", "overlay": {"label": "Drought-affected area", "colour": "#B5835A", "fill": 0.25},
         "indicators": ["drought", "no water", "wells dried", "crop failed", "fodder", "tanker", "सूखा", "कुएं सूख", "ಬರ", "ಬರಗಾಲ", "வறட்சி",
                        "కరువు", "വരൾച്ച", "খরা", "ମରୁଡ଼ି", "દુષ્કાળ", "ਸੋਕਾ", "खडेरी", "sukha", "bara", "paani nahi"],
         "life_threat": {"water": 0.85, "food": 0.65, "medical": 0.7, "rescue": 0.5, "shelter": 0.3, "infrastructure": 0.3},

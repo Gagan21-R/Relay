@@ -7,14 +7,14 @@ import { Empty, Panel, simTime } from "../components/ui";
 import { useApi } from "../hooks/useApi";
 
 export const AGENT_META: Record<string, { label: string; colour: string; role: string }> = {
-  intake: { label: "Intake", colour: "#F6F4EF", role: "reads every report" },
-  trust: { label: "Trust", colour: "#E2CF98", role: "duplicates, credibility" },
-  triage: { label: "Triage", colour: "#C9C3FF", role: "who first" },
-  resource: { label: "Resource", colour: "#9FBF9F", role: "stock, shortages" },
-  blackout: { label: "Blackout", colour: "#0B0B0C", role: "silent places" },
-  monitor: { label: "Monitor", colour: "#D9895B", role: "what changed" },
-  coordination: { label: "Coordination", colour: "#5A4FD6", role: "plans, routes, people" },
-  duty_officer: { label: "Duty Officer", colour: "#FF3D1F", role: "a person decides" },
+  intake: { label: "Intake", colour: "#FFFFFF", role: "reads every report" },
+  trust: { label: "Trust", colour: "#E6D8BC", role: "duplicates, credibility" },
+  triage: { label: "Triage", colour: "#A9B6FF", role: "who first" },
+  resource: { label: "Resource", colour: "#34C46A", role: "stock, shortages" },
+  blackout: { label: "Blackout", colour: "#000000", role: "silent places" },
+  monitor: { label: "Monitor", colour: "#FF7A1F", role: "what changed" },
+  coordination: { label: "Coordination", colour: "#1F3BFF", role: "plans, routes, people" },
+  duty_officer: { label: "Duty Officer", colour: "#FF2D00", role: "a person decides" },
 };
 const ORDER = ["intake", "trust", "triage", "monitor", "coordination", "resource", "blackout", "duty_officer"];
 const PERF: Record<string, string> = { inform: "bg-white", request: "bg-sun-300", propose: "bg-lime-300", accept: "bg-mint-300",
@@ -28,7 +28,7 @@ function Network({ edges, active }: { edges: any[]; active: Set<string> }) {
   const max = Math.max(1, ...pairs.values());
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label="Agent communication network">
-      <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#0B0B0C" /></marker></defs>
+      <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#000000" /></marker></defs>
       {[...pairs].map(([k, n]) => {
         const [a, b] = k.split(">");
         if (!pos[a] || !pos[b]) return null;
@@ -39,8 +39,8 @@ function Network({ edges, active }: { edges: any[]; active: Set<string> }) {
         const hot = active.has(k);
         return (
           <g key={k}>
-            <line x1={sx} y1={sy} x2={ex} y2={ey} stroke={hot ? "#FF3D1F" : "#0B0B0C"} strokeOpacity={hot ? 1 : 0.35} strokeWidth={1 + 4 * (n / max)} markerEnd="url(#arr)" />
-            <text x={(sx + ex) / 2 + nx} y={(sy + ey) / 2 + ny} fontSize="10" fontWeight="800" textAnchor="middle" fill="#0B0B0C">{n}</text>
+            <line x1={sx} y1={sy} x2={ex} y2={ey} stroke={hot ? "#FF2D00" : "#000000"} strokeOpacity={hot ? 1 : 0.35} strokeWidth={1 + 4 * (n / max)} markerEnd="url(#arr)" />
+            <text x={(sx + ex) / 2 + nx} y={(sy + ey) / 2 + ny} fontSize="10" fontWeight="800" textAnchor="middle" fill="#000000">{n}</text>
           </g>);
       })}
       {ORDER.map((a) => {
@@ -48,9 +48,9 @@ function Network({ edges, active }: { edges: any[]; active: Set<string> }) {
         const m = AGENT_META[a];
         return (
           <g key={a}>
-            <circle cx={x} cy={y} r={30} fill={m.colour} stroke="#0B0B0C" strokeWidth={2.5} />
-            <text x={x} y={y + 3} fontSize="10" fontWeight="900" textAnchor="middle" fill={a === "blackout" || a === "duty_officer" || a === "coordination" ? "#fff" : "#0B0B0C"}>{m.label}</text>
-            <text x={x} y={y + 44} fontSize="9" textAnchor="middle" fill="#0B0B0C" opacity={0.6}>{m.role}</text>
+            <circle cx={x} cy={y} r={30} fill={m.colour} stroke="#000000" strokeWidth={2.5} />
+            <text x={x} y={y + 3} fontSize="10" fontWeight="900" textAnchor="middle" fill={a === "blackout" || a === "duty_officer" || a === "coordination" ? "#fff" : "#000000"}>{m.label}</text>
+            <text x={x} y={y + 44} fontSize="9" textAnchor="middle" fill="#000000" opacity={0.6}>{m.role}</text>
           </g>);
       })}
     </svg>

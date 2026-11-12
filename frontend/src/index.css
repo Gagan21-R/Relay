@@ -2,66 +2,66 @@
 @tailwind components;
 @tailwind utilities;
 
-/* RELAY design system v4 — brutalist · minimal.
-   Brutalist: the grid is visible, corners are square, rules are thick, shadows are hard, structure is labelled in mono.
-   Minimal: bone paper, black ink, one signal colour; colour only where it means something (approve = green,
-   reject = red, priority, status). No entrance animations; the live ticker is the only moving part. */
+/* RELAY design system v5 — BRUTALISM.
+   Raw structure on show: cream paper with a hard grid, pure black 3 px borders on everything, heavy offset shadows,
+   flat blocks of red, blue and green, uppercase Archivo Black headings, monospace labels, hover = shove + invert.
+   Approve / confirm = green, reject / refute / fail = red. No yellow anywhere. No entrance animations. */
 @layer base {
-  html { background: #EFECE6; }
+  html { background: #F4EEE2; }
   body {
     @apply bg-paper font-sans text-ink antialiased;
     background-image:
-      linear-gradient(rgba(11, 11, 12, 0.055) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(11, 11, 12, 0.055) 1px, transparent 1px);
-    background-size: 64px 64px;
+      linear-gradient(rgba(0, 0, 0, 0.09) 1.5px, transparent 1.5px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.09) 1.5px, transparent 1.5px);
+    background-size: 40px 40px;
   }
-  h1, h2, h3 { @apply font-display tracking-tight; }
-  ::selection { background: #FF3D1F; color: #F6F4EF; }
+  h1, h2, h3 { @apply font-display uppercase tracking-tight; }
+  ::selection { background: #1F3BFF; color: #FFFFFF; }
 }
 
 @layer components {
-  .card { @apply border-2 border-ink bg-bone shadow-hard; }
-  .card-flat { @apply border-2 border-ink bg-bone; }
-  .btn { @apply inline-flex select-none items-center gap-1.5 border-2 border-ink px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-[0.06em] transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none; }
+  .card { @apply border-2 border-ink bg-white shadow-hard; }
+  .card-flat { @apply border-2 border-ink bg-white; }
+  .btn { @apply inline-flex select-none items-center gap-1.5 border-2 border-ink px-3 py-1.5 font-mono text-[12px] font-extrabold uppercase tracking-[0.04em] transition-transform duration-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none; }
   .btn:not(:disabled):hover { transform: translate(-3px, -3px); }
-  .btn:not(:disabled):active { transform: translate(3px, 3px); box-shadow: none; }
-  .btn-primary { @apply btn bg-ink text-bone shadow-hard-pink hover:shadow-[8px_8px_0_0_#FF3D1F]; }
-  .btn-ghost { @apply btn bg-bone text-ink shadow-hard-sm hover:shadow-hard; }
-  .btn-pop { @apply btn bg-signal text-bone shadow-hard hover:shadow-hard-lg; }
+  .btn:not(:disabled):active { transform: translate(4px, 4px); box-shadow: none; }
+  .btn-primary { @apply btn bg-ink text-white shadow-hard-pink; }
+  .btn-ghost { @apply btn bg-white text-ink shadow-hard-sm hover:bg-ink hover:text-white; }
+  .btn-pop { @apply btn bg-blue text-white shadow-hard; }
   .btn-danger { @apply btn bg-stop text-white shadow-hard-sm; }
   /* decisions: approve / confirm = green, reject / refute / fail = red — everywhere */
-  .btn-approve { @apply btn bg-go text-white shadow-hard hover:shadow-hard-lg; }
-  .btn-reject { @apply btn bg-stop text-white shadow-hard hover:shadow-hard-lg; }
-  .badge { @apply inline-flex items-center gap-1 border border-ink px-1.5 py-[1px] font-mono text-[10.5px] font-bold uppercase leading-4 tracking-[0.04em]; }
-  .sticker { @apply inline-flex items-center gap-1.5 border-2 border-ink px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] shadow-hard-sm; }
-  .input { @apply w-full border-2 border-ink bg-bone px-3 py-2 text-sm font-medium outline-none transition-shadow focus:shadow-hard-violet; }
-  .mega { @apply font-display font-extrabold leading-[0.86] tracking-[-0.045em]; }
-  .serif-i { @apply font-serif italic font-normal tracking-normal; }
-  .label { @apply font-mono text-[10.5px] font-bold uppercase tracking-[0.18em] text-ink/55; }
-  .index { @apply font-mono text-[10.5px] font-bold tracking-[0.12em] text-ink/45; }
-  .rule { @apply h-[2px] w-full bg-ink; }
+  .btn-approve { @apply btn bg-go text-white shadow-hard; }
+  .btn-reject { @apply btn bg-stop text-white shadow-hard; }
+  .badge { @apply inline-flex items-center gap-1 border-2 border-ink px-1.5 py-[1px] font-mono text-[10.5px] font-extrabold uppercase leading-4; }
+  .sticker { @apply inline-flex items-center gap-1.5 border-2 border-ink px-2.5 py-1 font-mono text-[11px] font-extrabold uppercase tracking-[0.1em] shadow-hard-sm; }
+  .input { @apply w-full border-2 border-ink bg-white px-3 py-2 text-sm font-medium outline-none focus:shadow-hard-violet; }
+  .mega { @apply font-display uppercase leading-[0.9] tracking-[-0.03em]; }
+  .serif-i { @apply font-display not-italic; }
+  .label { @apply font-mono text-[11px] font-extrabold uppercase tracking-[0.14em] text-ink; }
+  .index { @apply font-mono text-[11px] font-extrabold tracking-[0.1em] text-ink; }
+  .rule { @apply h-[3px] w-full bg-ink; }
 }
 
-.stroke-text { -webkit-text-stroke: 1.6px #0B0B0C; color: transparent; }
-.text-stroke { -webkit-text-stroke: 1.6px #0B0B0C; color: transparent; }
+.stroke-text { -webkit-text-stroke: 2px #000; color: transparent; }
+.text-stroke { -webkit-text-stroke: 2px #000; color: transparent; }
 
 /* brutalist pattern fills (kept for old call sites, toned down) */
-.pat-dots { background-image: radial-gradient(#0B0B0C 1px, transparent 1.2px); background-size: 14px 14px; }
-.pat-grid { background-image: linear-gradient(#0B0B0C14 1px, transparent 1px), linear-gradient(90deg, #0B0B0C14 1px, transparent 1px); background-size: 24px 24px; }
-.pat-stripes { background-image: repeating-linear-gradient(-45deg, #0B0B0C 0 1px, transparent 1px 9px); }
-.pat-zigzag { background-image: repeating-linear-gradient(90deg, #0B0B0C 0 1px, transparent 1px 12px); }
-.pat-checker { background-image: conic-gradient(#0B0B0C 25%, transparent 0 50%, #0B0B0C 0 75%, transparent 0); background-size: 12px 12px; }
+.pat-dots { background-image: radial-gradient(#000000 1px, transparent 1.2px); background-size: 14px 14px; }
+.pat-grid { background-image: linear-gradient(#00000014 1px, transparent 1px), linear-gradient(90deg, #00000014 1px, transparent 1px); background-size: 24px 24px; }
+.pat-stripes { background-image: repeating-linear-gradient(-45deg, #000000 0 1px, transparent 1px 9px); }
+.pat-zigzag { background-image: repeating-linear-gradient(90deg, #000000 0 1px, transparent 1px 12px); }
+.pat-checker { background-image: conic-gradient(#000000 25%, transparent 0 50%, #000000 0 75%, transparent 0); background-size: 12px 12px; }
 .hatch-red { background-image: repeating-linear-gradient(45deg, rgba(255, 61, 31, .55) 0 3px, transparent 3px 9px); }
 
 .marquee-mask { mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
 .grain::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .16; mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.6'/></svg>"); }
 
-:focus-visible { outline: 3px solid #FF3D1F; outline-offset: 2px; }
+:focus-visible { outline: 4px solid #1F3BFF; outline-offset: 2px; }
 .leaflet-container { font: inherit; background: #AAD3DF; }
-.leaflet-container a.leaflet-popup-close-button { color: #0B0B0C; }
-.leaflet-popup-content-wrapper, .leaflet-popup-tip { border-radius: 0 !important; border: 2px solid #0B0B0C; box-shadow: 5px 5px 0 #0B0B0C !important; background: #F6F4EF; }
-.leaflet-tooltip { border-radius: 0 !important; border: 1.5px solid #0B0B0C !important; box-shadow: 3px 3px 0 #0B0B0C !important; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.leaflet-container a.leaflet-popup-close-button { color: #000000; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { border-radius: 0 !important; border: 2px solid #000000; box-shadow: 5px 5px 0 #000000 !important; background: #FFFFFF; }
+.leaflet-tooltip { border-radius: 0 !important; border: 1.5px solid #000000 !important; box-shadow: 3px 3px 0 #000000 !important; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
 .leaflet-bar a { border-radius: 0 !important; }
 .relay-pin { background: transparent; border: 0; }
 
@@ -81,5 +81,5 @@
 
 
 /* hover: underline that grows, brutalist link */
-.link-grow { background: linear-gradient(#FF3D1F, #FF3D1F) 0 100% / 0 2px no-repeat; transition: background-size .25s; }
+.link-grow { background: linear-gradient(#FF2D00, #FF2D00) 0 100% / 0 2px no-repeat; transition: background-size .25s; }
 .link-grow:hover { background-size: 100% 2px; }

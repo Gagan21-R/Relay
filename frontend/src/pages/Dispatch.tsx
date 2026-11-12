@@ -19,7 +19,7 @@ const COLS = [
   { k: "confirmed", label: "Confirmed by Duty Officer", tone: "bg-mint-300" },
   { k: "failed", label: "Failed / cancelled", tone: "bg-pink-300" },
 ];
-const ROUTE_COLOR: Record<string, string> = { assigned: "#C9A94C", dispatched: "#5A4FD6", delivered: "#B85A27", confirmed: "#5F8F64", failed: "#FF3D1F" };
+const ROUTE_COLOR: Record<string, string> = { assigned: "#E6D8BC", dispatched: "#1F3BFF", delivered: "#E25B00", confirmed: "#00A33A", failed: "#FF2D00" };
 
 export function SafetyBadge({ label }: { label?: string }) {
   if (!label) return null;

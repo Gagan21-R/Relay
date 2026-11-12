@@ -1,5 +1,5 @@
-// The RELAY landing page, built as a creative-agency portfolio in a brutalist · minimal style: a raw grid, index
-// numbers, thick rules, bone paper, black ink and one signal colour. No entrance animations. Sections: hero ·
+// The RELAY landing page, built as a creative-agency portfolio in a BRUTALIST style: raw grid, giant uppercase type,
+// thick black borders, heavy shadows, flat red / blue / green / black blocks, no yellow. No entrance animations. Sections: hero ·
 // manifesto · live index · case studies · capabilities · team · process · research · contact (files a real report) ·
 // footer.
 import { useState } from "react";
@@ -116,10 +116,10 @@ export default function About() {
             <span className="flex items-start gap-2">Explain<Explain id="about.page" /></span>
           </div>
           <div className="py-10">
-            <h1 className="mega text-[52px] sm:text-[92px] xl:text-[112px]">Reports in.<br />Relief out<span className="text-signal">.</span></h1>
-            <p className="mt-8 max-w-xl border-l-2 border-ink pl-4 text-lg leading-relaxed">
+            <h1 className="mega text-[50px] sm:text-[86px] xl:text-[104px]">Reports in.<br /><span className="bg-signal px-2 text-white">Relief</span> out.</h1>
+            <p className="mt-8 max-w-xl border-2 border-ink bg-white p-4 text-lg font-medium leading-relaxed shadow-hard">
               Someone texts <span className="border-2 border-ink bg-bone px-1.5 font-bold">ನೀರು</span> and{" "}
-              <span className="border-2 border-ink bg-ink px-1.5 font-bold text-bone">help madi</span>. Seven agents read it, check it, rank it,
+              <span className="border-2 border-ink bg-blue px-1.5 font-bold text-white">help madi</span>. Seven agents read it, check it, rank it,
               negotiate the stock and the route — and then a person decides.
             </p>
           </div>
@@ -151,7 +151,7 @@ export default function About() {
 
       {/* LANGUAGES */}
       <div className="flex flex-wrap border-b-2 border-ink bg-bone">
-        {LANGS.map((w) => <span key={w} className="border-r-2 border-ink px-4 py-3 font-display text-xl font-extrabold">{w}</span>)}
+        {LANGS.map((w) => <span key={w} className="border-r-2 border-ink bg-white px-4 py-3 font-display text-xl odd:bg-cream">{w}</span>)}
         <span className="flex-1 bg-ink px-4 py-3 text-right font-mono text-[10.5px] uppercase tracking-[0.18em] text-bone/70">19 languages configured · support levels declared</span>
       </div>
 
@@ -161,11 +161,11 @@ export default function About() {
         <div className="p-5 sm:p-10">
           <p className="font-display text-[30px] font-extrabold leading-[1.05] tracking-tight sm:text-[52px]">
             We do not trust the loudest report. We trust evidence, we listen for the silence, and we never let a machine{" "}
-            <span className="bg-ink px-2 text-bone">press send</span><span className="text-signal">.</span></p>
+            <span className="bg-signal px-2 text-white">press send</span>.</p>
           <div className="mt-10 grid border-2 border-ink sm:grid-cols-3">
             {[["AI interprets", "reads, translates, fills a strict schema"], ["Rules enforce", "priorities, routes, quantities, permissions"], ["People decide", "approve, verify, confirm, send"]].map(([a, b], i) => (
-              <div key={a} className={`p-5 ${i < 2 ? "border-b-2 border-ink sm:border-b-0 sm:border-r-2" : ""}`}>
-                <p className="font-mono text-[10px] text-signal">0{i + 1}</p><p className="mt-2 font-display text-2xl font-extrabold">{a}</p><p className="mt-1 text-sm text-ink/60">{b}</p>
+              <div key={a} className={`p-5 text-white ${["bg-blue", "bg-ink", "bg-go"][i]} ${i < 2 ? "border-b-2 border-ink sm:border-b-0 sm:border-r-2" : ""}`}>
+                <p className="font-mono text-[11px] font-extrabold">0{i + 1}</p><p className="mt-2 font-display text-2xl uppercase">{a}</p><p className="mt-1 font-mono text-[12px] uppercase">{b}</p>
               </div>))}
           </div>
         </div>
@@ -175,11 +175,11 @@ export default function About() {
       <section className="border-b-2 border-ink">
         <div className="grid border-b-2 border-ink lg:grid-cols-[280px_1fr]">
           <div className="border-b-2 border-ink p-5 sm:p-10 lg:border-b-0 lg:border-r-2"><p className="label">003 — Selected work</p><p className="mt-2 text-sm text-ink/60">Every case opens the live page where it happens.</p></div>
-          <div className="p-5 sm:p-10"><h2 className="mega text-[48px] sm:text-[88px]">Case studies<span className="text-signal">.</span></h2></div>
+          <div className="p-5 sm:p-10"><h2 className="mega text-[48px] sm:text-[84px]">Case studies.</h2></div>
         </div>
         {CASES.map((c) => (
           <Link key={c.n} to={c.to} className="group grid grid-cols-[56px_1fr_auto] items-start gap-4 border-b-2 border-ink px-2 py-6 hover:bg-ink hover:text-bone sm:grid-cols-[80px_1.2fr_1fr_auto] sm:px-4">
-            <span className="font-mono text-sm text-ink/40 group-hover:text-signal">{c.n}</span>
+            <span className="border-2 border-ink bg-signal px-1 text-center font-mono text-sm font-extrabold text-white">{c.n}</span>
             <div><h3 className="mega text-[30px] sm:text-[44px]">{c.title}</h3><p className="mt-1 text-lg opacity-75">{c.claim}</p></div>
             <div className="hidden sm:block">
               <p className="text-sm opacity-75">{c.body}</p>
@@ -194,10 +194,10 @@ export default function About() {
         <div className="flex items-baseline justify-between border-b-2 border-ink px-5 py-3 sm:px-10"><p className="label">004 — Capabilities</p><Link to="/workflow" className="link-grow font-mono text-[11px] uppercase">full workflow →</Link></div>
         <div className="grid sm:grid-cols-2 xl:grid-cols-3">
           {CAPS.map(([t, d], i) => (
-            <div key={t} className="border-b-2 border-r-2 border-ink p-6">
-              <p className="font-mono text-[10px] text-ink/40">{String(i + 1).padStart(2, "0")}</p>
-              <p className="mt-3 font-display text-[26px] font-extrabold leading-tight">{t}</p>
-              <p className="mt-2 max-w-sm text-sm text-ink/65">{d}</p>
+            <div key={t} className={`border-b-2 border-r-2 border-ink p-6 ${i % 2 ? "bg-cream" : "bg-white"} hover:bg-ink hover:text-white`}>
+              <p className="inline-block border-2 border-ink bg-signal px-1.5 font-mono text-[11px] font-extrabold text-white">{String(i + 1).padStart(2, "0")}</p>
+              <p className="mt-3 font-display text-[24px] uppercase leading-tight">{t}</p>
+              <p className="mt-2 max-w-sm text-sm font-medium">{d}</p>
             </div>))}
         </div>
       </section>
@@ -206,14 +206,14 @@ export default function About() {
       <section className="border-b-2 border-ink">
         <div className="grid border-b-2 border-ink lg:grid-cols-[280px_1fr]">
           <div className="border-b-2 border-ink p-5 sm:p-10 lg:border-b-0 lg:border-r-2"><p className="label">005 — The team</p><p className="mt-2 text-sm text-ink/60">Seven agents who talk to each other, and one person who decides. <Link to="/agents" className="link-grow font-bold">See them talk →</Link></p></div>
-          <div className="p-5 sm:p-10"><h2 className="mega text-[48px] sm:text-[88px]">Seven agents.<br />One person decides<span className="text-signal">.</span></h2></div>
+          <div className="p-5 sm:p-10"><h2 className="mega text-[44px] sm:text-[76px]">Seven agents.<br /><span className="bg-signal px-2 text-white">One person</span> decides.</h2></div>
         </div>
         <div className="grid sm:grid-cols-2 xl:grid-cols-4">
           {TEAM.map((m, i) => (
-            <div key={m.name} className={`border-b-2 border-r-2 border-ink ${m.human ? "bg-ink text-bone" : "bg-bone"}`}>
-              <div className={`flex h-36 items-end justify-between border-b-2 p-4 ${m.human ? "border-bone/20" : "border-ink"}`}>
-                <span className="font-display text-[96px] font-extrabold leading-[0.8] tracking-[-0.06em]">{m.name[0]}</span>
-                <span className={`font-mono text-[11px] ${m.human ? "text-signal" : "text-ink/40"}`}>{String(i + 1).padStart(2, "0")}</span>
+            <div key={m.name} className="border-b-2 border-r-2 border-ink bg-white">
+              <div className={`flex h-36 items-end justify-between border-b-2 border-ink p-4 text-white ${m.human ? "bg-signal" : ["bg-ink", "bg-blue", "bg-go", "bg-ink"][i % 4]}`}>
+                <span className="font-display text-[96px] leading-[0.8] tracking-[-0.06em]">{m.name[0]}</span>
+                <span className="font-mono text-[12px] font-extrabold">{String(i + 1).padStart(2, "0")}</span>
               </div>
               <div className="p-4">
                 <p className="font-mono text-[10px] uppercase tracking-[0.16em] opacity-50">{m.human ? "human" : "agent"} · {m.role}</p>
@@ -253,7 +253,7 @@ export default function About() {
       <section className="grid border-b-2 border-ink lg:grid-cols-[1fr_1.2fr]">
         <div className="border-b-2 border-ink p-5 sm:p-10 lg:border-b-0 lg:border-r-2">
           <p className="label">008 — Contact the control room</p>
-          <h2 className="mega mt-4 text-[44px] sm:text-[60px] xl:text-[68px]">Say it in your language<span className="text-signal">.</span></h2>
+          <h2 className="mega mt-4 text-[40px] sm:text-[56px] xl:text-[62px]">Say it in <span className="bg-blue px-2 text-white">your</span> language.</h2>
           <p className="mt-6 max-w-md border-l-2 border-ink pl-4 text-[15px]">This form files a real report: language detection, extraction, geocoding, the duplicate check and an evidence score. Leave out where you are and RELAY will ask.</p>
         </div>
         <div className="p-5 sm:p-10"><ContactForm /></div>
@@ -261,7 +261,7 @@ export default function About() {
 
       {/* FOOTER */}
       <footer className="bg-ink px-5 pb-6 pt-10 text-bone sm:px-10">
-        <p className="font-display text-[15vw] font-extrabold uppercase leading-[0.8] tracking-[-0.05em]">Relay<span className="text-signal">.</span></p>
+        <p className="font-display text-[14vw] uppercase leading-[0.8] tracking-[-0.05em]">Relay<span className="text-signal">.</span></p>
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t-2 border-bone/20 pt-4 font-mono text-[10.5px] uppercase tracking-[0.14em] text-bone/60">
           <span>Team Tech Architects · AgentX Hackathon 2026</span>
           <span>Synthetic data · real places · real-world validation pending</span>
